@@ -18,4 +18,9 @@ chmod +x "$INSTALLER_PATH"
 
 printf 'Running installer: %s\n' "$INSTALLER_PATH"
 printf 'You may be prompted for your sudo password.\n'
-exec sudo "$INSTALLER_PATH"
+if command -v sh >/dev/null 2>&1; then
+  exec sudo "$(command -v sh)" "$INSTALLER_PATH"
+fi
+
+printf 'No POSIX shell found in PATH for installer execution.\n' >&2
+exit 1
