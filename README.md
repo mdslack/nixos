@@ -199,6 +199,18 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 - `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
 - GNOME Keyring is enabled and wired into `greetd` PAM so tools like `gh auth login` can use system credential storage.
 
+## Temporary utilities
+
+When you need one-off tools for debugging or verification, prefer ephemeral shells instead of permanently adding packages to system config.
+
+Example (`vainfo` from `libva-utils`):
+
+```bash
+nix shell nixpkgs#libva-utils -c vainfo
+```
+
+This keeps your base configuration minimal while still giving you access to diagnostics on demand.
+
 ## Next migration steps from your Fedora/Ansible setup
 
 - Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
