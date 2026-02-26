@@ -18,6 +18,10 @@ chmod +x "$INSTALLER_PATH"
 
 printf 'Running installer: %s\n' "$INSTALLER_PATH"
 printf 'You may be prompted for your sudo password.\n'
+if command -v bash >/dev/null 2>&1; then
+  exec sudo "$(command -v bash)" "$INSTALLER_PATH"
+fi
+
 if command -v sh >/dev/null 2>&1; then
   exec sudo "$(command -v sh)" "$INSTALLER_PATH"
 fi
