@@ -48,6 +48,7 @@ in {
         brotli
         fontconfig
         freetype
+        dbus
         libnl
         libxkbcommon
         libglvnd
