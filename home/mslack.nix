@@ -61,6 +61,13 @@ in {
   home.file =
     {
       ".oh-my-zsh".source = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
+      ".local/bin/expressvpn-gui" = {
+        text = ''
+          #!/usr/bin/env bash
+          exec env QT_QPA_PLATFORM=wayland /opt/expressvpn/bin/expressvpn-client "$@"
+        '';
+        executable = true;
+      };
     }
     // builtins.listToAttrs (
       map (name:
