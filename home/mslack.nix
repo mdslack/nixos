@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let
   dotfilesRoot = "${config.home.homeDirectory}/dotfiles";
   mkOutOfStoreSymlink = config.lib.file.mkOutOfStoreSymlink;
@@ -62,6 +62,19 @@ in {
         })
       (builtins.attrNames managedHomeEntries)
     );
+
+  home.activation.installOhMyZshPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh/custom"
+    mkdir -p "$ZSH_CUSTOM/plugins"
+
+    if [ ! -d "$ZSH_CUSTOM/plugins/fast-syntax-highlighting" ]; then
+      ${pkgs.git}/bin/git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting.git "$ZSH_CUSTOM/plugins/fast-syntax-highlighting" || true
+    fi
+
+    if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autocomplete" ]; then
+      ${pkgs.git}/bin/git clone --depth 1 https://github.com/marlonrichert/zsh-autocomplete.git "$ZSH_CUSTOM/plugins/zsh-autocomplete" || true
+    fi
+  '';
 
   systemd.user.services.gnome-keyring-daemon = {
     Unit = {
