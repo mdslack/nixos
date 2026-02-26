@@ -72,6 +72,14 @@ in {
         xterm
         cacert
       ];
+
+      # ExpressVPN still checks legacy FHS command paths.
+      systemd.tmpfiles.rules = [
+        "L+ /sbin/iptables - - - - ${pkgs.iptables}/bin/iptables"
+        "L+ /usr/sbin/iptables - - - - ${pkgs.iptables}/bin/iptables"
+        "L+ /sbin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
+        "L+ /usr/sbin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
+      ];
     })
 
     (lib.mkIf cfg.enableExpressVpnManualService {
