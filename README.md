@@ -103,10 +103,19 @@ cd /mnt/home/<username>/nixos
 - set `hosts.<host>.username` if needed
 - keep `nixpkgs` on `nixos-unstable` for Dank Linux compatibility
 
-8. Generate hardware config into this host path:
+8. Generate hardware config, then copy it into this host path:
 
 ```bash
-sudo nixos-generate-config --show-hardware-config > hosts/<host>/hardware-configuration.nix
+sudo nixos-generate-config --root /mnt
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/<username>/nixos/hosts/<host>/hardware-configuration.nix
+```
+
+Why this pattern: in the installer, your cloned repo path may be owned by root. Generating into `/mnt/etc/nixos` first avoids shell redirection permission issues.
+
+If you write directly with redirection, remember `sudo cmd > file` still writes as your current user. Use root shell redirection instead:
+
+```bash
+sudo sh -c 'nixos-generate-config --show-hardware-config > /mnt/home/<username>/nixos/hosts/<host>/hardware-configuration.nix'
 ```
 
 9. Install from the cloned flake path:
