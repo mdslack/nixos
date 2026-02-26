@@ -52,6 +52,8 @@ in {
         libxau
         libxdmcp
         libxcb
+        libSM
+        libICE
         libnl
         libxkbcommon
         libglvnd
