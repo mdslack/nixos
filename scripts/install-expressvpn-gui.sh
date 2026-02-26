@@ -62,7 +62,7 @@ done
 
 # Patch hardcoded FHS binary paths used by installer scripts.
 mapfile -t script_files < <(find "$workdir" -type f -name "*.sh")
-for cmd in bash sh cp mv rm mkdir ln chmod chown chgrp sed awk grep cat head tail wc expr dd mktemp dirname uname id tee touch killall pgrep ps systemctl service update-rc.d rc-service rc-update; do
+for cmd in bash sh cp mv rm mkdir ln chmod chown chgrp sed awk grep cat head tail wc expr dd mktemp dirname uname id tee touch killall pgrep ps systemctl service update-rc.d rc-service rc-update setcap getent groupadd; do
   resolved="$(command -v "$cmd" || true)"
   if [[ -n "$resolved" ]]; then
     for script in "${script_files[@]}"; do
@@ -79,6 +79,7 @@ for script in "$workdir/x64/install.sh" "$workdir/arm64/install.sh"; do
   if [[ -f "$script" ]]; then
     sed -i 's|if ! sudo "\$@"; then|if ! sudo env "PATH=$PATH" "$@"; then|' "$script"
     sed -i 's|sudo "\$@"|sudo env "PATH=$PATH" "$@"|' "$script"
+    sed -i 's|_sudo setcap |_sudo_optional setcap |' "$script"
   fi
 done
 

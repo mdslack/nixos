@@ -48,8 +48,10 @@ in {
       ];
 
       environment.systemPackages = with pkgs; [
+        libcap
         iproute2
         iptables
+        procps
         psmisc
         xterm
         cacert
