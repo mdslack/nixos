@@ -78,6 +78,12 @@ in {
     fi
   '';
 
+  home.activation.installYaziPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -f "${config.home.homeDirectory}/.config/yazi/package.toml" ]; then
+      ${pkgs.yazi}/bin/ya pkg install || true
+    fi
+  '';
+
   systemd.user.services.gnome-keyring-daemon = {
     Unit = {
       Description = "GNOME Keyring daemon";
