@@ -43,7 +43,8 @@
     enableVPN = true;
     enableDynamicTheming = true;
     enableAudioWavelength = true;
-    enableCalendarEvents = true;
+    # Temporarily disabled to avoid khal build/install failures.
+    enableCalendarEvents = false;
     enableClipboardPaste = true;
 
     greeter = {
@@ -63,7 +64,7 @@
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-color-emoji
-    jetbrains-mono
+    nerd-fonts.jetbrains-mono
   ];
 
   environment.systemPackages = with pkgs;
