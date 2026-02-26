@@ -40,6 +40,7 @@ in {
         value = {
           source = mkOutOfStoreSymlink "${dotfilesRoot}/${entry.source}";
           recursive = entry.recursive or false;
+          force = true;
         };
       })
     (builtins.attrNames managedXdgEntries)
@@ -58,6 +59,7 @@ in {
           value = {
             source = mkOutOfStoreSymlink "${dotfilesRoot}/${entry.source}";
             recursive = entry.recursive or false;
+            force = true;
           };
         })
       (builtins.attrNames managedHomeEntries)
