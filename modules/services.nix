@@ -46,6 +46,8 @@ in {
         stdenv.cc.cc.lib
         glib
         brotli
+        fontconfig
+        freetype
         libnl
         libxkbcommon
         libglvnd
