@@ -66,4 +66,17 @@ if [[ -f "$workdir/multi_arch_installer.sh" ]]; then
 fi
 
 cd "$workdir"
+
+force_dep_flag="--force-dependencies"
+for arg in "$@"; do
+  if [[ "$arg" == "--force-dependencies" ]]; then
+    force_dep_flag=""
+    break
+  fi
+done
+
+if [[ -n "$force_dep_flag" ]]; then
+  exec "$BASH_BIN" ./multi_arch_installer.sh "$force_dep_flag" "$@"
+fi
+
 exec "$BASH_BIN" ./multi_arch_installer.sh "$@"
