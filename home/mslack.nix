@@ -26,10 +26,11 @@ in {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    yazi
     neovim
     zed-editor
   ];
+
+  programs.yazi.enable = true;
 
   xdg.configFile = builtins.listToAttrs (
     map (name:
@@ -44,7 +45,9 @@ in {
         };
       })
     (builtins.attrNames managedXdgEntries)
-  );
+  ) // lib.optionalAttrs (pkgs ? yaziPlugins && pkgs.yaziPlugins ? "catppuccin-mocha") {
+    "yazi/flavors/catppuccin-mocha.yazi".source = pkgs.yaziPlugins."catppuccin-mocha";
+  };
 
   home.file =
     {
@@ -75,16 +78,6 @@ in {
 
     if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autocomplete" ]; then
       ${pkgs.git}/bin/git clone --depth 1 https://github.com/marlonrichert/zsh-autocomplete.git "$ZSH_CUSTOM/plugins/zsh-autocomplete" || true
-    fi
-  '';
-
-  home.activation.installYaziPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export HOME="${config.home.homeDirectory}"
-    export XDG_CONFIG_HOME="${config.xdg.configHome}"
-    export XDG_DATA_HOME="${config.xdg.dataHome}"
-
-    if [ -f "$XDG_CONFIG_HOME/yazi/package.toml" ]; then
-      ${pkgs.yazi}/bin/ya pkg install || true
     fi
   '';
 
