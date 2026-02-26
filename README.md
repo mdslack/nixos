@@ -13,6 +13,7 @@ Flake-based NixOS starter with a full Dank Linux baseline:
 - `flake.nix` - flake inputs and host definitions (`workstation`, `meerkat`, `framework`)
 - `modules/workstation-base.nix` - shared baseline for all workstation-class hosts
 - `modules/dev-tooling.nix` - shared developer tools module with VM toggle
+- `modules/services.nix` - shared services module (Tailscale + service toggles)
 - `hosts/workstation/configuration.nix` - generic workstation template host
 - `hosts/meerkat/configuration.nix` - meerkat host entry
 - `hosts/framework/configuration.nix` - framework host entry
@@ -29,7 +30,7 @@ Flake-based NixOS starter with a full Dank Linux baseline:
 sudo nixos-rebuild switch --flake .#<host>
 ```
 
-3. Generate DMS compositor defaults (first login):
+4. Generate DMS compositor defaults (first login):
 
 ```bash
 dms setup
@@ -174,7 +175,6 @@ You can keep `/etc/nixos` untouched when using flakes like this.
 - Home Manager auto-symlinks these `~/dotfiles` paths into `~/.config` when present:
   - `dms/.config/DankMaterialShell` -> `~/.config/DankMaterialShell`
   - `lazyvim/.config/nvim` -> `~/.config/nvim`
-  - `yazi/.config/yazi` -> `~/.config/yazi`
   - `zed/.config/zed` -> `~/.config/zed`
   - `markdown/.config/markdown` -> `~/.config/markdown`
 - Home Manager also links non-`~/.config` entries when present:
@@ -183,7 +183,8 @@ You can keep `/etc/nixos` untouched when using flakes like this.
   - `git/.gitconfig` -> `~/.gitconfig`
   - `ssh/.ssh/config` -> `~/.ssh/config`
   - `opencode/.opencode/opencode.jsonc` -> `~/.opencode/opencode.jsonc`
-- Entries are only linked if the source path exists in `~/dotfiles`.
+- These paths are managed as symlinks by Home Manager; keep the corresponding files/directories present in `~/dotfiles`.
+- `~/.config/yazi` is managed declaratively by Home Manager (`programs.yazi`), not symlinked from dotfiles.
 
 Example:
 
@@ -205,15 +206,40 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 
 The shared base imports `modules/dev-tooling.nix` and enables a practical default toolchain:
 
-- `git-lfs`, `lazygit`, `yazi`
+- `git-lfs`, `lazygit`
 - `fd`, `fzf`, `ripgrep`
 - `pandoc`, `nodejs`, `mermaid-cli`
 - `protobuf` (`protoc`), `rustup`, `mdbook`
+
+Yazi itself is configured in Home Manager via `programs.yazi`, including a locally packaged Catppuccin Mocha flavor.
 
 VM stack is off by default. To enable it, set this in a host config:
 
 ```nix
 workstation.devTooling.enableVmManager = true;
+```
+
+## Services module
+
+The shared base imports `modules/services.nix` and enables Tailscale by default.
+
+- `workstation.services.enable = true`
+- `workstation.services.enableTailscale = true`
+- `workstation.services.enableExpressVpnPackage = true`
+- `workstation.services.enableExpressVpnService = true`
+
+ExpressVPN package smoke test after rebuild:
+
+```bash
+expressvpn --version
+expressvpn status
+systemctl status expressvpnd
+```
+
+If needed, complete vendor auth/activation interactively:
+
+```bash
+expressvpn activate
 ```
 
 ## Temporary utilities
@@ -233,4 +259,4 @@ This keeps your base configuration minimal while still giving you access to diag
 - Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
 - Move CLI/dev tools from `ansible/roles/dev_tooling` into Home Manager `home.packages`
 - Move dotfiles behaviors into Home Manager modules/options
-- Port services (libvirt, tailscale, etc.) to NixOS modules incrementally
+- Expand services module beyond Tailscale (ExpressVPN workflow, other host services)

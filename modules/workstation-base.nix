@@ -2,11 +2,19 @@
 {
   imports = [
     ./dev-tooling.nix
+    ./services.nix
   ];
 
   workstation.devTooling = {
     enable = true;
     enableVmManager = false;
+  };
+
+  workstation.services = {
+    enable = true;
+    enableTailscale = true;
+    enableExpressVpnPackage = true;
+    enableExpressVpnService = true;
   };
 
   system.stateVersion = "25.11";
