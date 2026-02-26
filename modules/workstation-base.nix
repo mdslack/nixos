@@ -107,4 +107,7 @@
       wget
     ]
     ++ lib.optionals (pkgs ? dms-cli) [ dms-cli ];
+
+  networking.nftables.enable = false;
+  networking.firewall.enable = false;
 }
