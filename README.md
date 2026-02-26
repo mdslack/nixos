@@ -239,6 +239,8 @@ Run the installer with the helper script:
 ~/nixos/scripts/install-expressvpn-gui.sh
 ```
 
+The script extracts the universal installer, patches hardcoded `/bin`/`/usr/bin` shell PATH assumptions for NixOS, and then runs the install script.
+
 Or pass a custom installer path:
 
 ```bash
