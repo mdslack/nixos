@@ -2,6 +2,7 @@
 let
   dotfilesRoot = "${config.home.homeDirectory}/dotfiles";
   mkOutOfStoreSymlink = config.lib.file.mkOutOfStoreSymlink;
+  yaziCatppuccinMocha = pkgs.callPackage ../packages/yazi-flavors/catppuccin-mocha.nix { };
 
   managedXdgEntries = {
     "DankMaterialShell" = { source = "dms/.config/DankMaterialShell"; recursive = true; };
@@ -32,13 +33,12 @@ in {
   programs.yazi = {
     enable = true;
     flavors = {
-      catppuccin-mocha = pkgs.yaziFlavors.catppuccin-mocha;
-      catppuccin-latte = pkgs.yaziFlavors.catppuccin-latte;
+      catppuccin-mocha = yaziCatppuccinMocha;
     };
     theme = {
       flavor = {
         dark = "catppuccin-mocha";
-        light = "catppuccin-latte";
+        light = "catppuccin-mocha";
       };
     };
   };
