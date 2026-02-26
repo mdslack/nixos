@@ -26,7 +26,6 @@ in {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    oh-my-zsh
     yazi
     neovim
     zed-editor
@@ -46,19 +45,23 @@ in {
     (builtins.attrNames managedXdgEntries)
   );
 
-  home.file = builtins.listToAttrs (
-    map (name:
-      let
-        entry = managedHomeEntries.${name};
-      in {
-        name = name;
-        value = {
-          source = mkOutOfStoreSymlink "${dotfilesRoot}/${entry.source}";
-          recursive = entry.recursive or false;
-        };
-      })
-    (builtins.attrNames managedHomeEntries)
-  );
+  home.file =
+    {
+      ".oh-my-zsh".source = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
+    }
+    // builtins.listToAttrs (
+      map (name:
+        let
+          entry = managedHomeEntries.${name};
+        in {
+          name = name;
+          value = {
+            source = mkOutOfStoreSymlink "${dotfilesRoot}/${entry.source}";
+            recursive = entry.recursive or false;
+          };
+        })
+      (builtins.attrNames managedHomeEntries)
+    );
 
   systemd.user.services.gnome-keyring-daemon = {
     Unit = {
