@@ -130,19 +130,25 @@ If the ISO environment does not have flakes enabled by default:
 sudo nixos-install --flake /mnt/home/<username>/nixos#<host> --option experimental-features "nix-command flakes"
 ```
 
-10. Reboot into the new system:
+10. Set the user password before reboot (required to log in via greeter):
+
+```bash
+sudo nixos-enter --root /mnt -c 'passwd <username>'
+```
+
+11. Reboot into the new system:
 
 ```bash
 sudo reboot
 ```
 
-11. After first login, if the repo is root-owned from install-time cloning, fix ownership:
+12. After first login, if the repo is root-owned from install-time cloning, fix ownership:
 
 ```bash
-sudo chown -R "$USER":"$USER" ~/nixos
+sudo chown -R "$USER":users ~/nixos
 ```
 
-12. Initialize DMS config:
+13. Initialize DMS config:
 
 ```bash
 dms setup
@@ -191,6 +197,7 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 - DMS and DankGreeter are enabled through the flake-provided NixOS modules.
 - `nixpkgs` is pinned to `nixos-unstable` for best Dank Linux compatibility.
 - `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
+- GNOME Keyring is enabled and wired into `greetd` PAM so tools like `gh auth login` can use system credential storage.
 
 ## Next migration steps from your Fedora/Ansible setup
 

@@ -12,10 +12,11 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "input" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "render" "input" ];
     shell = pkgs.zsh;
   };
 
@@ -24,6 +25,8 @@
 
   services.dbus.enable = true;
   security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
   services.gvfs.enable = true;
   services.pipewire = {
     enable = true;
@@ -31,6 +34,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
   };
+  hardware.enableRedistributableFirmware = true;
   hardware.graphics.enable = true;
 
   programs.niri.enable = true;
@@ -70,6 +74,8 @@
   environment.systemPackages = with pkgs;
     [
       adw-gtk3
+      alacritty
+      brave
       curl
       git
       gh
