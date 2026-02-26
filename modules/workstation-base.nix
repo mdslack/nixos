@@ -14,6 +14,7 @@
     enable = true;
     enableTailscale = true;
     enableExpressVpnManualReminder = true;
+    enableExpressVpnRuntimeCompat = true;
   };
 
   system.stateVersion = "25.11";
