@@ -75,10 +75,18 @@ in {
 
       # ExpressVPN still checks legacy FHS command paths.
       systemd.tmpfiles.rules = [
+        "L+ /bin/iptables - - - - ${pkgs.iptables}/bin/iptables"
+        "L+ /usr/bin/iptables - - - - ${pkgs.iptables}/bin/iptables"
         "L+ /sbin/iptables - - - - ${pkgs.iptables}/bin/iptables"
         "L+ /usr/sbin/iptables - - - - ${pkgs.iptables}/bin/iptables"
+        "L+ /bin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
+        "L+ /usr/bin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
         "L+ /sbin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
         "L+ /usr/sbin/ip6tables - - - - ${pkgs.iptables}/bin/ip6tables"
+        "L+ /bin/iptables-nft - - - - ${pkgs.iptables}/bin/iptables-nft"
+        "L+ /usr/bin/iptables-nft - - - - ${pkgs.iptables}/bin/iptables-nft"
+        "L+ /sbin/iptables-nft - - - - ${pkgs.iptables}/bin/iptables-nft"
+        "L+ /usr/sbin/iptables-nft - - - - ${pkgs.iptables}/bin/iptables-nft"
       ];
     })
 
