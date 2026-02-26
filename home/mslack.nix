@@ -76,6 +76,20 @@ in {
         '';
         executable = true;
       };
+      ".local/bin/expressvpnctl" = {
+        text = ''
+          #!/usr/bin/env bash
+          exec /opt/expressvpn/bin/expressvpnctl "$@"
+        '';
+        executable = true;
+      };
+      ".local/bin/expressvpn-gui-x11" = {
+        text = ''
+          #!/usr/bin/env bash
+          exec env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 XDG_SESSION_TYPE=x11 /opt/expressvpn/bin/expressvpn-client "$@"
+        '';
+        executable = true;
+      };
     }
     // builtins.listToAttrs (
       map (name:
