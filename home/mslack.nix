@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let
   dotfilesRoot = "${config.home.homeDirectory}/dotfiles";
   mkOutOfStoreSymlink = config.lib.file.mkOutOfStoreSymlink;
@@ -32,6 +32,9 @@ in {
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
+
+  warnings = lib.optional (!(builtins.pathExists dotfilesRoot))
+    "Dotfiles repo not found at ${dotfilesRoot}. Dotfile symlinks are skipped until you clone and rebuild.";
 
   home.packages = [ ];
 
