@@ -6,7 +6,6 @@ let
   managedXdgEntries = {
     "DankMaterialShell" = { source = "dms/.config/DankMaterialShell"; recursive = true; };
     "nvim" = { source = "lazyvim/.config/nvim"; recursive = true; };
-    "yazi" = { source = "yazi/.config/yazi"; recursive = true; };
     "zed" = { source = "zed/.config/zed"; recursive = true; };
     "markdown" = { source = "markdown/.config/markdown"; recursive = true; };
   };
@@ -30,7 +29,19 @@ in {
     zed-editor
   ];
 
-  programs.yazi.enable = true;
+  programs.yazi = {
+    enable = true;
+    flavors = {
+      catppuccin-mocha = pkgs.yaziFlavors.catppuccin-mocha;
+      catppuccin-latte = pkgs.yaziFlavors.catppuccin-latte;
+    };
+    theme = {
+      flavor = {
+        dark = "catppuccin-mocha";
+        light = "catppuccin-latte";
+      };
+    };
+  };
 
   xdg.configFile = builtins.listToAttrs (
     map (name:
@@ -45,9 +56,7 @@ in {
         };
       })
     (builtins.attrNames managedXdgEntries)
-  ) // lib.optionalAttrs (pkgs ? yaziPlugins && pkgs.yaziPlugins ? "catppuccin-mocha") {
-    "yazi/flavors/catppuccin-mocha.yazi".source = pkgs.yaziPlugins."catppuccin-mocha";
-  };
+  );
 
   home.file =
     {
