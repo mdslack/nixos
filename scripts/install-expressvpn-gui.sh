@@ -74,6 +74,14 @@ for cmd in bash sh cp mv rm mkdir ln chmod chown chgrp sed awk grep cat head tai
   fi
 done
 
+# Ensure sudo uses NixOS PATH when installer escalates commands.
+for script in "$workdir/x64/install.sh" "$workdir/arm64/install.sh"; do
+  if [[ -f "$script" ]]; then
+    sed -i 's|if ! sudo "\$@"; then|if ! sudo env "PATH=$PATH" "$@"; then|' "$script"
+    sed -i 's|sudo "\$@"|sudo env "PATH=$PATH" "$@"|' "$script"
+  fi
+done
+
 if [[ -f "$workdir/multi_arch_installer.sh" ]]; then
   sed -i 's|exec \./"${X64_VERSION}" "\$@"|exec bash "./${X64_VERSION}" "$@"|' "$workdir/multi_arch_installer.sh"
   sed -i 's|exec \./"${ARM64_VERSION}" "\$@"|exec bash "./${ARM64_VERSION}" "$@"|' "$workdir/multi_arch_installer.sh"
