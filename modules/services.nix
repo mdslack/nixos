@@ -7,6 +7,8 @@ in {
 
     enableTailscale = lib.mkEnableOption "Tailscale service";
 
+    enableProtonVpn = lib.mkEnableOption "Proton VPN GUI package";
+
     enableExpressVpnManualReminder = lib.mkEnableOption "manual ExpressVPN GUI install reminder";
 
     enableExpressVpnManualService = lib.mkOption {
@@ -32,6 +34,13 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     (lib.mkIf cfg.enableTailscale {
       services.tailscale.enable = true;
+    })
+
+    (lib.mkIf cfg.enableProtonVpn {
+      environment.systemPackages = [ pkgs.protonvpn-gui ];
+      warnings = [
+        "Proton VPN GUI installed. Launch with: protonvpn-app"
+      ];
     })
 
     (lib.mkIf cfg.enableExpressVpnManualReminder {

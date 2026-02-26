@@ -13,6 +13,7 @@
   workstation.services = {
     enable = true;
     enableTailscale = true;
+    enableProtonVpn = true;
     enableExpressVpnManualReminder = true;
     enableExpressVpnManualService = true;
     enableExpressVpnRuntimeCompat = true;
