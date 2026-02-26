@@ -49,7 +49,7 @@ in {
         iproute2
         iptables
         psmisc
-        ca-certificates
+        cacert
       ];
     })
   ]);
