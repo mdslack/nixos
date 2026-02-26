@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, ... }:
+{ config, pkgs, username, ... }:
 let
   dotfilesRoot = "${config.home.homeDirectory}/dotfiles";
   mkOutOfStoreSymlink = config.lib.file.mkOutOfStoreSymlink;
@@ -11,10 +11,6 @@ let
     "markdown" = { source = "markdown/.config/markdown"; recursive = true; };
   };
 
-  existingXdgEntryNames = builtins.filter
-    (name: builtins.pathExists "${dotfilesRoot}/${managedXdgEntries.${name}.source}")
-    (builtins.attrNames managedXdgEntries);
-
   managedHomeEntries = {
     ".zshrc" = { source = "zsh/.zshrc"; };
     ".bashrc" = { source = "bash/.bashrc"; };
@@ -22,19 +18,12 @@ let
     ".ssh/config" = { source = "ssh/.ssh/config"; };
     ".opencode/opencode.jsonc" = { source = "opencode/.opencode/opencode.jsonc"; };
   };
-
-  existingHomeEntryNames = builtins.filter
-    (name: builtins.pathExists "${dotfilesRoot}/${managedHomeEntries.${name}.source}")
-    (builtins.attrNames managedHomeEntries);
 in {
   home.username = username;
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
-
-  warnings = lib.optional (!(builtins.pathExists dotfilesRoot))
-    "Dotfiles repo not found at ${dotfilesRoot}. Dotfile symlinks are skipped until you clone and rebuild.";
 
   home.packages = [ ];
 
@@ -49,7 +38,7 @@ in {
           recursive = entry.recursive or false;
         };
       })
-    existingXdgEntryNames
+    (builtins.attrNames managedXdgEntries)
   );
 
   home.file = builtins.listToAttrs (
@@ -63,7 +52,7 @@ in {
           recursive = entry.recursive or false;
         };
       })
-    existingHomeEntryNames
+    (builtins.attrNames managedHomeEntries)
   );
 
   systemd.user.services.gnome-keyring-daemon = {
