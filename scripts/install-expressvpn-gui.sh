@@ -68,15 +68,25 @@ fi
 cd "$workdir"
 
 force_dep_flag="--force-dependencies"
+gui_flag="--gui"
 for arg in "$@"; do
   if [[ "$arg" == "--force-dependencies" ]]; then
     force_dep_flag=""
-    break
+  fi
+  if [[ "$arg" == "--gui" || "$arg" == "--headless" ]]; then
+    gui_flag=""
   fi
 done
 
 if [[ -n "$force_dep_flag" ]]; then
+  if [[ -n "$gui_flag" ]]; then
+    exec "$BASH_BIN" ./multi_arch_installer.sh "$force_dep_flag" "$gui_flag" "$@"
+  fi
   exec "$BASH_BIN" ./multi_arch_installer.sh "$force_dep_flag" "$@"
+fi
+
+if [[ -n "$gui_flag" ]]; then
+  exec "$BASH_BIN" ./multi_arch_installer.sh "$gui_flag" "$@"
 fi
 
 exec "$BASH_BIN" ./multi_arch_installer.sh "$@"
