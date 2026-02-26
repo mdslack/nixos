@@ -49,6 +49,7 @@ in {
         fontconfig
         freetype
         dbus
+        xorg.libXau
         libnl
         libxkbcommon
         libglvnd
