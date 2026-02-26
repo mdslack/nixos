@@ -52,7 +52,7 @@ in {
         libxau
         libxdmcp
         libxcb
-        "xcb-util-cursor"
+        pkgs."xcb-util-cursor"
         libSM
         libICE
         libnl
