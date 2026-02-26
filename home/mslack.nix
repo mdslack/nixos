@@ -64,7 +64,7 @@ in {
     );
 
   home.activation.installOhMyZshPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh/custom"
+    ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh-custom"
     mkdir -p "$ZSH_CUSTOM/plugins"
 
     if [ ! -d "$ZSH_CUSTOM/plugins/fast-syntax-highlighting" ]; then
