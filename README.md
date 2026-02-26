@@ -12,6 +12,7 @@ Flake-based NixOS starter with a full Dank Linux baseline:
 
 - `flake.nix` - flake inputs and host definitions (`workstation`, `meerkat`, `framework`)
 - `modules/workstation-base.nix` - shared baseline for all workstation-class hosts
+- `modules/dev-tooling.nix` - shared developer tools module with VM toggle
 - `hosts/workstation/configuration.nix` - generic workstation template host
 - `hosts/meerkat/configuration.nix` - meerkat host entry
 - `hosts/framework/configuration.nix` - framework host entry
@@ -198,6 +199,21 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 - `nixpkgs` is pinned to `nixos-unstable` for best Dank Linux compatibility.
 - `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
 - GNOME Keyring is enabled and wired into `greetd` PAM so tools like `gh auth login` can use system credential storage.
+
+## Dev tooling module
+
+The shared base imports `modules/dev-tooling.nix` and enables a practical default toolchain:
+
+- `git-lfs`, `lazygit`, `yazi`
+- `fd`, `fzf`, `ripgrep`
+- `pandoc`, `nodejs`, `mermaid-cli`
+- `protobuf` (`protoc`), `rustup`, `mdbook`
+
+VM stack is off by default. To enable it, set this in a host config:
+
+```nix
+workstation.devTooling.enableVmManager = true;
+```
 
 ## Temporary utilities
 

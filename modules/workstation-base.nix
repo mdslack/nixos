@@ -1,5 +1,14 @@
 { lib, pkgs, hostname, username, ... }:
 {
+  imports = [
+    ./dev-tooling.nix
+  ];
+
+  workstation.devTooling = {
+    enable = true;
+    enableVmManager = false;
+  };
+
   system.stateVersion = "25.11";
 
   networking.hostName = hostname;
