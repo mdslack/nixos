@@ -13,8 +13,7 @@
   workstation.services = {
     enable = true;
     enableTailscale = true;
-    enableExpressVpnPackage = true;
-    enableExpressVpnService = true;
+    enableExpressVpnManualReminder = true;
   };
 
   system.stateVersion = "25.11";

@@ -225,21 +225,24 @@ The shared base imports `modules/services.nix` and enables Tailscale by default.
 
 - `workstation.services.enable = true`
 - `workstation.services.enableTailscale = true`
-- `workstation.services.enableExpressVpnPackage = true`
-- `workstation.services.enableExpressVpnService = true`
+- `workstation.services.enableExpressVpnManualReminder = true`
 
-ExpressVPN package smoke test after rebuild:
+Manual GUI install path reminder is enabled by default via:
 
-```bash
-expressvpn --version
-expressvpn status
-systemctl status expressvpnd
+```nix
+workstation.services.expressvpnManualInstallPath = "/home/<user>/Downloads/expressvpn-installer.run";
 ```
 
-If needed, complete vendor auth/activation interactively:
+Run the installer with the helper script:
 
 ```bash
-expressvpn activate
+~/nixos/scripts/install-expressvpn-gui.sh
+```
+
+Or pass a custom installer path:
+
+```bash
+~/nixos/scripts/install-expressvpn-gui.sh ~/Downloads/expressvpn-installer.run
 ```
 
 ## Temporary utilities

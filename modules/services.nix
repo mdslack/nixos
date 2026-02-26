@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, username, ... }:
 let
   cfg = config.workstation.services;
 in {
@@ -7,9 +7,13 @@ in {
 
     enableTailscale = lib.mkEnableOption "Tailscale service";
 
-    enableExpressVpnPackage = lib.mkEnableOption "ExpressVPN package from nixpkgs";
+    enableExpressVpnManualReminder = lib.mkEnableOption "manual ExpressVPN GUI install reminder";
 
-    enableExpressVpnService = lib.mkEnableOption "systemd expressvpnd service";
+    expressvpnManualInstallPath = lib.mkOption {
+      type = lib.types.str;
+      default = "/home/${username}/Downloads/expressvpn-installer.run";
+      description = "Expected path for manual ExpressVPN GUI installer.";
+    };
 
   };
 
@@ -18,25 +22,10 @@ in {
       services.tailscale.enable = true;
     })
 
-    (lib.mkIf cfg.enableExpressVpnPackage {
-      environment.systemPackages = [ pkgs.expressvpn ];
+    (lib.mkIf cfg.enableExpressVpnManualReminder {
       warnings = [
-        "ExpressVPN package is installed. Verify behavior with: expressvpn --version, expressvpn status, then activate/login if required."
+        "ExpressVPN is set to manual GUI install. Place installer at ${cfg.expressvpnManualInstallPath} and run it from a graphical session."
       ];
-    })
-
-    (lib.mkIf (cfg.enableExpressVpnPackage && cfg.enableExpressVpnService) {
-      systemd.services.expressvpnd = {
-        description = "ExpressVPN daemon";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        serviceConfig = {
-          ExecStart = "${pkgs.expressvpn}/bin/expressvpnd";
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-      };
     })
   ]);
 }
