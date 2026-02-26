@@ -9,6 +9,12 @@ in {
 
     enableExpressVpnManualReminder = lib.mkEnableOption "manual ExpressVPN GUI install reminder";
 
+    enableExpressVpnManualService = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Manage expressvpn-service via NixOS for manually installed GUI client.";
+    };
+
     enableExpressVpnRuntimeCompat = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -56,6 +62,19 @@ in {
         xterm
         cacert
       ];
+    })
+
+    (lib.mkIf cfg.enableExpressVpnManualService {
+      systemd.services.expressvpn-service = {
+        description = "ExpressVPN daemon";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network.target" ];
+        serviceConfig = {
+          Environment = [ "LD_LIBRARY_PATH=/opt/expressvpn/lib" ];
+          ExecStart = "/opt/expressvpn/bin/expressvpn-daemon";
+          Restart = "always";
+        };
+      };
     })
   ]);
 }

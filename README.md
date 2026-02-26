@@ -226,6 +226,7 @@ The shared base imports `modules/services.nix` and enables Tailscale by default.
 - `workstation.services.enable = true`
 - `workstation.services.enableTailscale = true`
 - `workstation.services.enableExpressVpnManualReminder = true`
+- `workstation.services.enableExpressVpnManualService = true`
 - `workstation.services.enableExpressVpnRuntimeCompat = true`
 
 Manual GUI install path reminder is enabled by default via:
@@ -241,6 +242,7 @@ Run the installer with the helper script:
 ```
 
 The script extracts the universal installer, patches hardcoded `/bin`/`/usr/bin` shell PATH assumptions for NixOS, and then runs the install script.
+It also defaults to `--skip-service` because `/etc/systemd/system` is managed by NixOS; the `expressvpn-service` unit is declared in `modules/services.nix`.
 
 If installer/runtime reports missing libs (for example `libatomic`, `libglib-2.0`, `libbrotlidec`), keep `workstation.services.enableExpressVpnRuntimeCompat = true` so `nix-ld` and common compatibility libraries are present.
 

@@ -14,6 +14,7 @@
     enable = true;
     enableTailscale = true;
     enableExpressVpnManualReminder = true;
+    enableExpressVpnManualService = true;
     enableExpressVpnRuntimeCompat = true;
   };
 
