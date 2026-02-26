@@ -80,6 +80,8 @@ for script in "$workdir/x64/install.sh" "$workdir/arm64/install.sh"; do
     sed -i 's|if ! sudo "\$@"; then|if ! sudo env "PATH=$PATH" "$@"; then|' "$script"
     sed -i 's|sudo "\$@"|sudo env "PATH=$PATH" "$@"|' "$script"
     sed -i 's|_sudo setcap |_sudo_optional setcap |' "$script"
+    sed -i 's|migrateXVLegacySettings || true|true # skip legacy settings migration on NixOS|' "$script"
+    sed -i 's|_sudo_optional ln -s "${ctlExecutablePath}" "${ctlSymlinkPath}" || true|true # skip ctl symlink on NixOS|' "$script"
   fi
 done
 
