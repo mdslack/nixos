@@ -41,6 +41,8 @@ in {
         glib
         brotli
         libnl
+        libxkbcommon
+        libglvnd
         openssl
         zlib
       ];
@@ -49,6 +51,7 @@ in {
         iproute2
         iptables
         psmisc
+        xterm
         cacert
       ];
     })

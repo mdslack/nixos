@@ -60,6 +60,20 @@ for script in "$workdir/multi_arch_installer.sh" "$workdir/x64/install.sh" "$wor
   fi
 done
 
+# Patch hardcoded FHS binary paths used by installer scripts.
+mapfile -t script_files < <(find "$workdir" -type f -name "*.sh")
+for cmd in bash sh cp mv rm mkdir ln chmod chown chgrp sed awk grep cat head tail wc expr dd mktemp dirname uname id tee touch killall pgrep ps systemctl service update-rc.d rc-service rc-update; do
+  resolved="$(command -v "$cmd" || true)"
+  if [[ -n "$resolved" ]]; then
+    for script in "${script_files[@]}"; do
+      sed -i "s|/bin/$cmd|$resolved|g" "$script"
+      sed -i "s|/usr/bin/$cmd|$resolved|g" "$script"
+      sed -i "s|/sbin/$cmd|$resolved|g" "$script"
+      sed -i "s|/usr/sbin/$cmd|$resolved|g" "$script"
+    done
+  fi
+done
+
 if [[ -f "$workdir/multi_arch_installer.sh" ]]; then
   sed -i 's|exec \./"${X64_VERSION}" "\$@"|exec bash "./${X64_VERSION}" "$@"|' "$workdir/multi_arch_installer.sh"
   sed -i 's|exec \./"${ARM64_VERSION}" "\$@"|exec bash "./${ARM64_VERSION}" "$@"|' "$workdir/multi_arch_installer.sh"
