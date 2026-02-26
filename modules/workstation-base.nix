@@ -14,9 +14,6 @@
     enable = true;
     enableTailscale = true;
     enableProtonVpn = true;
-    enableExpressVpnManualReminder = true;
-    enableExpressVpnManualService = true;
-    enableExpressVpnRuntimeCompat = true;
   };
 
   system.stateVersion = "25.11";
@@ -109,6 +106,4 @@
     ]
     ++ lib.optionals (pkgs ? dms-cli) [ dms-cli ];
 
-  networking.nftables.enable = false;
-  networking.firewall.enable = false;
 }

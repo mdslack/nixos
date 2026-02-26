@@ -28,7 +28,6 @@ in {
   home.packages = with pkgs; [
     neovim
     zed-editor
-    xwayland-satellite
   ];
 
   programs.yazi = {
@@ -62,51 +61,6 @@ in {
   home.file =
     {
       ".oh-my-zsh".source = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
-      ".local/bin/expressvpn-gui" = {
-        text = ''
-          #!/usr/bin/env bash
-          if env QT_QPA_PLATFORM=wayland /opt/expressvpn/bin/expressvpn-client "$@"; then
-            exit 0
-          fi
-
-          if env QT_QPA_PLATFORM=wayland-egl /opt/expressvpn/bin/expressvpn-client "$@"; then
-            exit 0
-          fi
-
-          exec env QT_QPA_PLATFORM=xcb /opt/expressvpn/bin/expressvpn-client "$@"
-        '';
-        executable = true;
-      };
-      ".local/bin/expressvpnctl" = {
-        text = ''
-          #!/usr/bin/env bash
-          exec /opt/expressvpn/bin/expressvpnctl "$@"
-        '';
-        executable = true;
-      };
-      ".local/bin/expressvpn-gui-x11" = {
-        text = ''
-          #!/usr/bin/env bash
-          set -euo pipefail
-
-          if [[ -z "${DISPLAY:-}" ]]; then
-            if ! pgrep -x xwayland-satellite >/dev/null 2>&1; then
-              nohup xwayland-satellite >/tmp/xwayland-satellite.log 2>&1 &
-              sleep 1
-            fi
-
-            if [[ -z "${DISPLAY:-}" && -d /tmp/.X11-unix ]]; then
-              sock="$(ls /tmp/.X11-unix/X* 2>/dev/null | head -n1 || true)"
-              if [[ -n "$sock" ]]; then
-                export DISPLAY=":''${sock##*/X}"
-              fi
-            fi
-          fi
-
-          exec env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 /opt/expressvpn/bin/expressvpn-client "$@"
-        '';
-        executable = true;
-      };
     }
     // builtins.listToAttrs (
       map (name:

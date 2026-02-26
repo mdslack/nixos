@@ -226,37 +226,11 @@ The shared base imports `modules/services.nix` and enables Tailscale by default.
 - `workstation.services.enable = true`
 - `workstation.services.enableTailscale = true`
 - `workstation.services.enableProtonVpn = true`
-- `workstation.services.enableExpressVpnManualReminder = true`
-- `workstation.services.enableExpressVpnManualService = true`
-- `workstation.services.enableExpressVpnRuntimeCompat = true`
 
 Proton VPN GUI can be launched with:
 
 ```bash
 protonvpn-app
-```
-
-Manual GUI install path reminder is enabled by default via:
-
-```nix
-workstation.services.expressvpnManualInstallPath = "/home/<user>/Downloads/expressvpn-installer.run";
-```
-
-Run the installer with the helper script:
-
-```bash
-~/nixos/scripts/install-expressvpn-gui.sh
-```
-
-The script extracts the universal installer, patches hardcoded `/bin`/`/usr/bin` shell PATH assumptions for NixOS, and then runs the install script.
-It also defaults to `--skip-service` because `/etc/systemd/system` is managed by NixOS; the `expressvpn-service` unit is declared in `modules/services.nix`.
-
-If installer/runtime reports missing libs (for example `libatomic`, `libglib-2.0`, `libbrotlidec`), keep `workstation.services.enableExpressVpnRuntimeCompat = true` so `nix-ld` and common compatibility libraries are present.
-
-Or pass a custom installer path:
-
-```bash
-~/nixos/scripts/install-expressvpn-gui.sh ~/Downloads/expressvpn-installer.run
 ```
 
 ## Temporary utilities
@@ -276,4 +250,4 @@ This keeps your base configuration minimal while still giving you access to diag
 - Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
 - Move CLI/dev tools from `ansible/roles/dev_tooling` into Home Manager `home.packages`
 - Move dotfiles behaviors into Home Manager modules/options
-- Expand services module beyond Tailscale (ExpressVPN workflow, other host services)
+- Expand services module beyond Tailscale/ProtonVPN (other host services)
