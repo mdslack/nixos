@@ -52,6 +52,7 @@ in {
         libxau
         libxdmcp
         libxcb
+        xcbutil
         pkgs."xcb-util-cursor"
         libSM
         libICE
