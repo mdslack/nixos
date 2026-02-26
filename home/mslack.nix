@@ -64,7 +64,15 @@ in {
       ".local/bin/expressvpn-gui" = {
         text = ''
           #!/usr/bin/env bash
-          exec env QT_QPA_PLATFORM=wayland /opt/expressvpn/bin/expressvpn-client "$@"
+          if env QT_QPA_PLATFORM=wayland /opt/expressvpn/bin/expressvpn-client "$@"; then
+            exit 0
+          fi
+
+          if env QT_QPA_PLATFORM=wayland-egl /opt/expressvpn/bin/expressvpn-client "$@"; then
+            exit 0
+          fi
+
+          exec env QT_QPA_PLATFORM=xcb /opt/expressvpn/bin/expressvpn-client "$@"
         '';
         executable = true;
       };
