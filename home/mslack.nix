@@ -79,7 +79,11 @@ in {
   '';
 
   home.activation.installYaziPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -f "${config.home.homeDirectory}/.config/yazi/package.toml" ]; then
+    export HOME="${config.home.homeDirectory}"
+    export XDG_CONFIG_HOME="${config.xdg.configHome}"
+    export XDG_DATA_HOME="${config.xdg.dataHome}"
+
+    if [ -f "$XDG_CONFIG_HOME/yazi/package.toml" ]; then
       ${pkgs.yazi}/bin/ya pkg install || true
     fi
   '';
