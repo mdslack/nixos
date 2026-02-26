@@ -28,6 +28,7 @@ in {
   home.packages = with pkgs; [
     neovim
     zed-editor
+    xwayland-satellite
   ];
 
   programs.yazi = {
@@ -86,7 +87,23 @@ in {
       ".local/bin/expressvpn-gui-x11" = {
         text = ''
           #!/usr/bin/env bash
-          exec env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 XDG_SESSION_TYPE=x11 /opt/expressvpn/bin/expressvpn-client "$@"
+          set -euo pipefail
+
+          if [[ -z "${DISPLAY:-}" ]]; then
+            if ! pgrep -x xwayland-satellite >/dev/null 2>&1; then
+              nohup xwayland-satellite >/tmp/xwayland-satellite.log 2>&1 &
+              sleep 1
+            fi
+
+            if [[ -z "${DISPLAY:-}" && -d /tmp/.X11-unix ]]; then
+              sock="$(ls /tmp/.X11-unix/X* 2>/dev/null | head -n1 || true)"
+              if [[ -n "$sock" ]]; then
+                export DISPLAY=":''${sock##*/X}"
+              fi
+            fi
+          fi
+
+          exec env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 /opt/expressvpn/bin/expressvpn-client "$@"
         '';
         executable = true;
       };
