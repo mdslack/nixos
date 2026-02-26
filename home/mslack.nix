@@ -25,7 +25,12 @@ in {
 
   programs.home-manager.enable = true;
 
-  home.packages = [ ];
+  home.packages = with pkgs; [
+    oh-my-zsh
+    yazi
+    neovim
+    zed-editor
+  ];
 
   xdg.configFile = builtins.listToAttrs (
     map (name:
