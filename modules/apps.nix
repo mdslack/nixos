@@ -7,21 +7,56 @@ let
     set -euo pipefail
 
     apps_dir="''${HOME}/.local/share/applications"
-    if [[ ! -d "$apps_dir" ]]; then
-      printf 'No applications directory found at %s\n' "$apps_dir" >&2
-      exit 0
+    mkdir -p "$apps_dir"
+
+    search_dirs=("$apps_dir")
+    if [[ -n "''${XDG_DATA_DIRS:-}" ]]; then
+      IFS=':' read -r -a xdg_dirs <<< "''${XDG_DATA_DIRS}"
+      for d in "''${xdg_dirs[@]}"; do
+        if [[ -d "$d/applications" ]]; then
+          search_dirs+=("$d/applications")
+        fi
+      done
     fi
+
+    upsert_icon() {
+      local desktop_file="$1"
+      local icon_path="$2"
+      if grep -q '^Icon=' "$desktop_file"; then
+        sed -i "s|^Icon=.*$|Icon=$icon_path|" "$desktop_file"
+      else
+        printf '\nIcon=%s\n' "$icon_path" >> "$desktop_file"
+      fi
+    }
 
     update_icon() {
       local app_name="$1"
       local icon_path="$2"
-      while IFS= read -r desktop_file; do
-        if grep -q '^Icon=' "$desktop_file"; then
-          sed -i "s|^Icon=.*$|Icon=$icon_path|" "$desktop_file"
-        else
-          printf '\nIcon=%s\n' "$icon_path" >> "$desktop_file"
+      for d in "''${search_dirs[@]}"; do
+        while IFS= read -r desktop_file; do
+          local target="$desktop_file"
+          if [[ ! -w "$desktop_file" ]]; then
+            target="$apps_dir/$(basename "$desktop_file")"
+            cp "$desktop_file" "$target"
+          fi
+          upsert_icon "$target" "$icon_path"
+        done < <(grep -rl "^Name=$app_name$" "$d" || true)
+      done
+    }
+
+    update_icon_by_desktop_id() {
+      local desktop_id="$1"
+      local icon_path="$2"
+      for d in "''${search_dirs[@]}"; do
+        if [[ -f "$d/$desktop_id" ]]; then
+          local target="$d/$desktop_id"
+          if [[ ! -w "$target" ]]; then
+            target="$apps_dir/$desktop_id"
+            cp "$d/$desktop_id" "$target"
+          fi
+          upsert_icon "$target" "$icon_path"
         fi
-      done < <(grep -rl "^Name=$app_name$" "$apps_dir" || true)
+      done
     }
 
     update_icon "Adobe Acrobat" "/etc/pwa-icons/acrobat.png"
@@ -43,9 +78,12 @@ let
     # Optional custom app icons. Provide files to enable these overrides.
     if [[ -f /etc/pwa-icons/alacritty.png ]]; then
       update_icon "Alacritty" "/etc/pwa-icons/alacritty.png"
+      update_icon_by_desktop_id "Alacritty.desktop" "/etc/pwa-icons/alacritty.png"
+      update_icon_by_desktop_id "alacritty.desktop" "/etc/pwa-icons/alacritty.png"
     fi
     if [[ -f /etc/pwa-icons/zed.png ]]; then
       update_icon "Zed" "/etc/pwa-icons/zed.png"
+      update_icon_by_desktop_id "dev.zed.Zed.desktop" "/etc/pwa-icons/zed.png"
     fi
 
     printf 'Brave PWA desktop icons updated.\n'
