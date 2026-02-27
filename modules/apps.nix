@@ -98,6 +98,10 @@ in {
 
     enableNautilus = lib.mkEnableOption "Nautilus file manager";
 
+    enableMaestral = lib.mkEnableOption "Maestral Dropbox client";
+
+    enableMaestralGui = lib.mkEnableOption "Maestral GUI";
+
     enableDropbox = lib.mkEnableOption "Dropbox desktop client";
 
     enableDropboxWithNautilus = lib.mkEnableOption "Dropbox + Nautilus integration bundle";
@@ -225,6 +229,20 @@ in {
 
     (lib.mkIf cfg.enableNautilus {
       environment.systemPackages = [ pkgs.nautilus ];
+    })
+
+    (lib.mkIf cfg.enableMaestral {
+      environment.systemPackages = lib.optionals (builtins.hasAttr "maestral" pkgs) [ pkgs.maestral ];
+      warnings = lib.optionals (!(builtins.hasAttr "maestral" pkgs)) [
+        "workstation.apps.enableMaestral is true, but pkgs.maestral is unavailable in this nixpkgs revision."
+      ];
+    })
+
+    (lib.mkIf cfg.enableMaestralGui {
+      environment.systemPackages = lib.optionals (builtins.hasAttr "maestral-gui" pkgs) [ pkgs."maestral-gui" ];
+      warnings = lib.optionals (!(builtins.hasAttr "maestral-gui" pkgs)) [
+        "workstation.apps.enableMaestralGui is true, but pkgs.maestral-gui is unavailable in this nixpkgs revision."
+      ];
     })
 
     (lib.mkIf cfg.enableDropbox {

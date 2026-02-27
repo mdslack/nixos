@@ -255,6 +255,8 @@ The shared base imports `modules/apps.nix` and enables Brave forced web app inst
 - `workstation.apps.enableNautilus = true`
 - `workstation.apps.enableDropbox = false`
 - `workstation.apps.enableDropboxWithNautilus = false`
+- `workstation.apps.enableMaestral = true`
+- `workstation.apps.enableMaestralGui = true`
 - `workstation.apps.enableZed = true`
 
 Managed policy path:
@@ -272,6 +274,7 @@ App package notes:
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
 - Dropbox core client is optional and off by default (`enableDropbox`).
 - Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).
+- Maestral (Dropbox alternative) can be enabled via `enableMaestral` and `enableMaestralGui`.
 
 Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
 After Brave has created PWA desktop files, apply icon overrides with:

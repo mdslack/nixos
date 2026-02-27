@@ -12,7 +12,9 @@
     enableSpotify = true;
     enableNautilus = true;
     enableDropbox = false;
-    enableDropboxWithNautilus = true;
+    enableDropboxWithNautilus = false;
+    enableMaestral = true;
+    enableMaestralGui = true;
     enableZed = true;
   };
 
