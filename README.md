@@ -223,21 +223,12 @@ VM stack is off by default. To enable it, set this in a host config:
 workstation.devTooling.enableVmManager = true;
 ```
 
-You can toggle TeX Live and AI CLI tools per host:
-
-```nix
-workstation.devTooling.enableTexLive = true;
-workstation.devTooling.enableAiCli = true;
-```
-
 ## Services module
 
 The shared base imports `modules/services.nix` and enables Tailscale by default.
 
-- `workstation.services.enable = true`
-- `workstation.services.enableTailscale = true`
-- `workstation.services.enableProtonVpn = true`
-- `workstation.services.enableProtonVpnCli = true`
+- Tailscale + Proton VPN GUI are installed by default.
+- `proton-vpn-cli` is installed when available in your nixpkgs revision.
 
 Proton VPN GUI can be launched with:
 
@@ -259,16 +250,7 @@ If `protonvpn-cli` exists, wrappers use it; otherwise they use `nmcli` with Prot
 
 The shared base imports `modules/apps.nix` and enables Brave forced web app installs.
 
-- `workstation.apps.enable = true`
-- `workstation.apps.enableBravePwas = true`
-- `workstation.apps.enableSpotify = true`
-- `workstation.apps.enableNautilus = true`
-- `workstation.apps.enableGnomeDesktop = true`
-- `workstation.apps.enableDropbox = false`
-- `workstation.apps.enableDropboxWithNautilus = false`
-- `workstation.apps.enableMaestral = true`
-- `workstation.apps.enableMaestralGui = true`
-- `workstation.apps.enableZed = true`
+- Brave PWAs, Spotify, GNOME desktop stack (including Nautilus), Maestral (+ GUI when available), and Zed are installed by default.
 
 Managed policy path:
 
@@ -282,12 +264,10 @@ App package notes:
 
 - Spotify is installed via nixpkgs (`pkgs.spotify`).
 - GNOME desktop stack is enabled through GDM; you can choose GNOME or Niri session from the login screen.
-- `enableNautilus` mainly matters when GNOME desktop is disabled (GNOME already includes Nautilus).
+- Nautilus is included via the GNOME desktop stack.
 - `gnome-tweaks` is added on top of the default GNOME package set.
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
-- Dropbox core client is optional and off by default (`enableDropbox`).
-- Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).
-- Maestral (Dropbox alternative) can be enabled via `enableMaestral` and `enableMaestralGui`.
+- Maestral is used as the Dropbox client path by default (`maestral` + `maestral-gui` when available).
 
 Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
 After Brave has created PWA desktop files, apply icon overrides with:
@@ -317,7 +297,6 @@ This keeps your base configuration minimal while still giving you access to diag
 
 ## Next migration steps from your Fedora/Ansible setup
 
-- Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
-- Move CLI/dev tools from `ansible/roles/dev_tooling` into Home Manager `home.packages`
-- Move dotfiles behaviors into Home Manager modules/options
-- Expand services module beyond Tailscale/ProtonVPN (other host services)
+- Add optional Doppler bootstrap for SSH key delivery.
+- Add remaining host-specific overrides (power, peripherals, hardware quirks).
+- Run one fresh-install validation per host and capture any manual post-install steps.

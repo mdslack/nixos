@@ -92,16 +92,6 @@ let
   '';
 in {
   options.workstation.apps = {
-    enable = lib.mkEnableOption "workstation app profile";
-    enableBravePwas = lib.mkEnableOption "Brave forced web app installs";
-    enableSpotify = lib.mkEnableOption "Spotify desktop app";
-    enableNautilus = lib.mkEnableOption "Nautilus file manager";
-    enableGnomeDesktop = lib.mkEnableOption "GNOME desktop with GDM";
-    enableMaestral = lib.mkEnableOption "Maestral Dropbox client";
-    enableMaestralGui = lib.mkEnableOption "Maestral GUI";
-    enableDropbox = lib.mkEnableOption "Dropbox desktop client";
-    enableDropboxWithNautilus = lib.mkEnableOption "Dropbox + Nautilus integration bundle";
-    enableZed = lib.mkEnableOption "Zed editor package";
 
     bravePwaInstallList = lib.mkOption {
       type = lib.types.listOf (lib.types.attrsOf lib.types.str);
@@ -186,8 +176,8 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    (lib.mkIf cfg.enableBravePwas {
+  config = lib.mkMerge [
+    {
       environment.etc."brave/policies/managed/workstation.json".text = builtins.toJSON {
         WebAppInstallForceList = cfg.bravePwaInstallList;
       };
@@ -212,21 +202,16 @@ in {
 
       environment.systemPackages = [ bravePwaIconApply ];
 
-      warnings = [
-        "Brave PWA policy is managed at /etc/brave/policies/managed/workstation.json. Restart Brave to apply changes."
-        "Run brave-pwa-icons-apply after Brave creates PWA desktop files to set custom icons."
-      ];
-    })
+      system.activationScripts.bravePwaPostInstallInfo.text = ''
+        echo "info: Brave PWA policy applied. After first Brave run, execute: brave-pwa-icons-apply"
+      '';
+    }
 
-    (lib.mkIf cfg.enableSpotify {
+    {
       environment.systemPackages = [ pkgs.spotify ];
-    })
+    }
 
-    (lib.mkIf cfg.enableNautilus {
-      environment.systemPackages = lib.optionals (!cfg.enableGnomeDesktop) [ pkgs.nautilus ];
-    })
-
-    (lib.mkIf cfg.enableGnomeDesktop {
+    {
       # Use latest option paths when available, fallback to legacy xserver paths.
       services.displayManager.gdm.enable = lib.mkIf hasNewGdmOptions true;
       services.desktopManager.gnome.enable = lib.mkIf hasNewGnomeOptions true;
@@ -241,56 +226,21 @@ in {
       xdg.portal.extraPortals = lib.mkAfter [ pkgs.xdg-desktop-portal-gnome ];
 
       environment.systemPackages = with pkgs; [
+        nautilus
         gnome-tweaks
       ];
+    }
 
-      warnings = [
-        "GNOME desktop stack enabled via GDM. Select GNOME or Niri session from GDM login."
-      ];
-    })
-
-    (lib.mkIf cfg.enableMaestral {
+    {
       environment.systemPackages = lib.optionals (builtins.hasAttr "maestral" pkgs) [ pkgs.maestral ];
-      warnings = lib.optionals (!(builtins.hasAttr "maestral" pkgs)) [
-        "workstation.apps.enableMaestral is true, but pkgs.maestral is unavailable in this nixpkgs revision."
-      ];
-    })
+    }
 
-    (lib.mkIf cfg.enableMaestralGui {
+    {
       environment.systemPackages = lib.optionals (builtins.hasAttr "maestral-gui" pkgs) [ pkgs."maestral-gui" ];
-      warnings = lib.optionals (!(builtins.hasAttr "maestral-gui" pkgs)) [
-        "workstation.apps.enableMaestralGui is true, but pkgs.maestral-gui is unavailable in this nixpkgs revision."
-      ];
-    })
+    }
 
-    (lib.mkIf cfg.enableDropbox {
-      environment.systemPackages = lib.optionals (builtins.hasAttr "dropbox" pkgs) [ pkgs.dropbox ];
-      warnings = lib.optionals (!(builtins.hasAttr "dropbox" pkgs)) [
-        "workstation.apps.enableDropbox is true, but pkgs.dropbox is unavailable in this nixpkgs revision."
-      ];
-    })
-
-    (lib.mkIf cfg.enableDropboxWithNautilus {
-      environment.systemPackages =
-        (lib.optionals (builtins.hasAttr "dropbox" pkgs) [ pkgs.dropbox ])
-        ++ (lib.optionals (builtins.hasAttr "nautilus-dropbox" pkgs) [ pkgs."nautilus-dropbox" ])
-        ++ (lib.optionals (builtins.hasAttr "nautilus" pkgs) [ pkgs.nautilus ])
-        ++ (lib.optionals (builtins.hasAttr "libayatana-appindicator" pkgs) [ pkgs.libayatana-appindicator ]);
-
-      warnings =
-        (lib.optionals (!(builtins.hasAttr "dropbox" pkgs)) [
-          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.dropbox is unavailable in this nixpkgs revision."
-        ])
-        ++ (lib.optionals (!(builtins.hasAttr "nautilus-dropbox" pkgs)) [
-          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.nautilus-dropbox is unavailable in this nixpkgs revision."
-        ])
-        ++ (lib.optionals (!(builtins.hasAttr "nautilus" pkgs)) [
-          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.nautilus is unavailable in this nixpkgs revision."
-        ]);
-    })
-
-    (lib.mkIf cfg.enableZed {
+    {
       environment.systemPackages = [ pkgs.zed-editor ];
-    })
-  ]);
+    }
+  ];
 }
