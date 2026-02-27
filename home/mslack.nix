@@ -5,6 +5,7 @@ let
   yaziCatppuccinMocha = pkgs.callPackage ../packages/yazi-flavors/catppuccin-mocha.nix { };
 
   managedXdgEntries = {
+    "alacritty" = { source = "alacritty/.config/alacritty"; recursive = true; };
     "DankMaterialShell" = { source = "dms/.config/DankMaterialShell"; recursive = true; };
     "nvim" = { source = "lazyvim/.config/nvim"; recursive = true; };
     "zed" = { source = "zed/.config/zed"; recursive = true; };
