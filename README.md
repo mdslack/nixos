@@ -260,6 +260,13 @@ Managed policy path:
 
 After rebuild, restart Brave to apply policy changes.
 
+Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
+After Brave has created PWA desktop files, apply icon overrides with:
+
+```bash
+brave-pwa-icons-apply
+```
+
 ## Temporary utilities
 
 When you need one-off tools for debugging or verification, prefer ephemeral shells instead of permanently adding packages to system config.
@@ -277,5 +284,4 @@ This keeps your base configuration minimal while still giving you access to diag
 - Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
 - Move CLI/dev tools from `ansible/roles/dev_tooling` into Home Manager `home.packages`
 - Move dotfiles behaviors into Home Manager modules/options
-- Port PWA icon overrides for Brave web apps (optional polish)
 - Expand services module beyond Tailscale/ProtonVPN (other host services)
