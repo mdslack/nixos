@@ -105,6 +105,7 @@
       brave
       btop
       curl
+      ghostty
       git
       gh
       rime-data

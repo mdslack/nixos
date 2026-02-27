@@ -83,6 +83,11 @@ let
       update_icon_by_desktop_id "Alacritty.desktop" "/etc/pwa-icons/alacritty.png"
       update_icon_by_desktop_id "alacritty.desktop" "/etc/pwa-icons/alacritty.png"
     fi
+    if [[ -f /etc/pwa-icons/ghostty.png ]]; then
+      update_icon "Ghostty" "/etc/pwa-icons/ghostty.png"
+      update_icon_by_desktop_id "com.mitchellh.ghostty.desktop" "/etc/pwa-icons/ghostty.png"
+      update_icon_by_desktop_id "ghostty.desktop" "/etc/pwa-icons/ghostty.png"
+    fi
     if [[ -f /etc/pwa-icons/zed.png ]]; then
       update_icon "Zed" "/etc/pwa-icons/zed.png"
       update_icon_by_desktop_id "dev.zed.Zed.desktop" "/etc/pwa-icons/zed.png"
@@ -198,6 +203,7 @@ in {
       environment.etc."pwa-icons/youtube.png".source = ../assets/pwa-icons/youtube.png;
       environment.etc."pwa-icons/zoom.png".source = ../assets/pwa-icons/zoom.png;
       environment.etc."pwa-icons/alacritty.png".source = ../assets/pwa-icons/alacritty.png;
+      environment.etc."pwa-icons/ghostty.png".source = ../assets/pwa-icons/ghostty.png;
       environment.etc."pwa-icons/zed.png".source = ../assets/pwa-icons/zed.png;
 
       environment.systemPackages = [ bravePwaIconApply ];
