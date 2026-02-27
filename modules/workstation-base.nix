@@ -22,6 +22,8 @@
   workstation.devTooling = {
     enable = true;
     enableVmManager = false;
+    enableTexLive = true;
+    enableAiCli = true;
   };
 
   workstation.services = {

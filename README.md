@@ -211,6 +211,8 @@ The shared base imports `modules/dev-tooling.nix` and enables a practical defaul
 - `fd`, `fzf`, `ripgrep`
 - `pandoc`, `nodejs`, `mermaid-cli`
 - `protobuf` (`protoc`), `rustup`, `mdbook`
+- `texlive.combined.scheme-medium`
+- AI CLIs: `opencode`, `codex`, `claude-code`
 
 Yazi itself is configured in Home Manager via `programs.yazi`, including a locally packaged Catppuccin Mocha flavor.
 
@@ -218,6 +220,13 @@ VM stack is off by default. To enable it, set this in a host config:
 
 ```nix
 workstation.devTooling.enableVmManager = true;
+```
+
+You can toggle TeX Live and AI CLI tools per host:
+
+```nix
+workstation.devTooling.enableTexLive = true;
+workstation.devTooling.enableAiCli = true;
 ```
 
 ## Services module
