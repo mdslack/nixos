@@ -197,10 +197,10 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 ## Notes
 
 - This config follows Dank Linux NixOS flake docs by using `github:AvengeMedia/DankMaterialShell/stable`.
-- DMS and DankGreeter are enabled through the flake-provided NixOS modules.
+- DMS is enabled through the flake-provided NixOS modules.
 - `nixpkgs` is pinned to `nixos-unstable` for best Dank Linux compatibility.
 - `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
-- GNOME Keyring is enabled and wired into `greetd` PAM so tools like `gh auth login` can use system credential storage.
+- GNOME keyring is enabled and wired into GDM PAM so tools like `gh auth login` can use system credential storage.
 - Yazi Catppuccin flavor is packaged locally in `packages/yazi-flavors/catppuccin-mocha.nix` for reproducibility.
 
 ## Dev tooling module
@@ -272,7 +272,7 @@ App package notes:
 
 - Spotify is installed via nixpkgs (`pkgs.spotify`).
 - Nautilus is installed via nixpkgs (`pkgs.nautilus`).
-- GNOME compatibility stack is enabled (`gnome-shell`, control center, tweaks, monitor, disk utility, text editor) while keeping Niri + DMS as default session.
+- GNOME desktop stack is enabled through GDM; you can choose GNOME or Niri session from the login screen.
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
 - Dropbox core client is optional and off by default (`enableDropbox`).
 - Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).

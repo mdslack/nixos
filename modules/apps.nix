@@ -234,7 +234,13 @@ in {
     })
 
     (lib.mkIf cfg.enableGnomeDesktop {
+      services.xserver.enable = true;
+      services.xserver.displayManager.gdm.enable = true;
+      services.xserver.desktopManager.gnome.enable = true;
+
       programs.dconf.enable = true;
+      services.gnome.gnome-keyring.enable = true;
+      security.pam.services.gdm.enableGnomeKeyring = true;
 
       xdg.portal.extraPortals = lib.mkAfter [ pkgs.xdg-desktop-portal-gnome ];
 
@@ -248,7 +254,7 @@ in {
       ];
 
       warnings = [
-        "GNOME desktop compatibility stack enabled. Niri + DMS remain your active session by default."
+        "GNOME desktop stack enabled via GDM. Select GNOME or Niri session from GDM login."
       ];
     })
 

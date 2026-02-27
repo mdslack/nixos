@@ -56,8 +56,6 @@
 
   services.dbus.enable = true;
   security.polkit.enable = true;
-  services.gnome.gnome-keyring.enable = true;
-  security.pam.services.greetd.enableGnomeKeyring = true;
   services.gvfs.enable = true;
   services.pipewire = {
     enable = true;
@@ -89,11 +87,13 @@
     enableClipboardPaste = true;
 
     greeter = {
-      enable = true;
+      enable = false;
       compositor.name = "niri";
       configHome = "/home/${username}";
     };
   };
+
+  services.greetd.enable = lib.mkForce false;
 
   programs.dsearch.enable = true;
 

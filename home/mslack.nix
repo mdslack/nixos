@@ -151,19 +151,4 @@ in {
     fi
   '';
 
-  systemd.user.services.gnome-keyring-daemon = {
-    Unit = {
-      Description = "GNOME Keyring daemon";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --foreground --components=secrets";
-      Restart = "on-failure";
-      RestartSec = 2;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
 }
