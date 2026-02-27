@@ -1,6 +1,8 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, options, ... }:
 let
   cfg = config.workstation.apps;
+  hasNewGdmOptions = lib.hasAttrByPath [ "services" "displayManager" "gdm" "enable" ] options;
+  hasNewGnomeOptions = lib.hasAttrByPath [ "services" "desktopManager" "gnome" "enable" ] options;
 
   bravePwaIconApply = pkgs.writeShellScriptBin "brave-pwa-icons-apply" ''
     #!/usr/bin/env bash
@@ -225,9 +227,12 @@ in {
     })
 
     (lib.mkIf cfg.enableGnomeDesktop {
-      services.xserver.enable = true;
-      services.xserver.displayManager.gdm.enable = true;
-      services.xserver.desktopManager.gnome.enable = true;
+      # Use latest option paths when available, fallback to legacy xserver paths.
+      services.displayManager.gdm.enable = lib.mkIf hasNewGdmOptions true;
+      services.desktopManager.gnome.enable = lib.mkIf hasNewGnomeOptions true;
+      services.xserver.enable = lib.mkIf (!hasNewGdmOptions || !hasNewGnomeOptions) true;
+      services.xserver.displayManager.gdm.enable = lib.mkIf (!hasNewGdmOptions) true;
+      services.xserver.desktopManager.gnome.enable = lib.mkIf (!hasNewGnomeOptions) true;
 
       programs.dconf.enable = true;
       services.gnome.gnome-keyring.enable = true;
