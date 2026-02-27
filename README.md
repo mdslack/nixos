@@ -267,7 +267,11 @@ After Brave has created PWA desktop files, apply icon overrides with:
 brave-pwa-icons-apply
 ```
 
-The same helper also normalizes launcher icons for `Alacritty` and `Zed` desktop entries.
+Optional app overrides are supported too:
+- `/etc/pwa-icons/alacritty.png` -> `Alacritty`
+- `/etc/pwa-icons/zed.png` -> `Zed`
+
+If those files are not present, `brave-pwa-icons-apply` leaves Alacritty/Zed icons unchanged.
 
 ## Temporary utilities
 

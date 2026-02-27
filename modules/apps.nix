@@ -39,8 +39,14 @@ let
     update_icon "WhatsApp" "/etc/pwa-icons/whatsapp.png"
     update_icon "YouTube" "/etc/pwa-icons/youtube.png"
     update_icon "Zoom" "/etc/pwa-icons/zoom.png"
-    update_icon "Alacritty" "Alacritty"
-    update_icon "Zed" "dev.zed.Zed"
+
+    # Optional custom app icons. Provide files to enable these overrides.
+    if [[ -f /etc/pwa-icons/alacritty.png ]]; then
+      update_icon "Alacritty" "/etc/pwa-icons/alacritty.png"
+    fi
+    if [[ -f /etc/pwa-icons/zed.png ]]; then
+      update_icon "Zed" "/etc/pwa-icons/zed.png"
+    fi
 
     printf 'Brave PWA desktop icons updated.\n'
   '';
