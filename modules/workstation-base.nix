@@ -27,11 +27,11 @@
       (with pkgs; [
         fcitx5-rime
         fcitx5-gtk
+        fcitx5-wayland
       ])
       ++ (with pkgs.qt6Packages; [
         fcitx5-chinese-addons
         fcitx5-qt
-        fcitx5-wayland
       ]);
   };
 
