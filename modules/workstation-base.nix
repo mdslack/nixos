@@ -45,6 +45,9 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
 
+  # Wayland-native mode for Chromium/Electron apps (including Spotify).
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "render" "input" ];
