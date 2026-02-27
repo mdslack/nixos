@@ -134,7 +134,6 @@
       wget
     ]
     ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-configtool" ] pkgs) [ pkgs.qt6Packages.fcitx5-configtool ]
-    ++ lib.optionals (pkgs ? fcitx5-configtool) [ pkgs.fcitx5-configtool ]
     ++ lib.optionals (pkgs ? dms-cli) [ dms-cli ];
 
 }
