@@ -47,15 +47,14 @@
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
-    fcitx5.addons =
-      (with pkgs; [
-        fcitx5-rime
-        fcitx5-gtk
-      ])
-      ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-chinese-addons" ] pkgs) [ pkgs.qt6Packages.fcitx5-chinese-addons ]
-      ++ lib.optionals (lib.hasAttrByPath [ "kdePackages" "fcitx5-chinese-addons" ] pkgs) [ pkgs.kdePackages.fcitx5-chinese-addons ]
-      ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-qt" ] pkgs) [ pkgs.qt6Packages.fcitx5-qt ]
-      ++ lib.optionals (lib.hasAttrByPath [ "kdePackages" "fcitx5-qt" ] pkgs) [ pkgs.kdePackages.fcitx5-qt ];
+    fcitx5.waylandFrontend = true;
+    fcitx5.addons = with pkgs.qt6Packages; [
+      fcitx5-rime
+      fcitx5-gtk
+      fcitx5-chinese-addons
+      fcitx5-qt
+      fcitx5-wayland
+    ];
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -131,10 +130,16 @@
       curl
       git
       gh
+      rime-data
       vim
       wget
     ]
     ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-configtool" ] pkgs) [ pkgs.qt6Packages.fcitx5-configtool ]
     ++ lib.optionals (pkgs ? dms-cli) [ dms-cli ];
+
+  warnings =
+    lib.optionals (!(lib.hasAttrByPath [ "qt6Packages" "fcitx5-rime" ] pkgs)) [
+      "qt6Packages.fcitx5-rime is unavailable in this nixpkgs revision; Rime input may be unusable."
+    ];
 
 }
