@@ -98,6 +98,8 @@ in {
 
     enableNautilus = lib.mkEnableOption "Nautilus file manager";
 
+    enableGnomeDesktop = lib.mkEnableOption "GNOME desktop compatibility stack";
+
     enableMaestral = lib.mkEnableOption "Maestral Dropbox client";
 
     enableMaestralGui = lib.mkEnableOption "Maestral GUI";
@@ -229,6 +231,25 @@ in {
 
     (lib.mkIf cfg.enableNautilus {
       environment.systemPackages = [ pkgs.nautilus ];
+    })
+
+    (lib.mkIf cfg.enableGnomeDesktop {
+      programs.dconf.enable = true;
+
+      xdg.portal.extraPortals = lib.mkAfter [ pkgs.xdg-desktop-portal-gnome ];
+
+      environment.systemPackages = with pkgs; [
+        gnome-shell
+        gnome-control-center
+        gnome-tweaks
+        gnome-system-monitor
+        gnome-disk-utility
+        gnome-text-editor
+      ];
+
+      warnings = [
+        "GNOME desktop compatibility stack enabled. Niri + DMS remain your active session by default."
+      ];
     })
 
     (lib.mkIf cfg.enableMaestral {

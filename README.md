@@ -253,6 +253,7 @@ The shared base imports `modules/apps.nix` and enables Brave forced web app inst
 - `workstation.apps.enableBravePwas = true`
 - `workstation.apps.enableSpotify = true`
 - `workstation.apps.enableNautilus = true`
+- `workstation.apps.enableGnomeDesktop = true`
 - `workstation.apps.enableDropbox = false`
 - `workstation.apps.enableDropboxWithNautilus = false`
 - `workstation.apps.enableMaestral = true`
@@ -271,6 +272,7 @@ App package notes:
 
 - Spotify is installed via nixpkgs (`pkgs.spotify`).
 - Nautilus is installed via nixpkgs (`pkgs.nautilus`).
+- GNOME compatibility stack is enabled (`gnome-shell`, control center, tweaks, monitor, disk utility, text editor) while keeping Niri + DMS as default session.
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
 - Dropbox core client is optional and off by default (`enableDropbox`).
 - Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).

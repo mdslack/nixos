@@ -11,6 +11,7 @@
     enableBravePwas = true;
     enableSpotify = true;
     enableNautilus = true;
+    enableGnomeDesktop = true;
     enableDropbox = false;
     enableDropboxWithNautilus = false;
     enableMaestral = true;
