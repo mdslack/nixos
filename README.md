@@ -201,6 +201,7 @@ sudo nixos-rebuild switch --flake ~/nixos#<host>
 - `nixpkgs` is pinned to `nixos-unstable` for best Dank Linux compatibility.
 - `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
 - GNOME keyring is enabled and wired into GDM PAM so tools like `gh auth login` can use system credential storage.
+- Chinese input is enabled via `fcitx5` with `fcitx5-rime`.
 - Yazi Catppuccin flavor is packaged locally in `packages/yazi-flavors/catppuccin-mocha.nix` for reproducibility.
 
 ## Dev tooling module
