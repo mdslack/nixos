@@ -113,6 +113,7 @@
       adw-gtk3
       alacritty
       brave
+      btop
       curl
       git
       gh
