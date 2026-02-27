@@ -8,6 +8,8 @@ in {
     enableTailscale = lib.mkEnableOption "Tailscale service";
 
     enableProtonVpn = lib.mkEnableOption "Proton VPN GUI package";
+
+    enableProtonVpnCli = lib.mkEnableOption "Proton VPN CLI package";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -19,6 +21,13 @@ in {
       environment.systemPackages = [ pkgs.protonvpn-gui ];
       warnings = [
         "Proton VPN GUI installed. Launch with: protonvpn-app"
+      ];
+    })
+
+    (lib.mkIf cfg.enableProtonVpnCli {
+      environment.systemPackages = lib.optionals (builtins.hasAttr "proton-vpn-cli" pkgs) [ pkgs."proton-vpn-cli" ];
+      warnings = lib.optionals (!(builtins.hasAttr "proton-vpn-cli" pkgs)) [
+        "workstation.services.enableProtonVpnCli is true, but pkgs.proton-vpn-cli is unavailable on this nixpkgs revision."
       ];
     })
   ]);

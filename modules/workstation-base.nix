@@ -14,6 +14,7 @@
     enable = true;
     enableTailscale = true;
     enableProtonVpn = true;
+    enableProtonVpnCli = true;
   };
 
   system.stateVersion = "25.11";

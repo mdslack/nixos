@@ -226,12 +226,23 @@ The shared base imports `modules/services.nix` and enables Tailscale by default.
 - `workstation.services.enable = true`
 - `workstation.services.enableTailscale = true`
 - `workstation.services.enableProtonVpn = true`
+- `workstation.services.enableProtonVpnCli = true`
 
 Proton VPN GUI can be launched with:
 
 ```bash
 protonvpn-app
 ```
+
+Convenience wrappers are also available:
+
+```bash
+protonvpn-status
+protonvpn-up
+protonvpn-down
+```
+
+If `protonvpn-cli` exists, wrappers use it; otherwise they use `nmcli` with Proton VPN NetworkManager profiles.
 
 ## Temporary utilities
 

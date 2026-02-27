@@ -61,6 +61,68 @@ in {
   home.file =
     {
       ".oh-my-zsh".source = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
+      ".local/bin/protonvpn-status" = {
+        text = ''
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          if command -v protonvpn-cli >/dev/null 2>&1; then
+            exec protonvpn-cli status
+          fi
+
+          nmcli -t -f NAME,TYPE,DEVICE connection show --active | awk -F: '$2 == "vpn" || tolower($1) ~ /proton/'
+        '';
+        executable = true;
+      };
+      ".local/bin/protonvpn-up" = {
+        text = ''
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          if command -v protonvpn-cli >/dev/null 2>&1; then
+            if [[ $# -gt 0 ]]; then
+              exec protonvpn-cli connect --cc "$1"
+            fi
+            exec protonvpn-cli connect
+          fi
+
+          if [[ $# -gt 0 ]]; then
+            exec nmcli connection up id "$1"
+          fi
+
+          conn="$(nmcli -t -f NAME,TYPE connection show | awk -F: 'tolower($1) ~ /proton/ && $2 == "vpn" { print $1; exit }')"
+          if [[ -z "$conn" ]]; then
+            printf 'No Proton VPN connection profile found. Open protonvpn-app first.\n' >&2
+            exit 1
+          fi
+
+          exec nmcli connection up id "$conn"
+        '';
+        executable = true;
+      };
+      ".local/bin/protonvpn-down" = {
+        text = ''
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          if command -v protonvpn-cli >/dev/null 2>&1; then
+            exec protonvpn-cli disconnect
+          fi
+
+          if [[ $# -gt 0 ]]; then
+            exec nmcli connection down id "$1"
+          fi
+
+          conn="$(nmcli -t -f NAME,TYPE connection show --active | awk -F: 'tolower($1) ~ /proton/ && ($2 == "vpn" || $2 == "wireguard") { print $1; exit }')"
+          if [[ -z "$conn" ]]; then
+            printf 'No active Proton VPN connection found.\n' >&2
+            exit 0
+          fi
+
+          exec nmcli connection down id "$conn"
+        '';
+        executable = true;
+      };
     }
     // builtins.listToAttrs (
       map (name:
