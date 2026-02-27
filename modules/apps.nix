@@ -96,7 +96,11 @@ in {
 
     enableSpotify = lib.mkEnableOption "Spotify desktop app";
 
+    enableNautilus = lib.mkEnableOption "Nautilus file manager";
+
     enableDropbox = lib.mkEnableOption "Dropbox desktop client";
+
+    enableDropboxWithNautilus = lib.mkEnableOption "Dropbox + Nautilus integration bundle";
 
     enableZed = lib.mkEnableOption "Zed editor package";
 
@@ -219,11 +223,34 @@ in {
       environment.systemPackages = [ pkgs.spotify ];
     })
 
+    (lib.mkIf cfg.enableNautilus {
+      environment.systemPackages = [ pkgs.nautilus ];
+    })
+
     (lib.mkIf cfg.enableDropbox {
       environment.systemPackages = lib.optionals (builtins.hasAttr "dropbox" pkgs) [ pkgs.dropbox ];
       warnings = lib.optionals (!(builtins.hasAttr "dropbox" pkgs)) [
         "workstation.apps.enableDropbox is true, but pkgs.dropbox is unavailable in this nixpkgs revision."
       ];
+    })
+
+    (lib.mkIf cfg.enableDropboxWithNautilus {
+      environment.systemPackages =
+        (lib.optionals (builtins.hasAttr "dropbox" pkgs) [ pkgs.dropbox ])
+        ++ (lib.optionals (builtins.hasAttr "nautilus-dropbox" pkgs) [ pkgs."nautilus-dropbox" ])
+        ++ (lib.optionals (builtins.hasAttr "nautilus" pkgs) [ pkgs.nautilus ])
+        ++ (lib.optionals (builtins.hasAttr "libayatana-appindicator" pkgs) [ pkgs.libayatana-appindicator ]);
+
+      warnings =
+        (lib.optionals (!(builtins.hasAttr "dropbox" pkgs)) [
+          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.dropbox is unavailable in this nixpkgs revision."
+        ])
+        ++ (lib.optionals (!(builtins.hasAttr "nautilus-dropbox" pkgs)) [
+          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.nautilus-dropbox is unavailable in this nixpkgs revision."
+        ])
+        ++ (lib.optionals (!(builtins.hasAttr "nautilus" pkgs)) [
+          "workstation.apps.enableDropboxWithNautilus is true, but pkgs.nautilus is unavailable in this nixpkgs revision."
+        ]);
     })
 
     (lib.mkIf cfg.enableZed {

@@ -252,7 +252,9 @@ The shared base imports `modules/apps.nix` and enables Brave forced web app inst
 - `workstation.apps.enable = true`
 - `workstation.apps.enableBravePwas = true`
 - `workstation.apps.enableSpotify = true`
-- `workstation.apps.enableDropbox = true`
+- `workstation.apps.enableNautilus = true`
+- `workstation.apps.enableDropbox = false`
+- `workstation.apps.enableDropboxWithNautilus = false`
 - `workstation.apps.enableZed = true`
 
 Managed policy path:
@@ -266,8 +268,10 @@ After rebuild, restart Brave to apply policy changes.
 App package notes:
 
 - Spotify is installed via nixpkgs (`pkgs.spotify`).
+- Nautilus is installed via nixpkgs (`pkgs.nautilus`).
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
-- Dropbox is optional and off by default.
+- Dropbox core client is optional and off by default (`enableDropbox`).
+- Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).
 
 Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
 After Brave has created PWA desktop files, apply icon overrides with:

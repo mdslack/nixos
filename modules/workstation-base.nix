@@ -10,7 +10,9 @@
     enable = true;
     enableBravePwas = true;
     enableSpotify = true;
-    enableDropbox = true;
+    enableNautilus = true;
+    enableDropbox = false;
+    enableDropboxWithNautilus = true;
     enableZed = true;
   };
 
