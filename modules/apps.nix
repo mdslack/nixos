@@ -6,7 +6,7 @@ let
     #!/usr/bin/env bash
     set -euo pipefail
 
-    apps_dir="${HOME}/.local/share/applications"
+    apps_dir="''${HOME}/.local/share/applications"
     if [[ ! -d "$apps_dir" ]]; then
       printf 'No applications directory found at %s\n' "$apps_dir" >&2
       exit 0
