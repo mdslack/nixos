@@ -39,6 +39,8 @@ let
     update_icon "WhatsApp" "/etc/pwa-icons/whatsapp.png"
     update_icon "YouTube" "/etc/pwa-icons/youtube.png"
     update_icon "Zoom" "/etc/pwa-icons/zoom.png"
+    update_icon "Alacritty" "Alacritty"
+    update_icon "Zed" "dev.zed.Zed"
 
     printf 'Brave PWA desktop icons updated.\n'
   '';

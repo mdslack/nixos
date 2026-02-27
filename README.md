@@ -267,6 +267,8 @@ After Brave has created PWA desktop files, apply icon overrides with:
 brave-pwa-icons-apply
 ```
 
+The same helper also normalizes launcher icons for `Alacritty` and `Zed` desktop entries.
+
 ## Temporary utilities
 
 When you need one-off tools for debugging or verification, prefer ephemeral shells instead of permanently adding packages to system config.
