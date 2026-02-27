@@ -51,8 +51,9 @@
       (with pkgs; [
         fcitx5-rime
         fcitx5-gtk
-        fcitx5-chinese-addons
       ])
+      ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-chinese-addons" ] pkgs) [ pkgs.qt6Packages.fcitx5-chinese-addons ]
+      ++ lib.optionals (lib.hasAttrByPath [ "kdePackages" "fcitx5-chinese-addons" ] pkgs) [ pkgs.kdePackages.fcitx5-chinese-addons ]
       ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-qt" ] pkgs) [ pkgs.qt6Packages.fcitx5-qt ]
       ++ lib.optionals (lib.hasAttrByPath [ "kdePackages" "fcitx5-qt" ] pkgs) [ pkgs.kdePackages.fcitx5-qt ];
   };
