@@ -1,9 +1,15 @@
 { lib, pkgs, hostname, username, ... }:
 {
   imports = [
+    ./apps.nix
     ./dev-tooling.nix
     ./services.nix
   ];
+
+  workstation.apps = {
+    enable = true;
+    enableBravePwas = true;
+  };
 
   workstation.devTooling = {
     enable = true;

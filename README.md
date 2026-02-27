@@ -14,6 +14,7 @@ Flake-based NixOS starter with a full Dank Linux baseline:
 - `modules/workstation-base.nix` - shared baseline for all workstation-class hosts
 - `modules/dev-tooling.nix` - shared developer tools module with VM toggle
 - `modules/services.nix` - shared services module (Tailscale + service toggles)
+- `modules/apps.nix` - shared app policy module (Brave PWAs)
 - `hosts/workstation/configuration.nix` - generic workstation template host
 - `hosts/meerkat/configuration.nix` - meerkat host entry
 - `hosts/framework/configuration.nix` - framework host entry
@@ -244,6 +245,21 @@ protonvpn-down
 
 If `protonvpn-cli` exists, wrappers use it; otherwise they use `nmcli` with Proton VPN NetworkManager profiles.
 
+## Apps module
+
+The shared base imports `modules/apps.nix` and enables Brave forced web app installs.
+
+- `workstation.apps.enable = true`
+- `workstation.apps.enableBravePwas = true`
+
+Managed policy path:
+
+```text
+/etc/brave/policies/managed/workstation.json
+```
+
+After rebuild, restart Brave to apply policy changes.
+
 ## Temporary utilities
 
 When you need one-off tools for debugging or verification, prefer ephemeral shells instead of permanently adding packages to system config.
@@ -261,4 +277,5 @@ This keeps your base configuration minimal while still giving you access to diag
 - Move base packages from `ansible/roles/base_system` into `environment.systemPackages`
 - Move CLI/dev tools from `ansible/roles/dev_tooling` into Home Manager `home.packages`
 - Move dotfiles behaviors into Home Manager modules/options
+- Port PWA icon overrides for Brave web apps (optional polish)
 - Expand services module beyond Tailscale/ProtonVPN (other host services)
