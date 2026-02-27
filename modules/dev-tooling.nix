@@ -12,13 +12,19 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       environment.systemPackages = with pkgs; [
+        doppler
         git-lfs
         lazygit
         fd
         fzf
         ripgrep
         pandoc
+        go
+        gopls
         nodejs
+        dotnet-sdk
+        python3
+        uv
         mermaid-cli
         protobuf
         rustup
