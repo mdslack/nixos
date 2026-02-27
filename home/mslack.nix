@@ -6,6 +6,7 @@ let
 
   managedXdgEntries = {
     "alacritty" = { source = "alacritty/.config/alacritty"; recursive = true; };
+    "ghostty" = { source = "ghostty/.config/ghostty"; recursive = true; };
     "DankMaterialShell" = { source = "dms/.config/DankMaterialShell"; recursive = true; };
     "nvim" = { source = "lazyvim/.config/nvim"; recursive = true; };
     "zed" = { source = "zed/.config/zed"; recursive = true; };
