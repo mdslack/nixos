@@ -251,6 +251,9 @@ The shared base imports `modules/apps.nix` and enables Brave forced web app inst
 
 - `workstation.apps.enable = true`
 - `workstation.apps.enableBravePwas = true`
+- `workstation.apps.enableSpotify = true`
+- `workstation.apps.enableDropbox = true`
+- `workstation.apps.enableZed = true`
 
 Managed policy path:
 
@@ -260,6 +263,12 @@ Managed policy path:
 
 After rebuild, restart Brave to apply policy changes.
 
+App package notes:
+
+- Spotify is installed via nixpkgs (`pkgs.spotify`).
+- Zed is installed via nixpkgs (`pkgs.zed-editor`).
+- Dropbox is optional and off by default.
+
 Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
 After Brave has created PWA desktop files, apply icon overrides with:
 
@@ -268,6 +277,7 @@ brave-pwa-icons-apply
 ```
 
 Optional app overrides are supported too:
+
 - `/etc/pwa-icons/alacritty.png` -> `Alacritty`
 - `/etc/pwa-icons/zed.png` -> `Zed`
 

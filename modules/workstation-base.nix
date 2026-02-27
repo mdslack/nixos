@@ -9,6 +9,9 @@
   workstation.apps = {
     enable = true;
     enableBravePwas = true;
+    enableSpotify = true;
+    enableDropbox = true;
+    enableZed = true;
   };
 
   workstation.devTooling = {

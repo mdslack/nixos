@@ -94,6 +94,12 @@ in {
 
     enableBravePwas = lib.mkEnableOption "Brave forced web app installs";
 
+    enableSpotify = lib.mkEnableOption "Spotify desktop app";
+
+    enableDropbox = lib.mkEnableOption "Dropbox desktop client";
+
+    enableZed = lib.mkEnableOption "Zed editor package";
+
     bravePwaInstallList = lib.mkOption {
       type = lib.types.listOf (lib.types.attrsOf lib.types.str);
       default = [
@@ -207,6 +213,21 @@ in {
         "Brave PWA policy is managed at /etc/brave/policies/managed/workstation.json. Restart Brave to apply changes."
         "Run brave-pwa-icons-apply after Brave creates PWA desktop files to set custom icons."
       ];
+    })
+
+    (lib.mkIf cfg.enableSpotify {
+      environment.systemPackages = [ pkgs.spotify ];
+    })
+
+    (lib.mkIf cfg.enableDropbox {
+      environment.systemPackages = lib.optionals (builtins.hasAttr "dropbox" pkgs) [ pkgs.dropbox ];
+      warnings = lib.optionals (!(builtins.hasAttr "dropbox" pkgs)) [
+        "workstation.apps.enableDropbox is true, but pkgs.dropbox is unavailable in this nixpkgs revision."
+      ];
+    })
+
+    (lib.mkIf cfg.enableZed {
+      environment.systemPackages = [ pkgs.zed-editor ];
     })
   ]);
 }
