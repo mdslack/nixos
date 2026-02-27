@@ -1,6 +1,8 @@
 { lib, config, pkgs, ... }:
 let
   cfg = config.workstation.apps;
+  alacrittyIconPath = ../assets/pwa-icons/alacritty.png;
+  zedIconPath = ../assets/pwa-icons/zed.png;
 
   bravePwaIconApply = pkgs.writeShellScriptBin "brave-pwa-icons-apply" ''
     #!/usr/bin/env bash
@@ -160,6 +162,11 @@ in {
       environment.etc."pwa-icons/whatsapp.png".source = ../assets/pwa-icons/whatsapp.png;
       environment.etc."pwa-icons/youtube.png".source = ../assets/pwa-icons/youtube.png;
       environment.etc."pwa-icons/zoom.png".source = ../assets/pwa-icons/zoom.png;
+      environment.etc = lib.optionalAttrs (builtins.pathExists alacrittyIconPath) {
+        "pwa-icons/alacritty.png".source = alacrittyIconPath;
+      } // lib.optionalAttrs (builtins.pathExists zedIconPath) {
+        "pwa-icons/zed.png".source = zedIconPath;
+      };
 
       environment.systemPackages = [ bravePwaIconApply ];
 
