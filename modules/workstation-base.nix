@@ -1,5 +1,18 @@
 { lib, pkgs, hostname, username, ... }:
-{
+let
+  pkgFromPaths = paths:
+    lib.findFirst
+      (p: p != null)
+      null
+      (map (path: lib.attrByPath path null pkgs) paths);
+
+  fcitx5Rime = pkgFromPaths [ [ "qt6Packages" "fcitx5-rime" ] [ "kdePackages" "fcitx5-rime" ] [ "fcitx5-rime" ] ];
+  fcitx5Gtk = pkgFromPaths [ [ "qt6Packages" "fcitx5-gtk" ] [ "kdePackages" "fcitx5-gtk" ] [ "fcitx5-gtk" ] ];
+  fcitx5ChineseAddons = pkgFromPaths [ [ "qt6Packages" "fcitx5-chinese-addons" ] [ "kdePackages" "fcitx5-chinese-addons" ] [ "fcitx5-chinese-addons" ] ];
+  fcitx5Qt = pkgFromPaths [ [ "qt6Packages" "fcitx5-qt" ] [ "kdePackages" "fcitx5-qt" ] [ "fcitx5-qt" ] ];
+  fcitx5Wayland = pkgFromPaths [ [ "qt6Packages" "fcitx5-wayland" ] [ "kdePackages" "fcitx5-wayland" ] [ "fcitx5-wayland" ] ];
+  fcitx5Configtool = pkgFromPaths [ [ "qt6Packages" "fcitx5-configtool" ] [ "kdePackages" "fcitx5-configtool" ] [ "fcitx5-configtool" ] ];
+in {
   imports = [
     ./apps.nix
     ./dev-tooling.nix
@@ -48,12 +61,12 @@
     enable = true;
     type = "fcitx5";
     fcitx5.waylandFrontend = true;
-    fcitx5.addons = with pkgs.qt6Packages; [
-      fcitx5-rime
-      fcitx5-gtk
-      fcitx5-chinese-addons
-      fcitx5-qt
-      fcitx5-wayland
+    fcitx5.addons = lib.filter (x: x != null) [
+      fcitx5Rime
+      fcitx5Gtk
+      fcitx5ChineseAddons
+      fcitx5Qt
+      fcitx5Wayland
     ];
   };
 
@@ -134,12 +147,12 @@
       vim
       wget
     ]
-    ++ lib.optionals (lib.hasAttrByPath [ "qt6Packages" "fcitx5-configtool" ] pkgs) [ pkgs.qt6Packages.fcitx5-configtool ]
+    ++ lib.optionals (fcitx5Configtool != null) [ fcitx5Configtool ]
     ++ lib.optionals (pkgs ? dms-cli) [ dms-cli ];
 
   warnings =
-    lib.optionals (!(lib.hasAttrByPath [ "qt6Packages" "fcitx5-rime" ] pkgs)) [
-      "qt6Packages.fcitx5-rime is unavailable in this nixpkgs revision; Rime input may be unusable."
+    lib.optionals (fcitx5Rime == null) [
+      "No fcitx5-rime package found in qt6Packages/kdePackages/top-level pkgs; Rime input will be unavailable."
     ];
 
 }
