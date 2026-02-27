@@ -4,11 +4,8 @@ let
 in {
   options.workstation.services = {
     enable = lib.mkEnableOption "workstation service profile";
-
     enableTailscale = lib.mkEnableOption "Tailscale service";
-
     enableProtonVpn = lib.mkEnableOption "Proton VPN GUI package";
-
     enableProtonVpnCli = lib.mkEnableOption "Proton VPN CLI package";
   };
 

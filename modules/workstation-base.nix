@@ -88,12 +88,6 @@
     # Temporarily disabled to avoid khal build/install failures.
     enableCalendarEvents = false;
     enableClipboardPaste = true;
-
-    greeter = {
-      enable = false;
-      compositor.name = "niri";
-      configHome = "/home/${username}";
-    };
   };
 
   services.greetd.enable = lib.mkForce false;

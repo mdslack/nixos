@@ -91,23 +91,14 @@ let
 in {
   options.workstation.apps = {
     enable = lib.mkEnableOption "workstation app profile";
-
     enableBravePwas = lib.mkEnableOption "Brave forced web app installs";
-
     enableSpotify = lib.mkEnableOption "Spotify desktop app";
-
     enableNautilus = lib.mkEnableOption "Nautilus file manager";
-
-    enableGnomeDesktop = lib.mkEnableOption "GNOME desktop compatibility stack";
-
+    enableGnomeDesktop = lib.mkEnableOption "GNOME desktop with GDM";
     enableMaestral = lib.mkEnableOption "Maestral Dropbox client";
-
     enableMaestralGui = lib.mkEnableOption "Maestral GUI";
-
     enableDropbox = lib.mkEnableOption "Dropbox desktop client";
-
     enableDropboxWithNautilus = lib.mkEnableOption "Dropbox + Nautilus integration bundle";
-
     enableZed = lib.mkEnableOption "Zed editor package";
 
     bravePwaInstallList = lib.mkOption {
@@ -230,7 +221,7 @@ in {
     })
 
     (lib.mkIf cfg.enableNautilus {
-      environment.systemPackages = [ pkgs.nautilus ];
+      environment.systemPackages = lib.optionals (!cfg.enableGnomeDesktop) [ pkgs.nautilus ];
     })
 
     (lib.mkIf cfg.enableGnomeDesktop {
@@ -245,12 +236,7 @@ in {
       xdg.portal.extraPortals = lib.mkAfter [ pkgs.xdg-desktop-portal-gnome ];
 
       environment.systemPackages = with pkgs; [
-        gnome-shell
-        gnome-control-center
         gnome-tweaks
-        gnome-system-monitor
-        gnome-disk-utility
-        gnome-text-editor
       ];
 
       warnings = [

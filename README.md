@@ -4,7 +4,7 @@ Flake-based NixOS starter with a full Dank Linux baseline:
 
 - Niri compositor
 - DankMaterialShell (DMS)
-- DankGreeter login manager
+- GDM login manager
 - DankSearch service
 - Home Manager integrated as a NixOS module
 
@@ -133,7 +133,7 @@ If the ISO environment does not have flakes enabled by default:
 sudo nixos-install --flake /mnt/home/<username>/nixos#<host> --option experimental-features "nix-command flakes"
 ```
 
-10. Set the user password before reboot (required to log in via greeter):
+10. Set the user password before reboot (required to log in):
 
 ```bash
 sudo nixos-enter --root /mnt -c 'passwd <username>'
@@ -271,8 +271,9 @@ After rebuild, restart Brave to apply policy changes.
 App package notes:
 
 - Spotify is installed via nixpkgs (`pkgs.spotify`).
-- Nautilus is installed via nixpkgs (`pkgs.nautilus`).
 - GNOME desktop stack is enabled through GDM; you can choose GNOME or Niri session from the login screen.
+- `enableNautilus` mainly matters when GNOME desktop is disabled (GNOME already includes Nautilus).
+- `gnome-tweaks` is added on top of the default GNOME package set.
 - Zed is installed via nixpkgs (`pkgs.zed-editor`).
 - Dropbox core client is optional and off by default (`enableDropbox`).
 - Full Dropbox + Nautilus integration is optional and off by default (`enableDropboxWithNautilus`).
