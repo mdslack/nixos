@@ -1,79 +1,215 @@
-# NixOS Workstation Starter
+# NixOS Infrastructure (Dendritic + flake-parts)
 
-Flake-based NixOS starter with a full Dank Linux baseline:
+This repository defines a feature-first infrastructure architecture using the dendritic pattern and `flake-parts`.
 
-- Niri compositor
-- DankMaterialShell (DMS)
-- GDM login manager
-- DankSearch service
-- Home Manager integrated as a NixOS module
+The system is organized around reusable features, composed into bundles, combined with user modules, then selected by host leaves. Outputs are generated from those leaves.
 
-## Layout
+## Architecture Overview
 
-- `flake.nix` - flake inputs and host definitions (`workstation`, `meerkat`, `framework`)
-- `modules/workstation-base.nix` - shared baseline for all workstation-class hosts
-- `modules/dev-tooling.nix` - shared developer tools module with VM toggle
-- `modules/services.nix` - shared services module (Tailscale + service toggles)
-- `modules/apps.nix` - shared app policy module (Brave PWAs)
-- `hosts/workstation/configuration.nix` - generic workstation template host
-- `hosts/meerkat/configuration.nix` - meerkat host entry
-- `hosts/framework/configuration.nix` - framework host entry
-- `hosts/<host>/hardware-configuration.nix` - per-host hardware profile (replace each)
-- `home/mslack.nix` - user-level Home Manager config
+- **Top-level model**: one top-level module graph (flake-parts), with lower-level modules stored and composed from that graph.
+- **Primary composition axis**: functional concerns (base, wm, desktop, shell, vpn, browser), not host directory structure.
+- **Host model**: hosts select features/bundles/users by leaf declarations.
+- **Output model**: `nixosConfigurations` are built from host leaves, with stable names `<host>-<mode>`.
 
-## First steps
+## Repository Structure
 
-1. Pick a host output: `workstation`, `meerkat`, or `framework`.
-2. Update host usernames in `flake.nix` if needed.
-3. Rebuild:
-
-```bash
-sudo nixos-rebuild switch --flake .#<host>
+```text
+.
+├── flake.nix
+├── flake.lock
+├── modules/
+│   ├── flake/
+│   │   ├── flake-parts.nix
+│   │   ├── meta.nix
+│   │   ├── nixpkgs.nix
+│   │   └── builders/
+│   │       ├── lib.nix
+│   │       └── nixos-configurations.nix
+│   ├── features/
+│   │   ├── base.nix
+│   │   ├── inputmethod.nix
+│   │   ├── terminal/
+│   │   │   ├── default.nix
+│   │   │   ├── alacritty.nix
+│   │   │   ├── ghostty.nix
+│   │   │   └── kitty.nix
+│   │   ├── vpn/
+│   │   │   └── proton.nix
+│   │   ├── browser/
+│   │   │   ├── brave.nix
+│   │   │   └── pwa.nix
+│   │   ├── desktop/
+│   │   │   ├── cosmic.nix
+│   │   │   ├── gnome.nix
+│   │   │   └── kde.nix
+│   │   ├── graphics/
+│   │   │   ├── amd.nix
+│   │   │   ├── egpu.nix
+│   │   │   ├── intel.nix
+│   │   │   └── nvidia.nix
+│   │   ├── session/
+│   │   │   ├── dms.nix
+│   │   │   └── noctalia.nix
+│   │   └── wm/
+│   │       ├── hyprland.nix
+│   │       └── niri.nix
+│   ├── bundles/
+│   │   ├── minimal.nix
+│   │   ├── desktop/
+│   │   │   ├── minimal.nix
+│   │   │   ├── cosmic.nix
+│   │   │   ├── gnome.nix
+│   │   │   └── kde.nix
+│   │   ├── session/
+│   │   │   ├── dms.nix
+│   │   │   └── noctalia.nix
+│   │   ├── server/
+│   │   │   └── minimal.nix
+│   │   └── wm/
+│   │       ├── hyprland.nix
+│   │       └── niri.nix
+│   ├── users/
+│   │   └── mslack.nix
+│   └── hosts/
+│       ├── default.nix
+│       ├── modes.nix
+│       ├── toggles.nix
+│       ├── framework13/
+│       │   ├── default.nix
+│       │   └── facter.json
+│       ├── meerkat/
+│       │   ├── default.nix
+│       │   └── facter.json
+│       └── elitedesk/
+│           ├── default.nix
+│           └── facter.json
+└── assets/
 ```
 
-4. Generate DMS compositor defaults (first login):
+## Module Domains
+
+- **`modules/flake/*`**
+  - Owns composition mechanics, package source wiring, output builders, and shared metadata.
+  - No host/business feature logic.
+- **`modules/features/*`**
+  - Reusable feature modules.
+  - A single feature file may define multiple module classes side-by-side (for example `flake.modules.nixos.<feature>` and `flake.modules.homeManager.<feature>`).
+  - Examples: `base`, `features.browser.brave`, `features.browser.pwa`, `features.wm.hyprland`, `features.desktop.kde`, `features.session.dms`.
+  - Must be host-agnostic.
+- **`modules/bundles/*`**
+  - Curated feature collections.
+  - Encodes compositional intent (for example, `minimal`, `hyprland`, `shell-variants`).
+- **`modules/users/*`**
+  - User identity, account policy, and user-scoped composition modules.
+  - Kept separate from features and bundles for clarity and ownership boundaries.
+  - Can define both NixOS user declarations and Home Manager user composition.
+- **`modules/hosts/*`**
+  - Host leaves and host-specific overrides.
+  - Declares which bundles/features/users define each `<host>-<mode>`.
+
+## Module Classes in Feature Files
+
+- Feature files are organized by concern, not by class-specific directories.
+- It is valid and recommended to define multiple class aspects in the same file when they represent one concern.
+- Typical pattern:
+  - `flake.modules.nixos.<feature> = ...`
+  - `flake.modules.homeManager.<feature> = ...`
+  - optional later: `flake.modules.darwin.<feature> = ...`
+- This is how cross-cutting concern stays co-located and easier to evolve.
+
+## Naming and Key Conventions
+
+- Files/dirs use kebab-case where practical.
+- Aggregation points use `default.nix` where appropriate.
+- Feature keys live under `flake.modules.<class>.*`.
+- Host leaves are prefixed under `hosts/` for builder discovery.
+- Output names are normalized to `<host>-<mode>`.
+
+## Build Pipeline
+
+1. `flake.nix` imports the module tree into flake-parts.
+2. Top-level modules populate `flake.modules` across classes (`nixos`, `homeManager`, optional future classes).
+3. Builder filters leaves by `hosts/` prefix.
+4. Builder evaluates each leaf with `nixpkgs.lib.nixosSystem`.
+5. Outputs are exposed as `flake.nixosConfigurations`.
+
+## Package Source Policy
+
+- **Baseline**: `inputs.nixpkgs` pinned to NixOS stable (`nixos-25.11`).
+- **Selective newer packages**: `inputs.nixpkgs-unstable`, opt-in only.
+- **DMS source**: dedicated `inputs.dms` (not nixpkgs package lookup).
+- **Locking**: all sources are pinned by `flake.lock`.
+
+## Runtime Composition Policy
+
+- Desktop and WM stacks are composed as mutually exclusive leaves.
+- Display manager/session ownership per stack:
+  - `desktop-gnome` -> GNOME + GDM
+  - `desktop-kde` -> Plasma 6 + SDDM
+  - `desktop-cosmic` -> COSMIC + cosmic-greeter
+  - `wm-hyprland` / `wm-niri` -> greetd + WM stack
+- Shell variants (`shell-dms`, `shell-noctalia`) are additive leaf-level choices.
+
+## Browser and PWA Policy
+
+- Browser-wide managed policies are defined in browser feature scope.
+- PWA force-install list and icon overrides are defined in PWA feature scope.
+- Chromium-family policy paths are managed consistently.
+
+## Dotfiles and Home Manager
+
+- Dotfiles are managed as feature-owned Home Manager concerns, not as a separate architecture track.
+- Each concern should live in one feature file where possible, with both system and user aspects together when relevant.
+- Prefer declarative HM module options first (`programs.*`, `services.*`), and use file linking where needed.
+- Repository-owned files can be linked via `home.file` / `xdg.configFile` from a dedicated `files/` tree.
+- `modules/users/*` owns user-specific composition and selects the set of HM features for each user.
+
+## Host Outputs
+
+- Host and mode combinations are available as:
+  - `.#framework13-<mode>`
+  - `.#meerkat-<mode>`
+  - `.#elitedesk-<mode>`
+
+Common modes include:
+
+- `minimal`
+- `gnome`
+- `kde`
+- `cosmic`
+- `hyprland`
+- `niri`
+- `hyprland-dms`
+- `hyprland-noctalia`
+- `niri-dms`
+- `niri-noctalia`
+
+## Fresh Install (Minimal ISO)
+
+These steps assume you booted the official NixOS minimal installer ISO.
+
+1. Bring up networking in the installer environment.
 
 ```bash
-dms setup
+ip a
+ping -c 3 nixos.org
 ```
 
-You can also generate specific pieces:
+If Wi-Fi is needed, use `nmtui`.
 
-```bash
-dms setup binds
-dms setup colors
-dms setup layout
-```
-
-## Install on another machine
-
-These steps assume you are booted into the NixOS installer ISO.
-
-### Partition + format (ext4)
-
-If this is a fresh disk, do this first. Example device: `/dev/nvme0n1`.
-
-1. Identify your install disk:
+2. Partition and format the target disk (example: `/dev/nvme0n1`).
 
 ```bash
 lsblk
-```
-
-2. Partition the disk with `cfdisk` (GPT). Example disk: `/dev/nvme0n1`.
-
-```bash
 sudo cfdisk /dev/nvme0n1
 ```
 
-Inside `cfdisk`:
+Recommended GPT layout:
+- `1G` EFI System
+- optional swap (`8G` or as desired)
+- remainder as root filesystem
 
-- Select `gpt` when prompted for label type.
-- Create partition 1: `1G`, set type to `EFI System`.
-- Create partition 2: optional swap (for example `8G`), set type to `Linux swap`.
-- Create partition 3: remaining space, type `Linux filesystem`.
-- Choose `Write`, type `yes`, then `Quit`.
-
-3. Format partitions (adjust partition numbers to your disk):
+Format (adjust partition names if different):
 
 ```bash
 sudo mkfs.fat -F 32 -n boot /dev/nvme0n1p1
@@ -81,9 +217,7 @@ sudo mkfs.ext4 -L nixos /dev/nvme0n1p3
 sudo mkswap -L swap /dev/nvme0n1p2
 ```
 
-If you skip swap, omit `mkswap` and the later `swapon` command.
-
-4. Mount your target filesystem:
+3. Mount target filesystem.
 
 ```bash
 sudo mount /dev/disk/by-label/nixos /mnt
@@ -92,211 +226,108 @@ sudo mount /dev/disk/by-label/boot /mnt/boot
 sudo swapon /dev/disk/by-label/swap
 ```
 
-5. Clone this repo into `~/nixos` in the target system:
+4. Clone this repo into the target system.
 
 ```bash
-sudo git clone <YOUR_REPO_URL> /mnt/home/<username>/nixos
-cd /mnt/home/<username>/nixos
+sudo mkdir -p /mnt/home/mslack
+sudo git clone <YOUR_REPO_URL> /mnt/home/mslack/nixos
 ```
 
-6. Choose the host name for this machine (`workstation`, `meerkat`, or `framework`).
+5. (Recommended) Generate hardware/facter data on the target machine and update host module files.
 
-7. Edit `flake.nix` for this machine:
+- Generate facter report for the target host:
 
-- set `hosts.<host>.username` if needed
-- keep `nixpkgs` on `nixos-unstable` for Dank Linux compatibility
+```bash
+sudo nix run github:numtide/nixos-facter -- -o /mnt/home/mslack/nixos/modules/hosts/<host>/facter.json
+```
 
-8. Generate hardware config, then copy it into this host path:
+- Generate hardware scan for reference and merge values into `modules/hosts/<host>/default.nix` as needed:
 
 ```bash
 sudo nixos-generate-config --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/<username>/nixos/hosts/<host>/hardware-configuration.nix
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/<host>-hardware-configuration.nix
 ```
 
-Why this pattern: in the installer, your cloned repo path may be owned by root. Generating into `/mnt/etc/nixos` first avoids shell redirection permission issues.
+Note: this repository keeps host hardware settings in `modules/hosts/<host>/default.nix`, not `/etc/nixos/hardware-configuration.nix`. Use the copied file in `/tmp` as a temporary reference and merge only what you need.
 
-If you write directly with redirection, remember `sudo cmd > file` still writes as your current user. Use root shell redirection instead:
+6. Install using a specific host-mode output.
 
 ```bash
-sudo sh -c 'nixos-generate-config --show-hardware-config > /mnt/home/<username>/nixos/hosts/<host>/hardware-configuration.nix'
+sudo nixos-install --flake /mnt/home/mslack/nixos#<host>-<mode>
 ```
 
-9. Install from the cloned flake path:
+If flakes are not enabled in the installer environment:
 
 ```bash
-sudo nixos-install --flake /mnt/home/<username>/nixos#<host>
+sudo nixos-install --flake /mnt/home/mslack/nixos#<host>-<mode> --option experimental-features "nix-command flakes"
 ```
 
-If the ISO environment does not have flakes enabled by default:
+7. Set password(s) before reboot (at minimum, `mslack`).
 
 ```bash
-sudo nixos-install --flake /mnt/home/<username>/nixos#<host> --option experimental-features "nix-command flakes"
+sudo nixos-enter --root /mnt -c 'passwd mslack'
+sudo nixos-enter --root /mnt -c 'passwd root'
 ```
 
-10. Set the user password before reboot (required to log in):
-
-```bash
-sudo nixos-enter --root /mnt -c 'passwd <username>'
-```
-
-11. Reboot into the new system:
+8. Reboot into the new system.
 
 ```bash
 sudo reboot
 ```
 
-12. After first login, if the repo is root-owned from install-time cloning, fix ownership:
+After first boot, if the repo was cloned by root in the installer, fix ownership:
 
 ```bash
-sudo chown -R "$USER":users ~/nixos
+sudo chown -R mslack:users ~/nixos
 ```
 
-13. Initialize DMS config:
-
-```bash
-dms setup
-```
-
-## Update workflow
-
-After install, future updates are:
+9. Post-install update flow.
 
 ```bash
 cd ~/nixos
 git pull
-sudo nixos-rebuild switch --flake ~/nixos#<host>
+sudo nixos-rebuild switch --flake .#<host>-<mode>
 ```
 
-You can keep `/etc/nixos` untouched when using flakes like this.
+## Operational Commands
 
-## Dotfiles location
-
-- Keep your Home Manager-managed dotfiles repo at `~/dotfiles`.
-- Keep your NixOS flake repo at `~/nixos`.
-- Home Manager auto-symlinks these `~/dotfiles` paths into `~/.config` when present:
-  - `dms/.config/DankMaterialShell` -> `~/.config/DankMaterialShell`
-  - `lazyvim/.config/nvim` -> `~/.config/nvim`
-  - `zed/.config/zed` -> `~/.config/zed`
-  - `markdown/.config/markdown` -> `~/.config/markdown`
-- Home Manager also links non-`~/.config` entries when present:
-  - `zsh/.zshrc` -> `~/.zshrc`
-  - `bash/.bashrc` -> `~/.bashrc`
-  - `git/.gitconfig` -> `~/.gitconfig`
-  - `ssh/.ssh/config` -> `~/.ssh/config`
-  - `opencode/.opencode/opencode.jsonc` -> `~/.opencode/opencode.jsonc`
-- These paths are managed as symlinks by Home Manager; keep the corresponding files/directories present in `~/dotfiles`.
-- `~/.config/yazi` is managed declaratively by Home Manager (`programs.yazi`), not symlinked from dotfiles.
-
-Example:
+Evaluate outputs:
 
 ```bash
-git clone <YOUR_DOTFILES_REPO_URL> ~/dotfiles
-sudo nixos-rebuild switch --flake ~/nixos#<host>
+nix flake show --no-write-lock-file
 ```
 
-## Notes
-
-- This config follows Dank Linux NixOS flake docs by using `github:AvengeMedia/DankMaterialShell/stable`.
-- DMS is enabled through the flake-provided NixOS modules.
-- `nixpkgs` is pinned to `nixos-unstable` for best Dank Linux compatibility.
-- `system.stateVersion` and `home.stateVersion` stay at `25.11` for migration defaults.
-- GNOME keyring is enabled and wired into GDM PAM so tools like `gh auth login` can use system credential storage.
-- Chinese input is enabled via `fcitx5` with `fcitx5-rime`.
-- Yazi Catppuccin flavor is packaged locally in `packages/yazi-flavors/catppuccin-mocha.nix` for reproducibility.
-
-## Dev tooling module
-
-The shared base imports `modules/dev-tooling.nix` and enables a practical default toolchain:
-
-- `git-lfs`, `lazygit`
-- `fd`, `fzf`, `ripgrep`
-- `pandoc`, `nodejs`, `mermaid-cli`
-- `protobuf` (`protoc`), `rustup`, `mdbook`
-- `texlive.combined.scheme-medium`
-- AI CLIs: `opencode`, `codex`, `claude-code`
-
-Yazi itself is configured in Home Manager via `programs.yazi`, including a locally packaged Catppuccin Mocha flavor.
-
-VM stack is off by default. To enable it, set this in a host config:
-
-```nix
-workstation.devTooling.enableVmManager = true;
-```
-
-## Services module
-
-The shared base imports `modules/services.nix` and enables Tailscale by default.
-
-- Tailscale + Proton VPN GUI are installed by default.
-- `proton-vpn-cli` is installed when available in your nixpkgs revision.
-
-Proton VPN GUI can be launched with:
+Evaluate one configuration attribute:
 
 ```bash
-protonvpn-app
+nix eval --no-write-lock-file .#nixosConfigurations.framework13-minimal.config.system.stateVersion
 ```
 
-Convenience wrappers are also available:
+Apply one configuration on target host:
 
 ```bash
-protonvpn-status
-protonvpn-up
-protonvpn-down
+sudo nixos-rebuild switch --flake .#framework13-minimal
 ```
 
-If `protonvpn-cli` exists, wrappers use it; otherwise they use `nmcli` with Proton VPN NetworkManager profiles.
-
-## Apps module
-
-The shared base imports `modules/apps.nix` and enables Brave forced web app installs.
-
-- Brave PWAs, Spotify, GNOME desktop stack (including Nautilus), Maestral (+ GUI when available), and Zed are installed by default.
-
-Managed policy path:
-
-```text
-/etc/brave/policies/managed/workstation.json
-```
-
-After rebuild, restart Brave to apply policy changes.
-
-App package notes:
-
-- Spotify is installed via nixpkgs (`pkgs.spotify`).
-- GNOME desktop stack is enabled through GDM; you can choose GNOME or Niri session from the login screen.
-- Nautilus is included via the GNOME desktop stack.
-- `gnome-tweaks` is added on top of the default GNOME package set.
-- Zed is installed via nixpkgs (`pkgs.zed-editor`).
-- Maestral is used as the Dropbox client path by default (`maestral` + `maestral-gui` when available).
-
-Custom PWA icons are shipped in `assets/pwa-icons` and linked to `/etc/pwa-icons`.
-After Brave has created PWA desktop files, apply icon overrides with:
+Dry-run activation first:
 
 ```bash
-brave-pwa-icons-apply
+sudo nixos-rebuild dry-run --flake .#framework13-minimal
 ```
 
-Optional app overrides are supported too:
+## Design Rules
 
-- `/etc/pwa-icons/alacritty.png` -> `Alacritty`
-- `/etc/pwa-icons/zed.png` -> `Zed`
+- Keep features reusable and host-agnostic.
+- Keep users as a first-class domain (`modules/users/*`), not embedded ad hoc in hosts.
+- Keep host-specific logic in host leaves.
+- Keep package source boundaries explicit.
+- Prefer composition over duplication.
+- Keep `flake.nix` small and declarative.
 
-If those files are not present, `brave-pwa-icons-apply` leaves Alacritty/Zed icons unchanged.
+## References
 
-## Temporary utilities
-
-When you need one-off tools for debugging or verification, prefer ephemeral shells instead of permanently adding packages to system config.
-
-Example (`vainfo` from `libva-utils`):
-
-```bash
-nix shell nixpkgs#libva-utils -c vainfo
-```
-
-This keeps your base configuration minimal while still giving you access to diagnostics on demand.
-
-## Next migration steps from your Fedora/Ansible setup
-
-- Add optional Doppler bootstrap for SSH key delivery.
-- Add remaining host-specific overrides (power, peripherals, hardware quirks).
-- Run one fresh-install validation per host and capture any manual post-install steps.
+- https://github.com/mightyiam/dendritic
+- https://discourse.nixos.org/t/the-dendritic-pattern/61271
+- https://github.com/drupol/infra
+- https://not-a-number.io/2025/refactoring-my-infrastructure-as-code-configurations/
+- https://github.com/Doc-Steve/dendritic-design-with-flake-parts

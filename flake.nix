@@ -1,69 +1,37 @@
 {
-  description = "NixOS workstation with full Dank Linux + Home Manager";
+  description = "NixOS Flake Parts Entry-point";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    stylix.url = "github:danth/stylix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nvf = {
+      url = "github:NotAShelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.noctalia-qs.follows = "noctalia-qs";
+    };
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
-  outputs = { nixpkgs, home-manager, dms, ... }:
-    let
-      system = "x86_64-linux";
-      mkHost = {
-        hostname,
-        username,
-        module,
-      }:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit hostname username;
-          };
-          modules = [
-            dms.nixosModules.dank-material-shell
-            dms.nixosModules.greeter
-            module
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.extraSpecialArgs = {
-                inherit username;
-              };
-              home-manager.users.${username} = import ./home/mslack.nix;
-            }
-          ];
-        };
-
-      hosts = {
-        workstation = {
-          username = "mslack";
-          module = ./hosts/workstation/configuration.nix;
-        };
-        meerkat = {
-          username = "mslack";
-          module = ./hosts/meerkat/configuration.nix;
-        };
-        framework = {
-          username = "mslack";
-          module = ./hosts/framework/configuration.nix;
-        };
-      };
-    in {
-      nixosConfigurations = nixpkgs.lib.mapAttrs
-        (hostname: cfg:
-          mkHost {
-            inherit hostname;
-            inherit (cfg) username module;
-          })
-        hosts;
-    };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 }
