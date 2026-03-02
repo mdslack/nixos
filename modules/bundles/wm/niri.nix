@@ -1,5 +1,5 @@
 {config, ...}: {
-  flake.modules.nixos.wm-niri = {
+  flake.modules.nixos.bundle-wm-niri = {
     imports = [
       config.flake.modules.nixos.desktop-minimal
       config.flake.modules.nixos.wm-niri

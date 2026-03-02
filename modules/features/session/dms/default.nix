@@ -1,8 +1,13 @@
-{inputs, ...}: {
-  flake.modules.nixos.session-dms = {
+{inputs, lib, ...}: {
+  flake.modules.nixos.session-dms = {pkgsUnstable, ...}: {
     imports = [
-      inputs.dms.nixosModules.dank-material-shell
-      inputs.dms.nixosModules.greeter
+      inputs.dms.nixosModules.default
+    ];
+
+    nixpkgs.overlays = [
+      (final: prev: {
+        dgop = pkgsUnstable.dgop;
+      })
     ];
 
     programs.dank-material-shell = {
@@ -17,10 +22,11 @@
       enableClipboardPaste = true;
     };
 
-    programs.dsearch.enable = true;
   };
 
   flake.modules.homeManager.session-dms = {
+    xdg.configFile."niri/config.kdl".enable = lib.mkForce false;
+
     xdg.configFile."DankMaterialShell/settings.json".source = ./settings.json;
     xdg.configFile."DankMaterialShell/.firstlaunch".text = "";
     xdg.configFile."DankMaterialShell/.changelog-1.4".text = "";

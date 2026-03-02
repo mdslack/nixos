@@ -1,11 +1,8 @@
-{
-  inputs,
-  lib,
-  options,
-  pkgs,
-  ...
-}: {
-  flake.modules.nixos.theme = {
+{inputs, ...}: {
+  flake.modules.nixos.theme-stylix = {
+    pkgs,
+    ...
+  }: {
     imports = [
       inputs.stylix.nixosModules.stylix
     ];
@@ -15,13 +12,9 @@
         enable = true;
         polarity = "dark";
         base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+        targets.neovim.enable = false;
+        targets.yazi.enable = false;
       };
-    }
-    // lib.optionalAttrs (lib.hasAttrByPath ["stylix" "targets" "neovim" "enable"] options) {
-      stylix.targets.neovim.enable = false;
-    }
-    // lib.optionalAttrs (lib.hasAttrByPath ["stylix" "targets" "yazi" "enable"] options) {
-      stylix.targets.yazi.enable = false;
     };
   };
 }

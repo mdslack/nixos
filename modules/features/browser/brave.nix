@@ -1,16 +1,11 @@
 {...}: {
   flake.modules.nixos.browser-brave = {
-    config,
     pkgs,
     ...
   }: {
     environment.systemPackages = [
       pkgs.brave
     ];
-
-    environment.etc."brave/policies/managed/workstation-pwa.json".text = builtins.toJSON {
-      WebAppInstallForceList = config.flake.meta.browser.pwaInstallForceList;
-    };
 
     environment.etc."brave/policies/managed/workstation-browser.json".text = builtins.toJSON {
       PasswordManagerEnabled = false;

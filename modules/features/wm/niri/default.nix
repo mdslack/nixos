@@ -1,5 +1,5 @@
-{pkgs, ...}: {
-  flake.modules.nixos.wm-niri = {
+{...}: {
+  flake.modules.nixos.wm-niri = {pkgs, ...}: {
     programs.niri.enable = true;
 
     services.greetd.enable = true;
@@ -34,11 +34,6 @@
   flake.modules.homeManager.wm-niri = {
     home.sessionVariables.TERMINAL = "ghostty";
 
-    programs.niri = {
-      enable = true;
-      settings = {
-        prefer-no-csd = true;
-      };
-    };
+    xdg.configFile."niri/config.kdl".source = ./config.kdl;
   };
 }

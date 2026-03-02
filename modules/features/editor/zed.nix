@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{...}: {
   # Included in default editor baseline.
-  flake.modules.nixos.editor-zed = {
+  flake.modules.nixos.editor-zed = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.zed-editor
     ];

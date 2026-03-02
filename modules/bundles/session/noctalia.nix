@@ -1,5 +1,5 @@
 {config, ...}: {
-  flake.modules.nixos.session-noctalia = {
+  flake.modules.nixos.bundle-session-noctalia = {
     imports = [
       config.flake.modules.nixos.session-noctalia
     ];
