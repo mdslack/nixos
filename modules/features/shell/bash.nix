@@ -1,9 +1,9 @@
 {...}: {
-  flake.modules.nixos.features.shell.bash = {
+  flake.modules.nixos.shell-bash = {
     programs.bash.enable = true;
   };
 
-  flake.modules.homeManager.features.shell.bash = {
+  flake.modules.homeManager.shell-bash = {
     programs.bash = {
       enable = true;
       sessionVariables = {

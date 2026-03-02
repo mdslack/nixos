@@ -1,5 +1,5 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.ai.claude = {
+{...}: {
+  flake.modules.nixos.ai-claude = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs."claude-code"
     ];

@@ -1,5 +1,9 @@
-{config, pkgs, ...}: {
-  flake.modules.nixos.features.graphics.nvidia = {
+{...}: {
+  flake.modules.nixos.graphics-nvidia = {
+    config,
+    pkgs,
+    ...
+  }: {
     hardware.enableRedistributableFirmware = true;
     hardware.graphics.enable = true;
     hardware.graphics.enable32Bit = true;

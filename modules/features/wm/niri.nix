@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  flake.modules.nixos.features.wm.niri = {
+  flake.modules.nixos.wm-niri = {
     programs.niri.enable = true;
 
     services.greetd.enable = true;
@@ -31,7 +31,7 @@
     ];
   };
 
-  flake.modules.homeManager.features.wm.niri = {
+  flake.modules.homeManager.wm-niri = {
     home.sessionVariables.TERMINAL = "ghostty";
 
     programs.niri = {

@@ -1,7 +1,7 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.ai.gemini = {
+{...}: {
+  flake.modules.nixos.ai-gemini = {pkgs, ...}: {
     environment.systemPackages = [
-      pkgs.gemini-cli
+      pkgs."gemini-cli"
     ];
   };
 }

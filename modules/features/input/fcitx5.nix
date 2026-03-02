@@ -1,5 +1,5 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.input.fcitx5 = {
+{...}: {
+  flake.modules.nixos.input-fcitx5 = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       rime-data
     ];

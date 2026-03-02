@@ -1,11 +1,11 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.terminal.kitty = {
+{...}: {
+  flake.modules.nixos.terminal-kitty = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.kitty
     ];
   };
 
-  flake.modules.homeManager.features.terminal.kitty = {
+  flake.modules.homeManager.terminal-kitty = {
     programs.kitty = {
       enable = true;
       settings = {

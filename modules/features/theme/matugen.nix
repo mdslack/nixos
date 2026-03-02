@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  flake.modules.nixos.features.theme.matugen = {
+  flake.modules.nixos.theme = {
     environment.systemPackages = [
       pkgs.matugen
     ];

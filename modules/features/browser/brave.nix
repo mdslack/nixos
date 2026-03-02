@@ -1,12 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  flake.modules.nixos.features.browser.brave = {
-    imports = [
-      config.flake.modules.nixos.features.browser.pwa
+{...}: {
+  flake.modules.nixos.browser-brave = {
+    config,
+    pkgs,
+    ...
+  }: {
+    environment.systemPackages = [
+      pkgs.brave
     ];
 
     environment.etc."brave/policies/managed/workstation-pwa.json".text = builtins.toJSON {
@@ -31,10 +30,13 @@
     };
   };
 
-  flake.modules.homeManager.features.browser.brave = {
+  flake.modules.homeManager.browser-brave = {
+    pkgs,
+    lib,
+    ...
+  }: {
     programs.chromium = {
       enable = true;
-      package = pkgs.brave;
     };
 
     home.activation.braveDefaults = lib.hm.dag.entryAfter ["writeBoundary"] ''

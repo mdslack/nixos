@@ -1,21 +1,18 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.terminal = {
+{config, ...}: {
+  flake.modules.nixos.terminal = {
     imports = [
-      ./alacritty.nix
-      ./ghostty.nix
-      ./kitty.nix
-    ];
-
-    fonts.packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
+      config.flake.modules.nixos.terminal-fonts
+      config.flake.modules.nixos.terminal-alacritty
+      config.flake.modules.nixos.terminal-ghostty
+      config.flake.modules.nixos.terminal-kitty
     ];
   };
 
-  flake.modules.homeManager.features.terminal = {
+  flake.modules.homeManager.terminal = {
     imports = [
-      ./alacritty.nix
-      ./ghostty.nix
-      ./kitty.nix
+      config.flake.modules.homeManager.terminal-alacritty
+      config.flake.modules.homeManager.terminal-ghostty
+      config.flake.modules.homeManager.terminal-kitty
     ];
   };
 }

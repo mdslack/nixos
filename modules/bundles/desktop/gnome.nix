@@ -1,8 +1,8 @@
 {config, ...}: {
-  flake.modules.nixos.desktop.gnome = {
+  flake.modules.nixos.desktop-gnome = {
     imports = [
-      config.flake.modules.nixos.desktop.minimal
-      config.flake.modules.nixos.features.desktop.gnome
+      config.flake.modules.nixos.desktop-minimal
+      config.flake.modules.nixos.desktop-gnome
     ];
   };
 }

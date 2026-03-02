@@ -1,11 +1,11 @@
 {config, ...}: {
-  flake.modules.nixos.session.noctalia = {
+  flake.modules.nixos.session-noctalia = {
     imports = [
-      config.flake.modules.nixos.features.session.noctalia
+      config.flake.modules.nixos.session-noctalia
     ];
 
     home-manager.sharedModules = [
-      config.flake.modules.homeManager.features.session.noctalia
+      config.flake.modules.homeManager.session-noctalia
     ];
   };
 }

@@ -1,15 +1,15 @@
-{...}: {
-  flake.modules.nixos.features.shell = {
+{config, ...}: {
+  flake.modules.nixos.shell = {
     imports = [
-      ./bash.nix
-      ./zsh.nix
+      config.flake.modules.nixos.shell-bash
+      config.flake.modules.nixos.shell-zsh
     ];
   };
 
-  flake.modules.homeManager.features.shell = {
+  flake.modules.homeManager.shell = {
     imports = [
-      ./bash.nix
-      ./zsh.nix
+      config.flake.modules.homeManager.shell-bash
+      config.flake.modules.homeManager.shell-zsh
     ];
   };
 }

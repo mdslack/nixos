@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  flake.modules.nixos.features.desktop.kde = {
+  flake.modules.nixos.desktop-kde = {
     services.displayManager.sddm.enable = true;
     services.displayManager.sddm.wayland.enable = true;
     services.desktopManager.plasma6.enable = true;

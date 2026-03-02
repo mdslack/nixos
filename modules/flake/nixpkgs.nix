@@ -10,6 +10,7 @@
     ../devshells/sets/node.nix
     ../devshells/sets/dotnet.nix
     ../devshells/sets/docs.nix
+    ../devshells/sets/nix.nix
     ../devshells/sets/secrets/doppler.nix
     ../devshells/sets/tools/devenv.nix
   ];

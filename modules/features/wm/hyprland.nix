@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  flake.modules.nixos.features.wm.hyprland = {
+  flake.modules.nixos.wm-hyprland = {
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;

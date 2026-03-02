@@ -1,5 +1,5 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.graphics.amd = {
+{...}: {
+  flake.modules.nixos.graphics-amd = {pkgs, ...}: {
     hardware.enableRedistributableFirmware = true;
     hardware.graphics.enable = true;
     hardware.graphics.enable32Bit = true;

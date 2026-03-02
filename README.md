@@ -14,6 +14,7 @@ The system is organized around reusable features, composed into bundles, combine
 ## Repository Structure
 
 ```text
+# abridged tree (key directories and files)
 .
 ├── flake.nix
 ├── flake.lock
@@ -27,29 +28,36 @@ The system is organized around reusable features, composed into bundles, combine
 │   │       └── nixos-configurations.nix
 │   ├── features/
 │   │   ├── base.nix
-│   │   ├── inputmethod.nix
+│   │   ├── default.nix
+│   │   ├── ai/
+│   │   │   ├── default.nix
+│   │   │   ├── opencode.nix
+│   │   │   ├── codex.nix
+│   │   │   ├── claude.nix
+│   │   │   └── gemini.nix
+│   │   ├── browser/
+│   │   │   ├── default.nix
+│   │   │   ├── brave.nix
+│   │   │   └── pwa.nix
+│   │   ├── input/
+│   │   │   ├── default.nix
+│   │   │   ├── fcitx5.nix
+│   │   │   └── pipewire.nix
 │   │   ├── terminal/
 │   │   │   ├── default.nix
+│   │   │   ├── fonts.nix
 │   │   │   ├── alacritty.nix
 │   │   │   ├── ghostty.nix
 │   │   │   └── kitty.nix
-│   │   ├── vpn/
-│   │   │   └── proton.nix
-│   │   ├── browser/
-│   │   │   ├── brave.nix
-│   │   │   └── pwa.nix
+│   │   ├── session/
+│   │   │   ├── dms/
+│   │   │   │   ├── default.nix
+│   │   │   │   └── settings.json
+│   │   │   └── noctalia.nix
 │   │   ├── desktop/
 │   │   │   ├── cosmic.nix
 │   │   │   ├── gnome.nix
 │   │   │   └── kde.nix
-│   │   ├── graphics/
-│   │   │   ├── amd.nix
-│   │   │   ├── egpu.nix
-│   │   │   ├── intel.nix
-│   │   │   └── nvidia.nix
-│   │   ├── session/
-│   │   │   ├── dms.nix
-│   │   │   └── noctalia.nix
 │   │   └── wm/
 │   │       ├── hyprland.nix
 │   │       └── niri.nix
@@ -94,7 +102,7 @@ The system is organized around reusable features, composed into bundles, combine
 - **`modules/features/*`**
   - Reusable feature modules.
   - A single feature file may define multiple module classes side-by-side (for example `flake.modules.nixos.<feature>` and `flake.modules.homeManager.<feature>`).
-  - Examples: `base`, `features.browser.brave`, `features.browser.pwa`, `features.wm.hyprland`, `features.desktop.kde`, `features.session.dms`.
+  - Examples: `base`, `browser`, `browser-brave`, `browser-pwa`, `wm-hyprland`, `desktop-kde`, `session-dms`.
   - Must be host-agnostic.
 - **`modules/bundles/*`**
   - Curated feature collections.
@@ -122,6 +130,7 @@ The system is organized around reusable features, composed into bundles, combine
 - Files/dirs use kebab-case where practical.
 - Aggregation points use `default.nix` where appropriate.
 - Feature keys live under `flake.modules.<class>.*`.
+- Naming follows `<domain>` for aggregates and `<domain>-<variant>` for variants.
 - Host leaves are prefixed under `hosts/` for builder discovery.
 - Output names are normalized to `<host>-<mode>`.
 
@@ -148,7 +157,34 @@ The system is organized around reusable features, composed into bundles, combine
   - `desktop-kde` -> Plasma 6 + SDDM
   - `desktop-cosmic` -> COSMIC + cosmic-greeter
   - `wm-hyprland` / `wm-niri` -> greetd + WM stack
-- Shell variants (`shell-dms`, `shell-noctalia`) are additive leaf-level choices.
+- Session variants (`session-dms`, `session-noctalia`) are additive leaf-level choices.
+
+## Tailscale SSH and ACL Policy
+
+- Inter-host administrative access is expected to use Tailscale identity and ACL policy, not ad hoc LAN SSH trust.
+- ACLs and SSH authorization policy are managed in the Tailscale admin console (`admin.tailscale.com`), under the tailnet policy file.
+- This repo enables Tailscale SSH via `services.tailscale.extraSetFlags = [ "--ssh" ]`.
+- OpenSSH remains enabled as a hardened fallback with password and keyboard-interactive authentication disabled and root login disallowed.
+- When Tailscale is enabled, `tailscale0` is treated as a trusted firewall interface for tailnet traffic.
+
+Recommended rollout:
+
+1. Tag nodes in Tailscale (for example by host role).
+2. Define ACL grants by user/group/tag for SSH access.
+3. Validate with `tailscale status` and `tailscale ssh <host>`.
+4. Keep emergency fallback access documented for recovery scenarios.
+
+SSH key notes:
+
+- For Tailscale SSH, no manual per-host SSH key distribution is required for normal access.
+- OpenSSH server host keys are generated automatically on each machine by `services.openssh`.
+- For OpenSSH fallback between hosts/users, generate user keys and declare their public keys in Nix:
+
+```bash
+ssh-keygen -t ed25519 -a 100 -f ~/.ssh/id_ed25519_<host-or-purpose>
+```
+
+- Optional: use hardware-backed FIDO2 keys (`*-sk`) for admin access where supported.
 
 ## Browser and PWA Policy
 

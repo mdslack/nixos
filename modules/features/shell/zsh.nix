@@ -1,9 +1,9 @@
 {...}: {
-  flake.modules.nixos.features.shell.zsh = {
+  flake.modules.nixos.shell-zsh = {
     programs.zsh.enable = true;
   };
 
-  flake.modules.homeManager.features.shell.zsh = {
+  flake.modules.homeManager.shell-zsh = {
     programs.zsh = {
       enable = true;
       enableCompletion = true;
@@ -26,7 +26,7 @@
           "sudo"
         ];
       };
-      initExtra = ''
+      initContent = ''
         setopt prompt_subst
 
         nix_shell_prompt() {

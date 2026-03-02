@@ -31,6 +31,11 @@
 
       docs = pkgs.mkShell {
         packages = packagesFor ["base" "docs"];
+        MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
+      };
+
+      nix = pkgs.mkShell {
+        packages = packagesFor ["base" "nix"];
       };
 
       proto = pkgs.mkShell {
@@ -47,9 +52,11 @@
           "dotnet"
           "protobuf"
           "docs"
+          "nix"
           "devenv"
           "doppler"
         ];
+        MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
       };
     };
   };

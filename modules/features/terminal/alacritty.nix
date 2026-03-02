@@ -1,11 +1,11 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.terminal.alacritty = {
+{...}: {
+  flake.modules.nixos.terminal-alacritty = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.alacritty
     ];
   };
 
-  flake.modules.homeManager.features.terminal.alacritty = {
+  flake.modules.homeManager.terminal-alacritty = {
     programs.alacritty = {
       enable = true;
       settings = {

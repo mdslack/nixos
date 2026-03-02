@@ -5,7 +5,7 @@
   pkgs,
   ...
 }: {
-  flake.modules.nixos.features.theme.stylix = {
+  flake.modules.nixos.theme = {
     imports = [
       inputs.stylix.nixosModules.stylix
     ];

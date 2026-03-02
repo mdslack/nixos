@@ -1,10 +1,10 @@
 {config, lib, ...}: let
-  M = name: lib.attrByPath (lib.splitString "." name) {} config.flake.modules.nixos;
+  M = name: config.flake.modules.nixos.${name} or {};
   modes = lib.mapAttrs (_: featureNames: map M featureNames) config.flake.meta.hostModes;
   hostFeatures = [
-    config.flake.modules.nixos.features.graphics.amd
+    config.flake.modules.nixos.graphics-amd
   ] ++ lib.optionals (config.flake.meta.hostToggles.framework13.egpu or false) [
-    config.flake.modules.nixos.features.graphics.egpu
+    config.flake.modules.nixos.graphics-egpu
   ];
 in {
   flake.modules.nixos = lib.mapAttrs' (modeName: modeImports:
@@ -13,6 +13,9 @@ in {
       networking.hostName = "framework13";
       facter.reportPath = ./facter.json;
       services.fprintd.enable = true;
+
+      boot.loader.systemd-boot.enable = lib.mkDefault true;
+      boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
       fileSystems."/" = lib.mkDefault {
         device = "/dev/disk/by-label/nixos";

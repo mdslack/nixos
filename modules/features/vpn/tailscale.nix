@@ -1,5 +1,8 @@
 {...}: {
-  flake.modules.nixos.features.vpn.tailscale = {
-    services.tailscale.enable = true;
+  flake.modules.nixos.vpn-tailscale = {
+    services.tailscale = {
+      enable = true;
+      extraSetFlags = ["--ssh"];
+    };
   };
 }

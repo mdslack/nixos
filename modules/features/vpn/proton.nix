@@ -1,8 +1,7 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.vpn.proton = {
+{...}: {
+  flake.modules.nixos.vpn-proton = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.protonvpn-gui
-      pkgs."proton-vpn-cli"
     ];
   };
 }

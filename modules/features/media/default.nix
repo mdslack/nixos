@@ -1,7 +1,7 @@
 {config, ...}: {
-  flake.modules.nixos.features.media = {
+  flake.modules.nixos.media = {
     imports = [
-      config.flake.modules.nixos.features.media.spotify
+      config.flake.modules.nixos.media-spotify
     ];
   };
 }

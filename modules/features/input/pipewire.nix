@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.nixos.features.input.pipewire = {
+  flake.modules.nixos.input-pipewire = {
     services.pipewire = {
       enable = true;
       pulse.enable = true;

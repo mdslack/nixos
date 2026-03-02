@@ -1,8 +1,14 @@
-{...}: {
-  flake.modules.nixos.features.ai = {
+{config, ...}: {
+  flake.modules.nixos.ai = {
     imports = [
-      ./opencode.nix
-      ./codex.nix
+      config.flake.modules.nixos.ai-opencode
+      config.flake.modules.nixos.ai-codex
+    ];
+  };
+
+  flake.modules.homeManager.ai = {
+    imports = [
+      config.flake.modules.homeManager.ai-opencode
     ];
   };
 }

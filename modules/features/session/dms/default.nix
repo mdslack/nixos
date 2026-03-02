@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.nixos.features.session.dms = {
+  flake.modules.nixos.session-dms = {
     imports = [
       inputs.dms.nixosModules.dank-material-shell
       inputs.dms.nixosModules.greeter
@@ -20,7 +20,7 @@
     programs.dsearch.enable = true;
   };
 
-  flake.modules.homeManager.features.session.dms = {
+  flake.modules.homeManager.session-dms = {
     xdg.configFile."DankMaterialShell/settings.json".source = ./settings.json;
     xdg.configFile."DankMaterialShell/.firstlaunch".text = "";
     xdg.configFile."DankMaterialShell/.changelog-1.4".text = "";

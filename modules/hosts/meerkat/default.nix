@@ -1,10 +1,10 @@
 {config, lib, ...}: let
-  M = name: lib.attrByPath (lib.splitString "." name) {} config.flake.modules.nixos;
+  M = name: config.flake.modules.nixos.${name} or {};
   modes = lib.mapAttrs (_: featureNames: map M featureNames) config.flake.meta.hostModes;
   hostFeatures = [
-    config.flake.modules.nixos.features.graphics.amd
+    config.flake.modules.nixos.graphics-amd
   ] ++ lib.optionals (config.flake.meta.hostToggles.meerkat.egpu or false) [
-    config.flake.modules.nixos.features.graphics.egpu
+    config.flake.modules.nixos.graphics-egpu
   ];
 in {
   flake.modules.nixos = lib.mapAttrs' (modeName: modeImports:
@@ -12,6 +12,9 @@ in {
       imports = modeImports ++ hostFeatures;
       networking.hostName = "meerkat";
       facter.reportPath = ./facter.json;
+
+      boot.loader.systemd-boot.enable = lib.mkDefault true;
+      boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
       boot.initrd.availableKernelModules = ["xhci_pci" "thunderbolt" "nvme" "usb_storage" "usbhid" "sd_mod"];
       boot.initrd.kernelModules = [];
@@ -34,7 +37,7 @@ in {
       ];
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-      hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+      hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
     })
   modes;
 }

@@ -1,15 +1,14 @@
 {config, ...}: {
-  flake.modules.nixos.features.editor = {
+  flake.modules.nixos.editor = {
     imports = [
-      config.flake.modules.nixos.features.editor.neovim
-      config.flake.modules.nixos.features.editor.zed
+      config.flake.modules.nixos.editor-neovim
+      config.flake.modules.nixos.editor-zed
     ];
   };
 
-  flake.modules.homeManager.features.editor = {
+  flake.modules.homeManager.editor = {
     imports = [
-      config.flake.modules.homeManager.features.editor.nvf
-      config.flake.modules.homeManager.features.editor.zed
+      config.flake.modules.homeManager.editor-zed
     ];
   };
 }

@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  flake.modules.nixos.features.desktop.cosmic = {
+  flake.modules.nixos.desktop-cosmic = {
     services.displayManager."cosmic-greeter".enable = true;
     services.desktopManager.cosmic.enable = true;
 

@@ -1,16 +1,12 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
-  flake.modules.nixos.features.cloud.maestral = {
+{...}: {
+  flake.modules.nixos.cloud = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.maestral
       pkgs."maestral-gui"
     ];
   };
 
-  flake.modules.homeManager.features.cloud.maestral = {
+  flake.modules.homeManager.cloud = {lib, ...}: {
     xdg.configFile."maestral/maestral.ini".text = ''
       [auth]
       keyring = keyring.backends.SecretService.Keyring

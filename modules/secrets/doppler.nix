@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  flake.modules.nixos.secrets.doppler = {
+  flake.modules.nixos.secrets-doppler = {
     options.secrets.doppler = {
       enable = lib.mkEnableOption "Doppler secrets provider baseline";
 

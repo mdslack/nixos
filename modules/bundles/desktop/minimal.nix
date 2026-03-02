@@ -1,11 +1,12 @@
 {config, ...}: {
-  flake.modules.nixos.desktop.minimal = {
+  flake.modules.nixos.desktop-minimal = {
     imports = [
-      config.flake.modules.nixos.features.browser
-      config.flake.modules.nixos.features.cloud.maestral
-      config.flake.modules.nixos.features.editor
-      config.flake.modules.nixos.features.input
-      config.flake.modules.nixos.features.media
+      config.flake.modules.nixos.theme
+      config.flake.modules.nixos.browser
+      config.flake.modules.nixos.cloud
+      config.flake.modules.nixos.editor
+      config.flake.modules.nixos.input
+      config.flake.modules.nixos.media
     ];
   };
 }

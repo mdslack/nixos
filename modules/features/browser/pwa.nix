@@ -138,7 +138,7 @@
     printf 'Browser PWA desktop icons updated.\n'
   '';
 in {
-  flake.modules.nixos.features.browser.pwa = {
+  flake.modules.nixos.browser-pwa = {
     flake.meta.browser.pwaInstallForceList = pwaInstallForceList;
 
     environment.etc."pwa-icons/acrobat.png".source = ../../../assets/pwa-icons/acrobat.png;

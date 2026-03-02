@@ -1,8 +1,8 @@
-{...}: {
-  flake.modules.nixos.features.network = {
+{config, ...}: {
+  flake.modules.nixos.network = {
     imports = [
-      ./firewall.nix
-      ./ssh.nix
+      config.flake.modules.nixos.network-firewall
+      config.flake.modules.nixos.network-ssh
     ];
 
     networking.networkmanager.enable = true;

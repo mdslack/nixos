@@ -5,43 +5,43 @@
     ];
     cosmic = [
       "minimal"
-      "desktop.cosmic"
+      "desktop-cosmic"
     ];
     gnome = [
       "minimal"
-      "desktop.gnome"
+      "desktop-gnome"
     ];
     kde = [
       "minimal"
-      "desktop.kde"
+      "desktop-kde"
     ];
     hyprland = [
       "minimal"
-      "wm.hyprland"
+      "wm-hyprland"
     ];
     hyprland-dms = [
       "minimal"
-      "wm.hyprland"
-      "session.dms"
+      "wm-hyprland"
+      "session-dms"
     ];
     hyprland-noctalia = [
       "minimal"
-      "wm.hyprland"
-      "session.noctalia"
+      "wm-hyprland"
+      "session-noctalia"
     ];
     niri = [
       "minimal"
-      "wm.niri"
+      "wm-niri"
     ];
     niri-dms = [
       "minimal"
-      "wm.niri"
-      "session.dms"
+      "wm-niri"
+      "session-dms"
     ];
     niri-noctalia = [
       "minimal"
-      "wm.niri"
-      "session.noctalia"
+      "wm-niri"
+      "session-noctalia"
     ];
   };
 }

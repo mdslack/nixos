@@ -1,9 +1,9 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   flake.modules.nixos.base = {
+    config,
+    pkgs,
+    ...
+  }: {
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nixpkgs.config.allowUnfree = true;
 
@@ -15,8 +15,6 @@
 
     services.dbus.enable = true;
     services.gvfs.enable = true;
-
-    xdg.portal.enable = true;
 
     environment.systemPackages = with pkgs; [
       git
@@ -36,10 +34,11 @@
       tmux
     ];
 
-    system.stateVersion = config.flake.meta.stateVersions.system;
+    system.stateVersion = "25.11";
   };
 
   flake.modules.homeManager.base = {
-    home.stateVersion = config.flake.meta.stateVersions.home;
+    home.stateVersion = "25.11";
+    home.enableNixpkgsReleaseCheck = false;
   };
 }

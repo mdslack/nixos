@@ -1,8 +1,8 @@
 {config, ...}: {
-  flake.modules.nixos.features.vpn = {
+  flake.modules.nixos.vpn = {
     imports = [
-      config.flake.modules.nixos.features.vpn.tailscale
-      config.flake.modules.nixos.features.vpn.proton
+      config.flake.modules.nixos.vpn-tailscale
+      config.flake.modules.nixos.vpn-proton
     ];
   };
 }

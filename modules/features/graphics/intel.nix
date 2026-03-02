@@ -1,5 +1,5 @@
-{pkgs, ...}: {
-  flake.modules.nixos.features.graphics.intel = {
+{...}: {
+  flake.modules.nixos.graphics-intel = {pkgs, ...}: {
     hardware.enableRedistributableFirmware = true;
     hardware.graphics.enable = true;
     hardware.graphics.enable32Bit = true;

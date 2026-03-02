@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.nixos.features.session.noctalia = {
+  flake.modules.nixos.session-noctalia = {
     imports = [
       inputs.noctalia.nixosModules.default
     ];
@@ -7,7 +7,7 @@
     programs."noctalia-shell".enable = true;
   };
 
-  flake.modules.homeManager.features.session.noctalia = {
+  flake.modules.homeManager.session-noctalia = {
     imports = [
       inputs.noctalia.homeModules.default
     ];

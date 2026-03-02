@@ -1,12 +1,12 @@
 {config, ...}: {
-  flake.modules.nixos.wm.niri = {
+  flake.modules.nixos.wm-niri = {
     imports = [
-      config.flake.modules.nixos.desktop.minimal
-      config.flake.modules.nixos.features.wm.niri
+      config.flake.modules.nixos.desktop-minimal
+      config.flake.modules.nixos.wm-niri
     ];
 
     home-manager.sharedModules = [
-      config.flake.modules.homeManager.features.wm.niri
+      config.flake.modules.homeManager.wm-niri
     ];
   };
 }

@@ -1,13 +1,13 @@
-{...}: {
-  flake.modules.nixos.features.files = {
+{config, ...}: {
+  flake.modules.nixos.files = {
     imports = [
-      ./yazi.nix
+      config.flake.modules.nixos.files-yazi
     ];
   };
 
-  flake.modules.homeManager.features.files = {
+  flake.modules.homeManager.files = {
     imports = [
-      ./yazi.nix
+      config.flake.modules.homeManager.files-yazi
     ];
   };
 }
