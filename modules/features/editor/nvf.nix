@@ -104,7 +104,7 @@
               };
               format = {
                 enable = true;
-                type = "ruff";
+                type = [ "ruff" ];
               };
             };
             nix = {
@@ -112,7 +112,7 @@
               lsp.enable = true;
               format = {
                 enable = true;
-                type = "alejandra";
+                type = [ "alejandra" ];
               };
               extraDiagnostics = {
                 enable = true;
@@ -147,12 +147,6 @@
             yaml = {
               enable = true;
               lsp.enable = true;
-              format.enable = true;
-            };
-            toml = {
-              enable = true;
-              lsp.enable = true;
-              format.enable = true;
             };
             bash = {
               enable = true;
