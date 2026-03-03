@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.terminal = {
     imports = [
       config.flake.modules.nixos.terminal-fonts

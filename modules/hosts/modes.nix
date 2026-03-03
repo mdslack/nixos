@@ -1,4 +1,4 @@
-{...}: {
+_: {
   flake.meta.hostModes = {
     minimal = [
       "minimal"

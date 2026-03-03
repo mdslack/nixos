@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   flake.modules.nixos.desktop-kde = {
     services.displayManager.sddm.enable = true;
     services.displayManager.sddm.wayland.enable = true;
@@ -6,7 +7,7 @@
 
     xdg.portal = {
       enable = true;
-      extraPortals = [pkgs.kdePackages.xdg-desktop-portal-kde];
+      extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
     };
   };
 }

@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   flake.modules.nixos.session-noctalia = {
     imports = [
       inputs.noctalia.nixosModules.default

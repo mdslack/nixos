@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   flake.modules.nixos.desktop-gnome = {
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;
@@ -9,7 +10,7 @@
 
     xdg.portal = {
       enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-gnome];
+      extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
     };
 
     environment.systemPackages = with pkgs; [

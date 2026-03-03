@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.virtualization = {
     imports = [
       config.flake.modules.nixos.virtualization-containers

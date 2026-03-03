@@ -1,10 +1,12 @@
-{...}: {
+_: {
   # Included in default editor baseline.
-  flake.modules.nixos.editor-zed = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.zed-editor
-    ];
-  };
+  flake.modules.nixos.editor-zed =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.zed-editor
+      ];
+    };
 
   # Included in default editor baseline.
   flake.modules.homeManager.editor-zed = {
@@ -69,7 +71,7 @@
                     "B"
                     "UP"
                   ];
-                  ignore = ["E501"];
+                  ignore = [ "E501" ];
                 };
                 format = {
                   "quote-style" = "double";

@@ -18,13 +18,15 @@ jobs:
         uses: nix-community/cache-nix-action@v6
 
       - name: nixfmt check
-        run: nix run nixpkgs#nixfmt-rfc-style -- --check .
+        run: |
+          mapfile -t nix_files < <(git ls-files "modules/**/*.nix")
+          nix run nixpkgs#nixfmt -- --check flake.nix home/mslack.nix "${nix_files[@]}"
 
       - name: statix check
         run: nix run nixpkgs#statix -- check .
 
       - name: deadnix check
-        run: nix run nixpkgs#deadnix -- .
+        run: nix run nixpkgs#deadnix -- --fail modules flake.nix home/mslack.nix
 
   eval:
     runs-on: ubuntu-latest

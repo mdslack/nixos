@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.graphics-egpu = {
     imports = [
       config.flake.modules.nixos.graphics-nvidia

@@ -1,8 +1,10 @@
-{...}: {
+_: {
   # Included in default editor baseline.
-  flake.modules.nixos.editor-neovim = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.neovim
-    ];
-  };
+  flake.modules.nixos.editor-neovim =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.neovim
+      ];
+    };
 }

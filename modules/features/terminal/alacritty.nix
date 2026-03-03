@@ -1,9 +1,11 @@
-{...}: {
-  flake.modules.nixos.terminal-alacritty = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.alacritty
-    ];
-  };
+_: {
+  flake.modules.nixos.terminal-alacritty =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.alacritty
+      ];
+    };
 
   flake.modules.homeManager.terminal-alacritty = {
     programs.alacritty = {

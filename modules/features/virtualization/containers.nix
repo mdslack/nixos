@@ -1,18 +1,20 @@
-{...}: {
-  flake.modules.nixos.virtualization-containers = {pkgs, ...}: {
-    virtualisation.containers.enable = true;
+_: {
+  flake.modules.nixos.virtualization-containers =
+    { pkgs, ... }:
+    {
+      virtualisation.containers.enable = true;
 
-    virtualisation.podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings.dns_enabled = true;
+      virtualisation.podman = {
+        enable = true;
+        dockerCompat = true;
+        defaultNetwork.settings.dns_enabled = true;
+      };
+
+      environment.systemPackages = with pkgs; [
+        podman-compose
+        distrobox
+      ];
     };
-
-    environment.systemPackages = with pkgs; [
-      podman-compose
-      distrobox
-    ];
-  };
 
   flake.modules.homeManager.virtualization-containers = {
     programs.bash.shellAliases = {

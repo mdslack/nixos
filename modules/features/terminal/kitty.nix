@@ -1,9 +1,11 @@
-{...}: {
-  flake.modules.nixos.terminal-kitty = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.kitty
-    ];
-  };
+_: {
+  flake.modules.nixos.terminal-kitty =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.kitty
+      ];
+    };
 
   flake.modules.homeManager.terminal-kitty = {
     programs.kitty = {

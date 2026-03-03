@@ -3,12 +3,13 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   flake.modules.nixos.secrets-doppler = {
     options.secrets.doppler = {
       enable = lib.mkEnableOption "Doppler secrets provider baseline";
 
-      package = lib.mkPackageOption pkgs "doppler" {};
+      package = lib.mkPackageOption pkgs "doppler" { };
 
       project = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
@@ -32,26 +33,23 @@
     config =
       let
         cfg = config.secrets.doppler;
-        lines =
-          [
-            (lib.optionalString (cfg.project != null) "DOPPLER_PROJECT=${cfg.project}")
-            (lib.optionalString (cfg.configName != null) "DOPPLER_CONFIG=${cfg.configName}")
-            (lib.optionalString (cfg.tokenFile != null) "DOPPLER_TOKEN_FILE=${toString cfg.tokenFile}")
-          ];
+        lines = [
+          (lib.optionalString (cfg.project != null) "DOPPLER_PROJECT=${cfg.project}")
+          (lib.optionalString (cfg.configName != null) "DOPPLER_CONFIG=${cfg.configName}")
+          (lib.optionalString (cfg.tokenFile != null) "DOPPLER_TOKEN_FILE=${toString cfg.tokenFile}")
+        ];
         envText =
           let
             filtered = lib.filter (line: line != "") lines;
           in
-            if filtered == []
-            then ""
-            else lib.concatStringsSep "\n" filtered + "\n";
+          if filtered == [ ] then "" else lib.concatStringsSep "\n" filtered + "\n";
       in
-        lib.mkIf cfg.enable {
-          environment.systemPackages = [
-            cfg.package
-          ];
+      lib.mkIf cfg.enable {
+        environment.systemPackages = [
+          cfg.package
+        ];
 
-          environment.etc."doppler/env".text = envText;
-        };
+        environment.etc."doppler/env".text = envText;
+      };
   };
 }

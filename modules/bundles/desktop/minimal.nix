@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.desktop-minimal = {
     imports = [
       config.flake.modules.nixos.theme

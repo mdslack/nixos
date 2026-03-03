@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.bundle-wm-hyprland = {
     imports = [
       config.flake.modules.nixos.desktop-minimal

@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.minimal = {
     imports = [
       config.flake.modules.nixos.ai

@@ -1,7 +1,9 @@
-{...}: {
-  flake.modules.nixos.theme-matugen = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.matugen
-    ];
-  };
+_: {
+  flake.modules.nixos.theme-matugen =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.matugen
+      ];
+    };
 }

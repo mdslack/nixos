@@ -1,13 +1,17 @@
-{config, lib, ...}: let
-  M = name: config.flake.modules.nixos.${name} or {};
+{ config, lib, ... }:
+let
+  M = name: config.flake.modules.nixos.${name} or { };
   modes = lib.mapAttrs (_: featureNames: map M featureNames) config.flake.meta.hostModes;
   hostFeatures = [
     config.flake.modules.nixos.graphics-intel
-  ] ++ lib.optionals (config.flake.meta.hostToggles.elitedesk.egpu or false) [
+  ]
+  ++ lib.optionals (config.flake.meta.hostToggles.elitedesk.egpu or false) [
     config.flake.modules.nixos.graphics-egpu
   ];
-in {
-  flake.modules.nixos = lib.mapAttrs' (modeName: modeImports:
+in
+{
+  flake.modules.nixos = lib.mapAttrs' (
+    modeName: modeImports:
     lib.nameValuePair "hosts/elitedesk/${modeName}" {
       imports = modeImports ++ hostFeatures;
       networking.hostName = "elitedesk";
@@ -25,6 +29,6 @@ in {
         device = "/dev/disk/by-label/boot";
         fsType = "vfat";
       };
-    })
-  modes;
+    }
+  ) modes;
 }

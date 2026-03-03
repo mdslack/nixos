@@ -1,9 +1,11 @@
-{...}: {
-  flake.modules.nixos.terminal-ghostty = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.ghostty
-    ];
-  };
+_: {
+  flake.modules.nixos.terminal-ghostty =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.ghostty
+      ];
+    };
 
   flake.modules.homeManager.terminal-ghostty = {
     programs.ghostty = {

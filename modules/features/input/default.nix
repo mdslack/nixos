@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.input = {
     imports = [
       config.flake.modules.nixos.input-fcitx5

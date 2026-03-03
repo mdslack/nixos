@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.network = {
     imports = [
       config.flake.modules.nixos.network-firewall

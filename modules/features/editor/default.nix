@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.editor = {
     imports = [
       config.flake.modules.nixos.editor-neovim

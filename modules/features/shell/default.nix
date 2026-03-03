@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.shell = {
     imports = [
       config.flake.modules.nixos.shell-bash

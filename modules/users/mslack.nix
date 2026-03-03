@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.users-mslack = {
     users.users.mslack = {
       isNormalUser = true;

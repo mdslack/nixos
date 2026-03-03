@@ -1,7 +1,9 @@
-{...}: {
-  flake.modules.nixos.editor-vscode = {pkgs, ...}: {
-    environment.systemPackages = [
-      pkgs.vscode
-    ];
-  };
+_: {
+  flake.modules.nixos.editor-vscode =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        pkgs.vscode
+      ];
+    };
 }

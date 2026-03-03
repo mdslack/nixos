@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.ai = {
     imports = [
       config.flake.modules.nixos.ai-opencode

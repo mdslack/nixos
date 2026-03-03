@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.files = {
     imports = [
       config.flake.modules.nixos.files-yazi

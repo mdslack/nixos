@@ -1,7 +1,8 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   options.flake.meta = lib.mkOption {
     type = with lib.types; lazyAttrsOf anything;
-    default = {};
+    default = { };
   };
 
   config.flake.meta.stateVersions = {

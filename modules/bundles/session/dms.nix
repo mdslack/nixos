@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.bundle-session-dms = {
     imports = [
       config.flake.modules.nixos.session-dms

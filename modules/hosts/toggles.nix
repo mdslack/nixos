@@ -1,4 +1,4 @@
-{...}: {
+_: {
   flake.meta.hostToggles = {
     framework13 = {
       egpu = false;
