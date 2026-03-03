@@ -52,6 +52,7 @@ let
           inputs.home-manager.nixosModules.home-manager
           {
             home-manager.extraSpecialArgs = specialArgs;
+            home-manager.backupFileExtension = "hm-bak";
             home-manager.sharedModules = [ config.flake.modules.homeManager.base ];
           }
         ]
