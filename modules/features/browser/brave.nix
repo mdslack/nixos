@@ -30,6 +30,7 @@ _: {
   flake.modules.homeManager.browser-brave =
     {
       lib,
+      pkgs,
       ...
     }:
     {
@@ -46,7 +47,7 @@ _: {
 
               tmp_file="$(mktemp)"
 
-              python3 - "$prefs_file" "$tmp_file" <<'PY'
+              ${pkgs.python3}/bin/python3 - "$prefs_file" "$tmp_file" <<'PY'
         import json
         import sys
 
