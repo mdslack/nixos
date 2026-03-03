@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ config, inputs, lib, ... }:
 {
   flake.modules.nixos.session-noctalia = {
     imports = [
@@ -15,19 +15,11 @@
 
     programs.noctalia-shell = {
       enable = true;
-      settings = {
-        settingsVersion = 0;
-        general = {
-          telemetryEnabled = false;
-          showChangelogOnStartup = false;
-        };
-        colorSchemes = {
-          useWallpaperColors = true;
-          predefinedScheme = "Noctalia (default)";
-          darkMode = true;
-          generationMethod = "tonal-spot";
-        };
-      };
+      settings = lib.mkForce { };
     };
+
+    xdg.configFile."noctalia/settings.json".source = lib.mkForce (
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/noctalia/settings.json"
+    );
   };
 }
