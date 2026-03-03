@@ -5,7 +5,7 @@
       inputs.noctalia.nixosModules.default
     ];
 
-    programs."noctalia-shell".enable = true;
+    services.noctalia-shell.enable = true;
   };
 
   flake.modules.homeManager.session-noctalia = {
