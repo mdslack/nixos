@@ -20,8 +20,9 @@
         settings = lib.mkForce { };
       };
 
-      xdg.configFile."noctalia/settings.json".source = lib.mkForce (
-        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/noctalia/settings.json"
-      );
+      xdg.configFile."noctalia" = {
+      	source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/noctalia";
+	recursive = true;
+      };
     };
 }

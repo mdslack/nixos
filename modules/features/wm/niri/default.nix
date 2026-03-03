@@ -1,4 +1,5 @@
-_: {
+{ ... }:
+{
   flake.modules.nixos.wm-niri =
     { pkgs, ... }:
     {
@@ -43,9 +44,14 @@ _: {
       ];
     };
 
-  flake.modules.homeManager.wm-niri = {
-    home.sessionVariables.TERMINAL = "ghostty";
+  flake.modules.homeManager.wm-niri =
+    { config, lib, ... }:
+    {
+      home.sessionVariables.TERMINAL = "ghostty";
 
-    xdg.configFile."niri/config.kdl".source = ./config.kdl;
-  };
+      xdg.configFile."niri" = {
+      	source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/niri";
+	recursive = true;
+      };
+    };
 }
