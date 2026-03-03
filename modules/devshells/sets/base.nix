@@ -20,6 +20,8 @@ _: {
         jq
         just
         tmux
+        luacheck
+        markdownlint-cli
       ];
     };
 }
