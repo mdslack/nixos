@@ -9,7 +9,7 @@ _: {
         settings = {
           default_session = {
             user = "greeter";
-            command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'dbus-run-session niri-session'";
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
           };
         };
       };
