@@ -1,10 +1,31 @@
-name: flake-eval
+name: flake-ci
 
 on:
   push:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v7
+
+      - name: nixfmt check
+        run: nix run nixpkgs#nixfmt-rfc-style -- --check .
+
+      - name: statix check
+        run: nix run nixpkgs#statix -- check .
+
+      - name: deadnix check
+        run: nix run nixpkgs#deadnix -- .
+
   eval:
     runs-on: ubuntu-latest
     steps:
@@ -23,3 +44,27 @@ jobs:
       - name: Eval representative outputs
         run: |
           nix eval --no-write-lock-file --json .#nixosConfigurations --apply builtins.attrNames
+
+  critical-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - meerkat-minimal
+          - meerkat-niri
+          - meerkat-hyprland
+          - meerkat-niri-dms
+          - meerkat-hyprland-dms
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v7
+
+      - name: Build critical target
+        run: nix build --no-link --no-write-lock-file .#nixosConfigurations.${{ matrix.target }}.config.system.build.toplevel
