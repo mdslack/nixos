@@ -20,7 +20,7 @@ _: {
         jq
         just
         tmux
-        luacheck
+        luaPackages.luacheck
         markdownlint-cli
         (writeShellScriptBin "update-ai-packages" ''
           set -euo pipefail
