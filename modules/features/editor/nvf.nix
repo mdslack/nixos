@@ -1,8 +1,7 @@
-{ inputs, ... }:
-{
+{inputs, ...}: {
   # Included in default editor baseline.
   flake.modules.homeManager.editor-nvf = {
-    imports = [ inputs.nvf.homeManagerModules.nvf ];
+    imports = [inputs.nvf.homeManagerModules.nvf];
 
     programs.nvf = {
       enable = true;
@@ -26,6 +25,10 @@
             "<leader>xx" = {
               action = "<cmd>Trouble toggle diagnostics<cr>";
               desc = "Trouble";
+            };
+            "<leader>ca" = {
+              action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
+              desc = "Code action";
             };
             "<C-h>" = {
               action = "<C-w>h";
@@ -100,11 +103,11 @@
               enable = true;
               lsp = {
                 enable = true;
-                servers = [ "basedpyright" ];
+                servers = ["basedpyright"];
               };
               format = {
                 enable = true;
-                type = [ "ruff" ];
+                type = ["ruff"];
               };
             };
             nix = {
@@ -112,11 +115,11 @@
               lsp.enable = true;
               format = {
                 enable = true;
-                type = [ "alejandra" ];
+                type = ["alejandra"];
               };
               extraDiagnostics = {
                 enable = true;
-                types = [ "statix" ];
+                types = ["statix"];
               };
             };
             go = {
@@ -174,15 +177,15 @@
             enable = true;
             lint_after_save = true;
             linters_by_ft = {
-              rust = [ "clippy" ];
-              python = [ "ruff" ];
-              go = [ "golangcilint" ];
-              typescript = [ "eslint" ];
-              typescriptreact = [ "eslint" ];
-              javascript = [ "eslint" ];
-              javascriptreact = [ "eslint" ];
-              lua = [ "luacheck" ];
-              markdown = [ "markdownlint" ];
+              rust = ["clippy"];
+              python = ["ruff"];
+              go = ["golangcilint"];
+              typescript = ["eslint"];
+              typescriptreact = ["eslint"];
+              javascript = ["eslint"];
+              javascriptreact = ["eslint"];
+              lua = ["luacheck"];
+              markdown = ["markdownlint"];
             };
           };
 
