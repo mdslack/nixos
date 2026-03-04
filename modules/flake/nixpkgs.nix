@@ -24,13 +24,17 @@
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ inputs.rust-overlay.overlays.default ];
+        overlays = [
+          inputs.rust-overlay.overlays.default
+        ];
       };
 
       _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ inputs.rust-overlay.overlays.default ];
+        overlays = [
+          inputs.rust-overlay.overlays.default
+        ];
       };
     };
 }

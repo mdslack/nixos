@@ -146,6 +146,7 @@ The system is organized around reusable features, composed into bundles, combine
 
 - **Baseline**: `inputs.nixpkgs` pinned to NixOS stable (`nixos-25.11`).
 - **Selective newer packages**: `inputs.nixpkgs-unstable`, opt-in only.
+- **Opencode build pin**: bun `1.3.10` is pinned in `modules/features/ai/opencode.nix` to satisfy upstream build requirements.
 - **DMS source**: dedicated `inputs.dms` (not nixpkgs package lookup).
 - **Locking**: all sources are pinned by `flake.lock`.
 
