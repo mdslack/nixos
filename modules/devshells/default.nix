@@ -8,14 +8,32 @@ _: {
       inherit (config._module.args) pkgs;
       inherit (config.dev) shellSets;
       packagesFor = names: builtins.concatLists (map (name: shellSets.${name} or [ ]) names);
+      zshShellHook = ''
+        if [ "''${TERM:-dumb}" = "dumb" ]; then
+          export TERM=xterm-256color
+        fi
+
+        if [[ $- == *i* ]] && [ -z "''${ZSH_VERSION:-}" ]; then
+          exec ${pkgs.zsh}/bin/zsh -l
+        fi
+      '';
+      mkDevShell = shellName: attrs:
+        pkgs.mkShell (
+          attrs
+          // {
+            shellHook = ''
+              export NIX_DEVSHELL_NAME="${shellName}"
+            '' + (attrs.shellHook or "") + zshShellHook;
+          }
+        );
     in
     {
       devShells = {
-        default = pkgs.mkShell {
+        default = mkDevShell "default" {
           packages = packagesFor [ "base" ];
         };
 
-        go = pkgs.mkShell {
+        go = mkDevShell "go" {
           packages = packagesFor [
             "base"
             "go"
@@ -23,7 +41,7 @@ _: {
           ];
         };
 
-        rust = pkgs.mkShell {
+        rust = mkDevShell "rust" {
           packages = packagesFor [
             "base"
             "rust"
@@ -31,7 +49,7 @@ _: {
           ];
         };
 
-        python = pkgs.mkShell {
+        python = mkDevShell "python" {
           packages = packagesFor [
             "base"
             "python"
@@ -39,7 +57,7 @@ _: {
           ];
         };
 
-        web = pkgs.mkShell {
+        web = mkDevShell "web" {
           packages = packagesFor [
             "base"
             "node"
@@ -47,7 +65,7 @@ _: {
           ];
         };
 
-        docs = pkgs.mkShell {
+        docs = mkDevShell "docs" {
           packages = packagesFor [
             "base"
             "docs"
@@ -55,14 +73,14 @@ _: {
           MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
         };
 
-        nix = pkgs.mkShell {
+        nix = mkDevShell "nix" {
           packages = packagesFor [
             "base"
             "nix"
           ];
         };
 
-        proto = pkgs.mkShell {
+        proto = mkDevShell "proto" {
           packages = packagesFor [
             "base"
             "protobuf"
@@ -70,7 +88,7 @@ _: {
           ];
         };
 
-        full = pkgs.mkShell {
+        full = mkDevShell "full" {
           packages = packagesFor [
             "base"
             "go"
