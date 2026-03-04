@@ -13,7 +13,7 @@ _: {
         PasswordManagerEnabled = false;
         MetricsReportingEnabled = false;
         HomepageIsNewTabPage = true;
-        RestoreOnStartup = 4;
+        RestoreOnStartup = 1;
         ExtensionInstallForcelist = [
           "ghmbeldphafepmbegfdlkpapadhbakde;https://clients2.google.com/service/update2/crx"
           "ophjlpahpchlmihnnnihgmmeilfjmjjc;https://clients2.google.com/service/update2/crx"
