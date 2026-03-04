@@ -137,6 +137,10 @@ in {
             enable = true;
             mappings.complete = "<C-.>";
             sourcePlugins = [pluginPkgs.cmp-cmdline];
+            setupOpts = {
+              completion.completeopt = "menu,menuone,noselect";
+              experimental.ghost_text = true;
+            };
           };
           luaConfigPost = ''
             local ok_cmp, cmp = pcall(require, "cmp")
@@ -181,6 +185,7 @@ in {
 
           languages = {
             enableTreesitter = true;
+            enableDAP = true;
 
             rust = {
               enable = true;
@@ -262,6 +267,10 @@ in {
           binds.whichKey.enable = true;
           autopairs.nvim-autopairs.enable = true;
           comments.comment-nvim.enable = true;
+          utility.surround = {
+            enable = true;
+            useVendoredKeybindings = false;
+          };
           visuals.indent-blankline.enable = true;
 
           diagnostics.nvim-lint = {
@@ -296,6 +305,11 @@ in {
             lightbulb.enable = true;
             trouble.enable = true;
             lspSignature.enable = true;
+          };
+
+          debugger.nvim-dap = {
+            enable = true;
+            ui.enable = true;
           };
         };
       };
