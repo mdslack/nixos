@@ -1,4 +1,6 @@
-{inputs, ...}: {
+{inputs, ...}: let
+  pluginPkgs = inputs.nixpkgs.legacyPackages.x86_64-linux.vimPlugins;
+in {
   # Included in default editor baseline.
   flake.modules.homeManager.editor-nvf = {
     imports = [inputs.nvf.homeManagerModules.nvf];
@@ -22,13 +24,73 @@
               action = "<cmd>ToggleTerm<cr>";
               desc = "Terminal";
             };
+            "<leader>fr" = {
+              action = "<cmd>Telescope oldfiles<cr>";
+              desc = "Recent files";
+            };
             "<leader>xx" = {
               action = "<cmd>Trouble toggle diagnostics<cr>";
               desc = "Trouble";
             };
+            "<leader>gs" = {
+              action = "<cmd>Neotree toggle git_status<cr>";
+              desc = "Git status tree";
+            };
+            "<leader>gh" = {
+              action = "<cmd>Gitsigns preview_hunk<cr>";
+              desc = "Preview git hunk";
+            };
             "<leader>ca" = {
               action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
               desc = "Code action";
+            };
+            "<leader>bd" = {
+              action = "<cmd>bdelete<cr>";
+              desc = "Delete buffer";
+            };
+            "H" = {
+              action = "<cmd>bprevious<cr>";
+              desc = "Previous buffer";
+            };
+            "L" = {
+              action = "<cmd>bnext<cr>";
+              desc = "Next buffer";
+            };
+            "<leader>b1" = {
+              action = "<cmd>BufferLineGoToBuffer 1<cr>";
+              desc = "Go to buffer 1";
+            };
+            "<leader>b2" = {
+              action = "<cmd>BufferLineGoToBuffer 2<cr>";
+              desc = "Go to buffer 2";
+            };
+            "<leader>b3" = {
+              action = "<cmd>BufferLineGoToBuffer 3<cr>";
+              desc = "Go to buffer 3";
+            };
+            "<leader>b4" = {
+              action = "<cmd>BufferLineGoToBuffer 4<cr>";
+              desc = "Go to buffer 4";
+            };
+            "<leader>b5" = {
+              action = "<cmd>BufferLineGoToBuffer 5<cr>";
+              desc = "Go to buffer 5";
+            };
+            "<leader>b6" = {
+              action = "<cmd>BufferLineGoToBuffer 6<cr>";
+              desc = "Go to buffer 6";
+            };
+            "<leader>b7" = {
+              action = "<cmd>BufferLineGoToBuffer 7<cr>";
+              desc = "Go to buffer 7";
+            };
+            "<leader>b8" = {
+              action = "<cmd>BufferLineGoToBuffer 8<cr>";
+              desc = "Go to buffer 8";
+            };
+            "<leader>b9" = {
+              action = "<cmd>BufferLineGoToBuffer 9<cr>";
+              desc = "Go to buffer 9";
             };
             "<C-h>" = {
               action = "<C-w>h";
@@ -71,6 +133,32 @@
           };
 
           telescope.enable = true;
+          autocomplete.nvim-cmp = {
+            enable = true;
+            mappings.complete = "<C-.>";
+            sourcePlugins = [pluginPkgs.cmp-cmdline];
+          };
+          luaConfigPost = ''
+            local ok_cmp, cmp = pcall(require, "cmp")
+            if ok_cmp then
+              cmp.setup.cmdline({ "/", "?" }, {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                  { name = "buffer" },
+                },
+              })
+
+              cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                  { name = "path" },
+                }, {
+                  { name = "cmdline" },
+                }),
+              })
+            end
+          '';
+
           filetree.neo-tree = {
             enable = true;
             setupOpts = {
@@ -166,7 +254,10 @@
           };
 
           statusline.lualine.enable = true;
-          tabline.nvimBufferline.enable = true;
+          tabline.nvimBufferline = {
+            enable = true;
+            setupOpts.options.numbers = "ordinal";
+          };
 
           binds.whichKey.enable = true;
           autopairs.nvim-autopairs.enable = true;
@@ -194,7 +285,10 @@
             gitsigns.enable = true;
           };
 
-          terminal.toggleterm.enable = true;
+          terminal.toggleterm = {
+            enable = true;
+            lazygit.enable = true;
+          };
 
           lsp = {
             enable = true;
