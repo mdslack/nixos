@@ -105,6 +105,16 @@ in
         upsert_icon() {
           local desktop_file="$1"
           local icon_path="$2"
+
+          if [[ ! -w "$desktop_file" ]]; then
+            chmod u+w "$desktop_file" 2>/dev/null || true
+          fi
+
+          if [[ ! -w "$desktop_file" ]]; then
+            printf 'warn: skipping unwritable desktop file: %s\n' "$desktop_file" >&2
+            return 0
+          fi
+
           if grep -q '^Icon=' "$desktop_file"; then
             sed -i "s|^Icon=.*$|Icon=$icon_path|" "$desktop_file"
           else
@@ -120,30 +130,94 @@ in
               local target="$desktop_file"
               if [[ ! -w "$desktop_file" ]]; then
                 target="$apps_dir/$(basename "$desktop_file")"
-                cp "$desktop_file" "$target"
+                if [[ "$desktop_file" != "$target" ]]; then
+                  cp "$desktop_file" "$target"
+                fi
+                chmod u+w "$target" 2>/dev/null || true
               fi
               upsert_icon "$target" "$icon_path"
             done < <(grep -rl "^Name=$app_name$" "$d" || true)
           done
         }
 
-        update_icon "Adobe Acrobat" "/etc/pwa-icons/acrobat.png"
-        update_icon "Box" "/etc/pwa-icons/box.png"
-        update_icon "ChatGPT" "/etc/pwa-icons/chatgpt.png"
-        update_icon "Dropbox" "/etc/pwa-icons/dropbox.png"
-        update_icon "Excel" "/etc/pwa-icons/excel.png"
-        update_icon "PowerPoint" "/etc/pwa-icons/powerpoint.png"
-        update_icon "Microsoft Teams" "/etc/pwa-icons/teams.png"
-        update_icon "Word" "/etc/pwa-icons/word.png"
-        update_icon "Outlook" "/etc/pwa-icons/outlook.png"
-        update_icon "Proton Calendar" "/etc/pwa-icons/proton-calendar.png"
-        update_icon "Proton Drive" "/etc/pwa-icons/proton-drive.png"
-        update_icon "Proton Mail" "/etc/pwa-icons/proton-mail.png"
-        update_icon "WhatsApp" "/etc/pwa-icons/whatsapp.png"
-        update_icon "YouTube" "/etc/pwa-icons/youtube.png"
-        update_icon "Zoom" "/etc/pwa-icons/zoom.png"
+        update_icon_by_desktop_id() {
+          local desktop_id="$1"
+          local icon_path="$2"
+          for d in "''${search_dirs[@]}"; do
+            if [[ -f "$d/$desktop_id" ]]; then
+              local target="$d/$desktop_id"
+              if [[ ! -w "$target" ]]; then
+                target="$apps_dir/$desktop_id"
+                if [[ "$d/$desktop_id" != "$target" ]]; then
+                  cp "$d/$desktop_id" "$target"
+                fi
+                chmod u+w "$target" 2>/dev/null || true
+              fi
+              upsert_icon "$target" "$icon_path"
+            fi
+          done
+        }
 
-        printf 'Browser PWA desktop icons updated.\n'
+        reset_brave_pwa_icons() {
+          shopt -s nullglob
+          for desktop_file in "$apps_dir"/brave-*-Default.desktop; do
+            local icon_name
+            icon_name="$(basename "$desktop_file" .desktop)"
+            upsert_icon "$desktop_file" "$icon_name"
+          done
+          shopt -u nullglob
+        }
+
+        reset_brave_pwa_icons
+
+        update_icon "Adobe Acrobat" "com.adobe.Reader"
+        update_icon "Box" "box"
+        update_icon "ChatGPT" "pwa-chatgpt"
+        update_icon "Dropbox" "dropbox"
+        update_icon "Excel" "ms-excel"
+        update_icon "PowerPoint" "ms-powerpoint"
+        update_icon "Microsoft Teams" "teams"
+        update_icon "Word" "ms-word"
+        update_icon "Outlook" "ms-outlook"
+        update_icon "Proton Calendar" "pwa-proton-calendar"
+        update_icon "Proton Drive" "pwa-proton-drive"
+        update_icon "Proton Mail" "proton-mail"
+        update_icon "WhatsApp" "whatsapp"
+        update_icon "YouTube" "youtube"
+        update_icon "Zoom" "Zoom"
+
+        update_icon "Alacritty" "Alacritty"
+        update_icon_by_desktop_id "Alacritty.desktop" "Alacritty"
+        update_icon_by_desktop_id "alacritty.desktop" "Alacritty"
+
+        update_icon "Ghostty" "com.mitchellh.ghostty"
+        update_icon_by_desktop_id "com.mitchellh.ghostty.desktop" "com.mitchellh.ghostty"
+        update_icon_by_desktop_id "ghostty.desktop" "com.mitchellh.ghostty"
+
+        update_icon "kitty" "kitty"
+        update_icon_by_desktop_id "kitty.desktop" "kitty"
+
+        update_icon "Proton VPN" "proton-vpn-logo"
+        update_icon_by_desktop_id "proton.vpn.app.gtk.desktop" "proton-vpn-logo"
+
+        update_icon "Zed" "zed"
+        update_icon "Zed Nightly" "zed"
+        update_icon_by_desktop_id "dev.zed.Zed.desktop" "zed"
+        update_icon_by_desktop_id "dev.zed.Zed-Nightly.desktop" "zed"
+
+        update_icon "Neovim" "nvim"
+        update_icon_by_desktop_id "nvim.desktop" "nvim"
+
+        update_icon "Spotify" "spotify"
+        update_icon_by_desktop_id "spotify.desktop" "spotify"
+
+        update_icon "Virtual Machine Manager" "virt-manager"
+        update_icon_by_desktop_id "virt-manager.desktop" "virt-manager"
+
+        update_icon "btop++" "btop-custom"
+        update_icon_by_desktop_id "btop.desktop" "btop-custom"
+
+        printf 'Browser desktop icons updated.\n'
       '';
     in
     {
@@ -151,27 +225,78 @@ in
         WebAppInstallForceList = pwaInstallForceList;
       };
 
-      environment.etc."pwa-icons/acrobat.png".source = ../../../assets/pwa-icons/acrobat.png;
-      environment.etc."pwa-icons/box.png".source = ../../../assets/pwa-icons/box.png;
-      environment.etc."pwa-icons/chatgpt.png".source = ../../../assets/pwa-icons/chatgpt.png;
-      environment.etc."pwa-icons/dropbox.png".source = ../../../assets/pwa-icons/dropbox.png;
-      environment.etc."pwa-icons/excel.png".source = ../../../assets/pwa-icons/excel.png;
-      environment.etc."pwa-icons/powerpoint.png".source = ../../../assets/pwa-icons/powerpoint.png;
-      environment.etc."pwa-icons/teams.png".source = ../../../assets/pwa-icons/teams.png;
-      environment.etc."pwa-icons/word.png".source = ../../../assets/pwa-icons/word.png;
-      environment.etc."pwa-icons/outlook.png".source = ../../../assets/pwa-icons/outlook.png;
-      environment.etc."pwa-icons/proton-calendar.png".source =
-        ../../../assets/pwa-icons/proton-calendar.png;
-      environment.etc."pwa-icons/proton-drive.png".source = ../../../assets/pwa-icons/proton-drive.png;
-      environment.etc."pwa-icons/proton-mail.png".source = ../../../assets/pwa-icons/proton-mail.png;
-      environment.etc."pwa-icons/whatsapp.png".source = ../../../assets/pwa-icons/whatsapp.png;
-      environment.etc."pwa-icons/youtube.png".source = ../../../assets/pwa-icons/youtube.png;
-      environment.etc."pwa-icons/zoom.png".source = ../../../assets/pwa-icons/zoom.png;
-
       environment.systemPackages = [ browserPwaIconApply ];
 
       system.activationScripts.pwaPostInstallInfo.text = ''
         echo "info: Browser PWA assets applied. After first browser run, execute: browser-pwa-icons-apply"
       '';
     };
+
+  flake.modules.homeManager.browser-pwa-icons =
+    { pkgs, ... }:
+    let
+      papirusAppIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps";
+    in
+    {
+      xdg.dataFile."icons/hicolor/scalable/apps/com.adobe.Reader.svg".source =
+        ../../../assets/icons/acrobat.svg;
+      xdg.dataFile."icons/hicolor/scalable/apps/box.svg".source =
+        "${papirusAppIcons}/box.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/dropbox.svg".source =
+        "${papirusAppIcons}/dropbox.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/ms-excel.svg".source =
+        "${papirusAppIcons}/ms-excel.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/ms-powerpoint.svg".source =
+        "${papirusAppIcons}/ms-powerpoint.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/teams.svg".source =
+        "${papirusAppIcons}/teams.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/ms-word.svg".source =
+        "${papirusAppIcons}/ms-word.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/ms-outlook.svg".source =
+        "${papirusAppIcons}/ms-outlook.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/proton-mail.svg".source =
+        "${papirusAppIcons}/proton-mail.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/whatsapp.svg".source =
+        "${papirusAppIcons}/whatsapp.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/youtube.svg".source =
+        "${papirusAppIcons}/youtube.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/Zoom.svg".source =
+        "${papirusAppIcons}/Zoom.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/Alacritty.svg".source =
+        "${papirusAppIcons}/Alacritty.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/com.mitchellh.ghostty.svg".source =
+        "${papirusAppIcons}/com.mitchellh.ghostty.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/kitty.svg".source =
+        "${papirusAppIcons}/kitty.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/proton-vpn-logo.svg".source =
+        "${papirusAppIcons}/proton-vpn-logo.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/zed.svg".source =
+        "${papirusAppIcons}/zed.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/nvim.svg".source =
+        "${papirusAppIcons}/nvim.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/spotify.svg".source =
+        "${papirusAppIcons}/spotify.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/virt-manager.svg".source =
+        "${papirusAppIcons}/virt-manager.svg";
+      xdg.dataFile."icons/hicolor/scalable/apps/btop.svg".source =
+        ../../../assets/icons/btop.svg;
+      xdg.dataFile."icons/hicolor/scalable/apps/btop-custom.svg".source =
+        ../../../assets/icons/btop.svg;
+      xdg.dataFile."icons/hicolor/48x48/apps/btop-custom.svg".source =
+        ../../../assets/icons/btop.svg;
+
+      xdg.dataFile."icons/hicolor/scalable/apps/pwa-chatgpt.svg".source =
+        ../../../assets/icons/chatgpt.svg;
+      xdg.dataFile."icons/hicolor/48x48/apps/pwa-chatgpt.svg".source =
+        ../../../assets/icons/chatgpt.svg;
+      xdg.dataFile."icons/hicolor/scalable/apps/pwa-proton-calendar.svg".source =
+        ../../../assets/icons/proton-calendar.svg;
+      xdg.dataFile."icons/hicolor/48x48/apps/pwa-proton-calendar.svg".source =
+        ../../../assets/icons/proton-calendar.svg;
+      xdg.dataFile."icons/hicolor/scalable/apps/pwa-proton-drive.svg".source =
+        ../../../assets/icons/proton-drive.svg;
+      xdg.dataFile."icons/hicolor/48x48/apps/pwa-proton-drive.svg".source =
+        ../../../assets/icons/proton-drive.svg;
+    };
+
 }

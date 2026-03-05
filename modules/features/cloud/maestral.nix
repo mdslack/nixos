@@ -9,33 +9,12 @@ _: {
     };
 
   flake.modules.homeManager.cloud =
-    { lib, ... }:
+    { config, lib, ... }:
     {
-      xdg.configFile."maestral/maestral.ini".text = ''
-        [auth]
-        keyring = keyring.backends.SecretService.Keyring
-        token_access_type = offline
-
-        [app]
-        notification_level = 15
-        log_level = 20
-        update_notification_interval = 604800
-        bandwidth_limit_up = 0.0
-        bandwidth_limit_down = 0.0
-        max_parallel_uploads = 6
-        max_parallel_downloads = 6
-
-        [sync]
-        path = /home/mslack/Dropbox
-        excluded_items = ['/camera uploads from chingfang', '/camera uploads', '/aed', '/git-annex-rclone', '/photos', '/apps', '/sent files', '/my axcrypt', '/tracking', '/family room', '/system images', '/aed energy logo files', '/documents', '/vault', '/paper files', '/old stuff', '/proton drive', '/chingfang']
-        max_cpu_percent = 20.0
-        keep_history = 604800
-        upload = True
-        download = True
-
-        [main]
-        version = 20.0
-      '';
+      xdg.configFile."maestral" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/maestral";
+        recursive = true;
+      };
 
       home.activation.maestralAccountId = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         ini_path="$HOME/.config/maestral/maestral.ini"

@@ -1,10 +1,14 @@
-_: {
+{ inputs, ... }:
+{
   # Included in default editor baseline.
   flake.modules.nixos.editor-zed =
     { pkgs, ... }:
+    let
+      zedPackage = inputs.zed.packages.${pkgs.system}.default;
+    in
     {
       environment.systemPackages = [
-        pkgs.zed-editor
+        zedPackage
       ];
     };
 
@@ -89,18 +93,8 @@ _: {
           metrics = false;
         };
         vim_mode = true;
-        icon_theme = {
-          mode = "dark";
-          light = "Catppuccin Latte";
-          dark = "Catppuccin Mocha";
-        };
         ui_font_size = 16;
         buffer_font_size = 15;
-        theme = {
-          mode = "dark";
-          light = "Catppuccin Latte";
-          dark = "Catppuccin Mocha";
-        };
       };
 
       userKeymaps = [

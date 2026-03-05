@@ -7,15 +7,10 @@ _: {
       ];
     };
 
-  flake.modules.homeManager.terminal-kitty = {
-    programs.kitty = {
-      enable = true;
-      settings = {
-        font_family = "JetBrains Mono Nerd Font";
-        font_size = 12;
-        background_opacity = "0.9";
-        window_padding_width = 25;
-      };
+  flake.modules.homeManager.terminal-kitty = { config, ... }: {
+    xdg.configFile."kitty" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty";
+      recursive = true;
     };
   };
 }

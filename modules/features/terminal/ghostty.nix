@@ -7,16 +7,14 @@ _: {
       ];
     };
 
-  flake.modules.homeManager.terminal-ghostty = {
+  flake.modules.homeManager.terminal-ghostty = { config, ... }: {
+    xdg.configFile."ghostty" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/ghostty";
+      recursive = true;
+    };
+
     programs.ghostty = {
       enable = true;
-      settings = {
-        "font-family" = "JetBrains Mono Nerd Font";
-        "font-size" = 12;
-        "background-opacity" = 0.9;
-        "window-padding-x" = 25;
-        "window-padding-y" = 25;
-      };
     };
   };
 }

@@ -7,19 +7,14 @@ _: {
       ];
     };
 
-  flake.modules.homeManager.terminal-alacritty = {
+  flake.modules.homeManager.terminal-alacritty = { config, ... }: {
+    xdg.configFile."alacritty" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/alacritty";
+      recursive = true;
+    };
+
     programs.alacritty = {
       enable = true;
-      settings = {
-        font.size = 12;
-        window = {
-          opacity = 0.9;
-          padding = {
-            x = 25;
-            y = 25;
-          };
-        };
-      };
     };
   };
 }

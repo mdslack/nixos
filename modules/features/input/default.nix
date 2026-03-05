@@ -6,4 +6,10 @@
       config.flake.modules.nixos.input-pipewire
     ];
   };
+
+  flake.modules.homeManager.input = {
+    imports = [
+      config.flake.modules.homeManager.input-fcitx5
+    ];
+  };
 }
