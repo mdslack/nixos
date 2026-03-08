@@ -28,6 +28,14 @@ in {
               action = "<cmd>Telescope oldfiles<cr>";
               desc = "Recent files";
             };
+            "<leader>mp" = {
+              action = "<cmd>MarkdownPreviewToggle<cr>";
+              desc = "Markdown preview";
+            };
+            "<leader>mr" = {
+              action = "<cmd>RenderMarkdown buf_toggle<cr>";
+              desc = "Render markdown";
+            };
             "<leader>xx" = {
               action = "<cmd>Trouble toggle diagnostics<cr>";
               desc = "Trouble";
@@ -229,6 +237,7 @@ in {
               enable = true;
               lsp.enable = true;
               format.enable = true;
+              extensions.render-markdown-nvim.enable = true;
             };
             lua = {
               enable = true;
@@ -271,6 +280,7 @@ in {
             enable = true;
             useVendoredKeybindings = false;
           };
+          utility.preview.markdownPreview.enable = true;
           visuals.indent-blankline.enable = true;
 
           diagnostics.nvim-lint = {
