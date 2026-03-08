@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    opencode-src.url = "github:anomalyco/opencode/dev";
+    opencode-src.url = "github:anomalyco/opencode/v1.2.21";
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
     rust-overlay.url = "github:oxalica/rust-overlay";
