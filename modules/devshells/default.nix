@@ -8,6 +8,25 @@ _: {
       inherit (config._module.args) pkgs;
       inherit (config.dev) shellSets;
       packagesFor = names: builtins.concatLists (map (name: shellSets.${name} or [ ]) names);
+      nativePythonRuntimeLibs = with pkgs; [
+        stdenv.cc.cc.lib
+        fontconfig
+        libglvnd
+        libGLU
+        mesa
+        wayland
+        xorg.libX11
+        xorg.libXcursor
+        xorg.libXext
+        xorg.libXfixes
+        xorg.libXft
+        xorg.libXinerama
+        xorg.libXrender
+        zlib
+      ];
+      nativePythonRuntimeShellHook = ''
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath nativePythonRuntimeLibs}''${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH"
+      '';
       zshShellHook = ''
         if [ "''${TERM:-dumb}" = "dumb" ]; then
           export TERM=xterm-256color
@@ -47,6 +66,7 @@ _: {
             "rust"
             "doppler"
           ];
+          shellHook = nativePythonRuntimeShellHook;
         };
 
         python = mkDevShell "python" {
@@ -55,6 +75,7 @@ _: {
             "python"
             "doppler"
           ];
+          shellHook = nativePythonRuntimeShellHook;
         };
 
         web = mkDevShell "web" {
@@ -103,6 +124,7 @@ _: {
             "doppler"
           ];
           MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
+          shellHook = nativePythonRuntimeShellHook;
         };
       };
     };
