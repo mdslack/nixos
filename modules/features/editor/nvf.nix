@@ -2,7 +2,7 @@
   pluginPkgs = inputs.nixpkgs.legacyPackages.x86_64-linux.vimPlugins;
 in {
   # Included in default editor baseline.
-  flake.modules.homeManager.editor-nvf = {
+  flake.modules.homeManager.editor-nvf = {pkgs, ...}: {
     imports = [inputs.nvf.homeManagerModules.nvf];
 
     programs.nvf = {
@@ -296,6 +296,16 @@ in {
               javascriptreact = ["eslint"];
               lua = ["luacheck"];
               markdown = ["markdownlint"];
+            };
+          };
+
+          formatter.conform-nvim = {
+            setupOpts.formatters.deno_fmt = {
+              command = "${pkgs.deno}/bin/deno";
+              append_args = [
+                "--line-width"
+                "80"
+              ];
             };
           };
 
