@@ -46,4 +46,21 @@ _: {
         codexLatest
       ];
     };
+
+  flake.modules.homeManager.ai-codex =
+    { config, lib, ... }:
+    let
+      codexSkillDirs = [
+        "rust-development"
+      ];
+    in
+    {
+      home.file = lib.listToAttrs (map (name: {
+        name = ".codex/skills/${name}";
+        value = {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/codex/skills/${name}";
+          recursive = true;
+        };
+      }) codexSkillDirs);
+    };
 }

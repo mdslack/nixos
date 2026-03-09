@@ -9,6 +9,7 @@
 
   flake.modules.homeManager.ai = {
     imports = [
+      config.flake.modules.homeManager.ai-codex
       config.flake.modules.homeManager.ai-opencode
     ];
   };
