@@ -14,7 +14,9 @@ _: {
         libglvnd
         libGLU
         mesa
+        vulkan-loader
         wayland
+        libxkbcommon
         xorg.libX11
         xorg.libXcursor
         xorg.libXext
