@@ -169,6 +169,8 @@ in {
                 }),
               })
             end
+
+            vim.opt.clipboard = "unnamedplus"
           '';
 
           filetree.neo-tree = {
