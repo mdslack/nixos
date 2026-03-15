@@ -6,6 +6,7 @@ _: {
       audacity
       wireplumber
       ffmpeg
+      jack-example-tools
       obs-studio
       qpwgraph
     ];
