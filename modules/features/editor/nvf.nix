@@ -261,7 +261,8 @@ in {
             };
             html = {
               enable = true;
-              lsp.enable = false;
+              lsp.enable = true;
+              format.enable = true;
             };
             css = {
               enable = true;
