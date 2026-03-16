@@ -28,6 +28,10 @@ in {
               action = "<cmd>Telescope oldfiles<cr>";
               desc = "Recent files";
             };
+            "<leader>fy" = {
+              action = "<cmd>Yazi<cr>";
+              desc = "Yazi";
+            };
             "<leader>mp" = {
               action = "<cmd>MarkdownPreviewToggle<cr>";
               desc = "Markdown preview";
@@ -283,6 +287,7 @@ in {
             enable = true;
             useVendoredKeybindings = false;
           };
+          utility.yazi-nvim.enable = true;
           utility.preview.markdownPreview.enable = true;
           visuals.indent-blankline.enable = true;
 
