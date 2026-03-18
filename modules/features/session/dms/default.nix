@@ -27,11 +27,14 @@
 
     };
 
-  flake.modules.homeManager.session-dms = {
-    xdg.configFile."niri/config.kdl".enable = lib.mkForce false;
+  flake.modules.homeManager.session-dms =
+    { config, ... }:
+    {
+      xdg.configFile."niri/config.kdl".enable = lib.mkForce false;
 
-    xdg.configFile."DankMaterialShell/settings.json".source = ./settings.json;
-    xdg.configFile."DankMaterialShell/.firstlaunch".text = "";
-    xdg.configFile."DankMaterialShell/.changelog-1.4".text = "";
-  };
+      xdg.configFile."DankMaterialShell" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/dms";
+        recursive = true;
+      };
+    };
 }
