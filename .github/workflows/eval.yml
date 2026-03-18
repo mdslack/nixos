@@ -4,41 +4,38 @@ on:
   push:
   pull_request:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v16
 
-      - name: Restore Nix store cache
-        uses: nix-community/cache-nix-action@v6
-
       - name: nixfmt check
         run: |
-          mapfile -t nix_files < <(git ls-files "modules/**/*.nix")
-          nix run nixpkgs#nixfmt -- --check flake.nix home/mslack.nix "${nix_files[@]}"
+          mapfile -t nix_files < <(git ls-files '*.nix')
+          nix run nixpkgs#nixfmt -- --check "${nix_files[@]}"
 
       - name: statix check
         run: nix run nixpkgs#statix -- check .
 
       - name: deadnix check
-        run: nix run nixpkgs#deadnix -- --fail modules flake.nix home/mslack.nix
+        run: nix run nixpkgs#deadnix -- --fail .
 
   eval:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v16
-
-      - name: Restore Nix store cache
-        uses: nix-community/cache-nix-action@v6
 
       - name: Flake show
         run: nix flake show --no-write-lock-file
@@ -53,20 +50,15 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - meerkat-minimal
-          - meerkat-niri
-          - meerkat-hyprland
+          - framework13-niri-bootstrap
           - meerkat-niri-noctalia
-          - meerkat-hyprland-dms
+          - elitedesk-hyprland-dms
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v16
-
-      - name: Restore Nix store cache
-        uses: nix-community/cache-nix-action@v6
 
       - name: Build critical target
         run: nix build --no-link --no-write-lock-file .#nixosConfigurations.${{ matrix.target }}.config.system.build.toplevel
