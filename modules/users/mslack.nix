@@ -26,4 +26,23 @@
       ];
     };
   };
+
+  flake.modules.nixos.users-mslack-bootstrap = {
+    users.users.mslack = {
+      isNormalUser = true;
+      description = "mslack";
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "libvirtd"
+      ];
+    };
+
+    home-manager.users.mslack = {
+      imports = [
+        config.flake.modules.homeManager.browser
+        config.flake.modules.homeManager.git
+      ];
+    };
+  };
 }

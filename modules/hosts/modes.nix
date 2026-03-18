@@ -33,6 +33,10 @@ _: {
       "minimal"
       "bundle-wm-niri"
     ];
+    niri-bootstrap = [
+      "bootstrap"
+      "bundle-wm-niri-bootstrap"
+    ];
     niri-dms = [
       "minimal"
       "bundle-wm-niri"

@@ -14,4 +14,15 @@
       config.flake.modules.nixos.users-mslack
     ];
   };
+
+  flake.modules.nixos.bootstrap = {
+    imports = [
+      config.flake.modules.nixos.network
+      config.flake.modules.nixos.security
+      config.flake.modules.nixos.shell
+      config.flake.modules.nixos.terminal-alacritty
+      config.flake.modules.nixos.browser
+      config.flake.modules.nixos.users-mslack-bootstrap
+    ];
+  };
 }

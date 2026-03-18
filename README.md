@@ -54,12 +54,46 @@ nix eval --no-write-lock-file --json .#nixosConfigurations --apply builtins.attr
 
 These steps assume UEFI + GPT and internet access in the installer.
 
-1. Verify networking:
+If the final target depends on `~/dotfiles` out-of-store symlinks, install a
+bootstrap mode first, then switch to the full mode after cloning dotfiles. For
+Niri hosts, use `niri-bootstrap`, which is intentionally limited to the basics:
+
+- Niri
+- Alacritty
+- Brave
+- Git / GitHub CLI auth support
+
+That gives you enough to sign in, clone `~/dotfiles`, and then switch to the
+full desktop/session mode.
+
+1. Bring up networking on the installer:
+
+Wired Ethernet is the easiest path. If a cable or dock is connected and the
+link comes up, DHCP should usually configure it automatically. Verify with:
 
 ```bash
 ip a
 ping -c 3 nixos.org
 ```
+
+If you need Wi-Fi on the ISO, use either `nmtui` or `nmcli`:
+
+```bash
+sudo nmtui
+```
+
+or
+
+```bash
+nmcli radio wifi on
+nmcli device wifi list
+sudo nmcli device wifi connect "<ssid>" password "<password>"
+ping -c 3 nixos.org
+```
+
+If you are using a USB-C / Thunderbolt dock for Ethernet, plug it in before
+starting the install and confirm the interface appears in `ip a` before
+continuing.
 
 2. Partition and format disk (example `/dev/nvme0n1`):
 
@@ -93,20 +127,63 @@ sudo git clone <YOUR_REPO_URL> /mnt/home/mslack/nixos
 sudo nix run github:numtide/nixos-facter -- -o /mnt/home/mslack/nixos/modules/hosts/<host>/facter.json
 ```
 
-6. (Optional) Generate hardware reference for manual merge:
+This flake consumes `facter.json` through `nixos-facter-modules`; that is the
+hardware report path wired into each host module.
+
+6. Review the host hardware module before install:
+
+The repo does not import `/etc/nixos/hardware-configuration.nix` directly.
+Hardware-specific boot and storage settings live in:
+
+- `modules/hosts/<host>/default.nix`
+- `modules/hosts/<host>/facter.json`
+
+For the existing hosts in this repo, the storage config is designed to match the
+partitioning commands above:
+
+- root label: `nixos`
+- EFI label: `boot`
+- swap label: `swap`
+
+If you use those labels during partitioning, you should not need to manually
+copy filesystem UUIDs into the repo before installing.
+
+If you are creating a new host, copy an existing host module as a starting
+point and update at minimum:
+
+- `networking.hostName`
+- `boot.loader.*`
+- `boot.initrd.availableKernelModules`
+- `boot.kernelModules`
+- `fileSystems`
+- `swapDevices`
+
+7. (Optional) Generate `hardware-configuration.nix` only as a debugging
+reference:
 
 ```bash
 sudo nixos-generate-config --root /mnt
 sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/<host>-hardware-configuration.nix
 ```
 
-7. Install selected host-mode output:
+In the normal path, you should not need to merge this file into the flake. Use
+it only if you are debugging a boot/storage mismatch or creating a brand-new
+host definition.
+
+8. Install selected host-mode output:
 
 ```bash
 sudo nixos-install --flake /mnt/home/mslack/nixos#<host>-<mode>
 ```
 
-8. Set passwords and reboot:
+For a first install on a host that needs private dotfiles later, prefer the
+bootstrap mode first. Example:
+
+```bash
+sudo nixos-install --flake /mnt/home/mslack/nixos#meerkat-niri-bootstrap
+```
+
+9. Set passwords and reboot:
 
 ```bash
 sudo nixos-enter --root /mnt -c 'passwd mslack'
@@ -114,12 +191,43 @@ sudo nixos-enter --root /mnt -c 'passwd root'
 sudo reboot
 ```
 
-9. First boot update flow:
+10. First boot update flow:
 
 ```bash
 cd ~/nixos
 git pull
 sudo nixos-rebuild switch --flake .#<host>-<mode>
+```
+
+Networking after first boot:
+
+- Installed systems in this repo use NetworkManager.
+- Wired Ethernet should come up automatically with DHCP when a link is present.
+- If you need to join Wi-Fi before the desktop is fully configured, use:
+
+```bash
+sudo nmtui
+```
+
+or
+
+```bash
+nmcli device wifi list
+sudo nmcli device wifi connect "<ssid>" password "<password>"
+```
+
+11. Bootstrap flow for private dotfiles:
+
+```bash
+brave
+git clone <YOUR_DOTFILES_URL> ~/dotfiles
+sudo nixos-rebuild switch --flake .#<host>-<final-mode>
+```
+
+Example:
+
+```bash
+sudo nixos-rebuild switch --flake .#meerkat-niri-noctalia
 ```
 
 ## Current Hosts and Modes
@@ -140,6 +248,7 @@ Modes in this repo:
 - `hyprland-dms`
 - `hyprland-noctalia`
 - `niri`
+- `niri-bootstrap`
 - `niri-dms`
 - `niri-noctalia`
 
@@ -185,6 +294,8 @@ How out-of-store linking behaves in this system:
   wiring, enabling/disabling features, or changing link targets.
 - The referenced dotfiles paths must exist on each host where the feature is
   enabled.
+- For first installs, use a bootstrap mode if the final target depends on
+  private dotfiles that are not yet present.
 
 Working rule of thumb:
 

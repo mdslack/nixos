@@ -10,4 +10,10 @@
       config.flake.modules.homeManager.wm-niri
     ];
   };
+
+  flake.modules.nixos.bundle-wm-niri-bootstrap = {
+    imports = [
+      config.flake.modules.nixos.wm-niri
+    ];
+  };
 }
