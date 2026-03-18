@@ -118,13 +118,23 @@ sudo swapon /dev/disk/by-label/swap
 
 ```bash
 sudo mkdir -p /mnt/home/mslack
-sudo git clone <YOUR_REPO_URL> /mnt/home/mslack/nixos
+sudo chown "$(id -u)":"$(id -g)" /mnt/home/mslack
+git clone <YOUR_REPO_URL> /mnt/home/mslack/nixos
+```
+
+This avoids ending up with a root-owned `~/nixos` checkout after first boot.
+If you already cloned with `sudo`, fix it before rebooting:
+
+```bash
+sudo chown -R 1000:100 /mnt/home/mslack/nixos
 ```
 
 5. Generate host fact data:
 
 ```bash
-sudo nix run github:numtide/nixos-facter -- -o /mnt/home/mslack/nixos/modules/hosts/<host>/facter.json
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:numtide/nixos-facter -- \
+  -o /mnt/home/mslack/nixos/modules/hosts/<host>/facter.json
 ```
 
 This flake consumes `facter.json` through `nixos-facter-modules`; that is the
@@ -343,6 +353,95 @@ Switch:
 ```bash
 sudo nixos-rebuild switch --flake .#framework13-minimal
 ```
+
+Update flake lock entries:
+
+```bash
+nix flake lock --update-input <input-name>
+git diff flake.lock
+sudo nixos-rebuild build --flake .#framework13-minimal
+```
+
+Update all flake inputs:
+
+```bash
+nix flake update
+git diff flake.lock
+sudo nixos-rebuild build --flake .#framework13-minimal
+```
+
+Upgrade packages in this flake:
+
+Package upgrades come from updating `flake.lock`, not from a separate package
+manager step. The normal flow is:
+
+```bash
+nix flake update
+git diff flake.lock
+sudo nixos-rebuild switch --flake .#framework13-minimal
+```
+
+If you only want to upgrade one dependency family, update just that input:
+
+```bash
+nix flake lock --update-input nixpkgs
+git diff flake.lock
+sudo nixos-rebuild switch --flake .#framework13-minimal
+```
+
+Clean up a stale Home Manager-managed config path:
+
+Sometimes an old file or symlink in `~/.config/<app>` blocks a new Home Manager
+layout from being linked. Verify the path is stale, remove it, then rerun Home
+Manager activation:
+
+```bash
+readlink -f ~/.config/<app>
+rm -r ~/.config/<app>
+sudo systemctl restart home-manager-mslack.service
+```
+
+This is most relevant when changing an app from a whole-directory symlink to
+per-file Home Manager management, or the reverse.
+
+Fix a root-owned `~/nixos` checkout:
+
+```bash
+sudo chown -R mslack:users ~/nixos
+```
+
+Clean up Home Manager backup files:
+
+Home Manager in this flake uses `.hm-bak` as its backup suffix. Review and
+remove old backups when you no longer need them:
+
+```bash
+find ~ -name '*.hm-bak' -print
+find ~ -name '*.hm-bak' -delete
+```
+
+List old NixOS system generations:
+
+```bash
+sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
+```
+
+Delete old NixOS system generations:
+
+```bash
+sudo nix-env --delete-generations old --profile /nix/var/nix/profiles/system
+sudo nix-collect-garbage -d
+```
+
+Keep only recent system generations:
+
+```bash
+sudo nix-env --delete-generations 30d --profile /nix/var/nix/profiles/system
+sudo nix-collect-garbage
+```
+
+These commands remove old deployable system profiles. Run them only after you
+are confident you no longer need to roll back to those older generations.
 
 ## Dev Environment
 
