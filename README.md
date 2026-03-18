@@ -186,6 +186,16 @@ host definition.
 sudo nixos-install --flake /mnt/home/mslack/nixos#<host>-<mode>
 ```
 
+If `nixos-install` fails with an error like `opening directory '/nix/store/...':
+Too many open files`, rerun it from a root shell with a higher file-descriptor
+limit:
+
+```bash
+sudo -i
+ulimit -n 65536
+nixos-install --flake /mnt/home/mslack/nixos#<host>-<mode>
+```
+
 For a first install on a host that needs private dotfiles later, prefer the
 bootstrap mode first. Example:
 
