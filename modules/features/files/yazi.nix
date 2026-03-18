@@ -8,7 +8,7 @@ _: {
     ];
   };
 
-  flake.modules.homeManager.files-yazi = {pkgs, ...}: let
+  flake.modules.homeManager.files-yazi = {config, pkgs, ...}: let
     yaziCatppuccinMocha = pkgs.stdenvNoCC.mkDerivation {
       pname = "yazi-flavor-catppuccin-mocha";
       version = "2026-01-18";
@@ -26,6 +26,9 @@ _: {
       '';
     };
   in {
+    xdg.configFile."yazi/yazi.toml".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/yazi/yazi.toml";
+
     programs.yazi = {
       enable = true;
       shellWrapperName = "yy";
