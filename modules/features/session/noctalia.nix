@@ -5,6 +5,9 @@
     ];
 
     environment.systemPackages = [
+      pkgs.adwaita-icon-theme
+      pkgs.hicolor-icon-theme
+      pkgs.papirus-icon-theme
       pkgs.swayidle
     ];
 
@@ -24,8 +27,6 @@
         TimeoutSec = 30;
       };
     };
-
-    services.noctalia-shell.enable = true;
   };
 
   flake.modules.homeManager.session-noctalia = {
