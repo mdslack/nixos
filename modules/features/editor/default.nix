@@ -2,6 +2,7 @@
 {
   flake.modules.nixos.editor = {
     imports = [
+      config.flake.modules.nixos.editor-libreoffice
       config.flake.modules.nixos.editor-neovim
       config.flake.modules.nixos.editor-zed
     ];
