@@ -22,6 +22,7 @@ _: {
         tmux
         luaPackages.luacheck
         markdownlint-cli
+        nodePackages.prettier
         (writeShellScriptBin "update-ai-packages" ''
           set -euo pipefail
 
