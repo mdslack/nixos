@@ -259,18 +259,11 @@ in {
             json = {
               enable = true;
               lsp.enable = true;
-              format = {
-                enable = true;
-                type = ["prettierd"];
-              };
+              format.enable = true;
             };
             yaml = {
               enable = true;
               lsp.enable = true;
-              format = {
-                enable = true;
-                type = ["prettierd"];
-              };
             };
             bash = {
               enable = true;
@@ -279,10 +272,7 @@ in {
             html = {
               enable = true;
               lsp.enable = true;
-              format = {
-                enable = true;
-                type = ["prettierd"];
-              };
+              format.enable = true;
             };
             css = {
               enable = true;
