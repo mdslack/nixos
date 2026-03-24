@@ -237,7 +237,10 @@ in {
             ts = {
               enable = true;
               lsp.enable = true;
-              format.enable = true;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
             };
             markdown = {
               enable = true;
@@ -256,11 +259,18 @@ in {
             json = {
               enable = true;
               lsp.enable = true;
-              format.enable = true;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
             };
             yaml = {
               enable = true;
               lsp.enable = true;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
             };
             bash = {
               enable = true;
@@ -269,11 +279,18 @@ in {
             html = {
               enable = true;
               lsp.enable = true;
-              format.enable = true;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
             };
             css = {
               enable = true;
               lsp.enable = false;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
             };
           };
 
