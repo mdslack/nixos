@@ -242,7 +242,10 @@ in {
             markdown = {
               enable = true;
               lsp.enable = true;
-              format.enable = true;
+              format = {
+                enable = true;
+                type = ["prettierd"];
+              };
               extensions.render-markdown-nvim.enable = true;
             };
             lua = {
@@ -313,6 +316,13 @@ in {
               append_args = [
                 "--line-width"
                 "80"
+              ];
+            };
+
+            setupOpts.formatters.prettierd = {
+              append_args = [
+                "--prose-wrap"
+                "never"
               ];
             };
           };
