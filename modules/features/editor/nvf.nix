@@ -325,13 +325,6 @@ in {
                 "80"
               ];
             };
-
-            setupOpts.formatters.prettierd = {
-              append_args = [
-                "--prose-wrap"
-                "never"
-              ];
-            };
           };
 
           git = {
