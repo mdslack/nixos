@@ -1,5 +1,6 @@
 {inputs, ...}: let
   pluginPkgs = inputs.nixpkgs.legacyPackages.x86_64-linux.vimPlugins;
+  markdownlintConfig = "${../../devshells/config/markdownlint.yaml}";
 in {
   # Included in default editor baseline.
   flake.modules.homeManager.editor-nvf = {pkgs, ...}: {
@@ -314,6 +315,17 @@ in {
               javascriptreact = ["eslint"];
               lua = ["luacheck"];
               markdown = ["markdownlint"];
+            };
+            linters = {
+              markdownlint.args = [
+                "--config"
+                markdownlintConfig
+                "--stdin"
+              ];
+              "markdownlint-cli2".args = [
+                "--config"
+                markdownlintConfig
+              ];
             };
           };
 
