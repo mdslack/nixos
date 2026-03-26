@@ -12,6 +12,7 @@
     environment.systemPackages = with pkgs; [
       imagemagick
       gimp
+      loupe
       inkscape
       krita
       zathura
