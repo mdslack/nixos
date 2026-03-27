@@ -240,15 +240,14 @@ in {
               lsp.enable = true;
               format = {
                 enable = true;
-                type = ["prettierd"];
+                type = ["prettier"];
               };
             };
             markdown = {
               enable = true;
               lsp.enable = true;
               format = {
-                enable = true;
-                type = ["prettierd"];
+                enable = false;
               };
               extensions.render-markdown-nvim.enable = true;
             };
@@ -280,7 +279,7 @@ in {
               lsp.enable = false;
               format = {
                 enable = true;
-                type = ["prettierd"];
+                type = ["prettier"];
               };
             };
           };
@@ -330,12 +329,25 @@ in {
           };
 
           formatter.conform-nvim = {
-            setupOpts.formatters.deno_fmt = {
-              command = "${pkgs.deno}/bin/deno";
-              append_args = [
-                "--line-width"
-                "80"
-              ];
+            setupOpts = {
+              format_on_save = {
+                lsp_format = "fallback";
+                timeout_ms = 3000;
+              };
+              format_after_save = null;
+              formatters = {
+                deno_fmt = {
+                  command = "${pkgs.deno}/bin/deno";
+                  append_args = [
+                    "--line-width"
+                    "80"
+                  ];
+                };
+                prettier = {
+                  command = "${pkgs.prettier}/bin/prettier";
+                };
+              };
+              formatters_by_ft.markdown = ["prettier"];
             };
           };
 
