@@ -7,6 +7,7 @@
   modes = lib.mapAttrs (_: featureNames: map M featureNames) config.flake.meta.hostModes;
   hostFeatures =
     [
+      config.flake.modules.nixos.bundle-hardware-laptop
       config.flake.modules.nixos.graphics-amd
     ]
     ++ lib.optionals (config.flake.meta.hostToggles.framework13.egpu or false) [
