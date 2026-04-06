@@ -41,13 +41,10 @@ _: {
       home.activation.braveDefaults = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               prefs_file="$HOME/.config/BraveSoftware/Brave-Browser/Default/Preferences"
 
-              if [ ! -f "$prefs_file" ]; then
-                exit 0
-              fi
+              if [ -f "$prefs_file" ]; then
+                tmp_file="$(mktemp)"
 
-              tmp_file="$(mktemp)"
-
-              ${pkgs.python3}/bin/python3 - "$prefs_file" "$tmp_file" <<'PY'
+                ${pkgs.python3}/bin/python3 - "$prefs_file" "$tmp_file" <<'PY'
         import json
         import sys
 
@@ -82,7 +79,8 @@ _: {
             json.dump(prefs, f, separators=(",", ":"))
         PY
 
-              mv "$tmp_file" "$prefs_file"
+                mv "$tmp_file" "$prefs_file"
+              fi
       '';
     };
 }
