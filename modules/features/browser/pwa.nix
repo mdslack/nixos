@@ -119,7 +119,7 @@ in {
 
         for root in "''${icon_search_roots[@]}"; do
           [[ -d "$root" ]] || continue
-          for ext in png svg xpm; do
+          for ext in svg png xpm; do
             match="$(find "$root" \( -type f -o -type l \) \( -path "*/$icon_name.$ext" -o -path "*/apps/$icon_name.$ext" \) -print -quit)"
             if [[ -n "$match" ]]; then
               printf '%s\n' "$match"
