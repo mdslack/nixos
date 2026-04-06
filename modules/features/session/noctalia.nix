@@ -8,25 +8,7 @@
       pkgs.adwaita-icon-theme
       pkgs.hicolor-icon-theme
       pkgs.papirus-icon-theme
-      pkgs.swayidle
     ];
-
-    systemd.user.services.swayidle = {
-      description = "Swayidle Service";
-      after = ["graphical-session.target"];
-      wantedBy = ["graphical-session.target"];
-
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = ''
-          ${pkgs.swayidle}/bin/swayidle -w \
-            timeout 300 "${pkgs.quickshell}/bin/qs -c noctalia-shell ipc call lockScreen lock" \
-            timeout 600 "${pkgs.quickshell}/bin/qs -c noctalia-shell ipc call sessionMenu lockAndSuspend"
-        '';
-        Restart = "on-failure";
-        TimeoutSec = 30;
-      };
-    };
   };
 
   flake.modules.homeManager.session-noctalia = {
