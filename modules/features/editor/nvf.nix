@@ -29,6 +29,14 @@ in {
               action = "<cmd>Telescope oldfiles<cr>";
               desc = "Recent files";
             };
+            "<leader>ff" = {
+              action = "<cmd>Telescope find_files<cr>";
+              desc = "Find files";
+            };
+            "<leader>fm" = {
+              action = "<cmd>lua require('mini.files').open(vim.api.nvim_buf_get_name(0), true)<cr>";
+              desc = "Mini files";
+            };
             "<leader>fy" = {
               action = "<cmd>Yazi<cr>";
               desc = "Yazi";
@@ -293,6 +301,7 @@ in {
           binds.whichKey.enable = true;
           autopairs.nvim-autopairs.enable = true;
           comments.comment-nvim.enable = true;
+          mini.files.enable = true;
           utility.surround = {
             enable = true;
             useVendoredKeybindings = false;
