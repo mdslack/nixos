@@ -10,6 +10,7 @@ _: {
         git-lfs
         gh
         lazygit
+        ansible
         curl
         wget
         btop
@@ -20,6 +21,8 @@ _: {
         jq
         just
         tmux
+        terraform
+        opentofu
         luaPackages.luacheck
         markdownlint-cli
         nodePackages.prettier
