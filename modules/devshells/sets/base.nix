@@ -11,8 +11,10 @@ _: {
         gh
         lazygit
         ansible
+        awscli2
         curl
         wget
+        rclone
         btop
         bat
         ripgrep
