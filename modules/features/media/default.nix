@@ -1,10 +1,17 @@
 {config, ...}: {
   flake.modules.nixos.media = {
     imports = [
+      config.flake.modules.nixos.media-audio
       config.flake.modules.nixos.media-graphics
       config.flake.modules.nixos.media-publishing
       config.flake.modules.nixos.media-recording
       config.flake.modules.nixos.media-spotify
+    ];
+  };
+
+  flake.modules.homeManager.media = {
+    imports = [
+      config.flake.modules.homeManager.media-audio
     ];
   };
 

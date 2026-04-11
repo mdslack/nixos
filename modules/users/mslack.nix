@@ -20,6 +20,7 @@
         config.flake.modules.homeManager.files
         config.flake.modules.homeManager.git
         config.flake.modules.homeManager.input
+        config.flake.modules.homeManager.media
         config.flake.modules.homeManager.shell
         config.flake.modules.homeManager.terminal
         config.flake.modules.homeManager.virtualization
