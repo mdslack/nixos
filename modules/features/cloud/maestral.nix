@@ -1,5 +1,5 @@
 _: {
-  flake.modules.nixos.cloud =
+  flake.modules.nixos.cloud-maestral =
     { pkgs, ... }:
     {
       environment.systemPackages = [
@@ -8,7 +8,7 @@ _: {
       ];
     };
 
-  flake.modules.homeManager.cloud =
+  flake.modules.homeManager.cloud-maestral =
     { config, lib, ... }:
     {
       xdg.configFile."maestral" = {
