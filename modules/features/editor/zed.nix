@@ -4,7 +4,7 @@
   flake.modules.nixos.editor-zed =
     { pkgs, ... }:
     let
-      zedPackage = inputs.zed.packages.${pkgs.system}.default;
+      zedPackage = inputs.zed.packages.${pkgs.stdenv.hostPlatform.system}.default;
     in
     {
       environment.systemPackages = [
