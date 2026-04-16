@@ -4,11 +4,11 @@ _: {
     let
       codexLatest = pkgsUnstable.stdenv.mkDerivation {
         pname = "codex";
-        version = "0.107.0";
+        version = "0.121.0";
 
         src = pkgsUnstable.fetchurl {
-          url = "https://github.com/openai/codex/releases/download/rust-v0.107.0/codex-x86_64-unknown-linux-gnu.tar.gz";
-          hash = "sha256-6OqctfcbRo8yPPw3ftcXeIGYFeOJpgdrOCCFPHPiGNw=";
+          url = "https://github.com/openai/codex/releases/download/rust-v0.121.0/codex-x86_64-unknown-linux-gnu.tar.gz";
+          hash = "sha256-8FOsgenGdpkg+e41ZqutR6sIVut+55JChoFmTs4RNDA=";
         };
 
         dontUnpack = true;
@@ -37,7 +37,10 @@ _: {
         '';
 
         postFixup = ''
-          wrapProgram $out/bin/codex --prefix PATH : ${lib.makeBinPath [ pkgsUnstable.ripgrep ]}
+          wrapProgram $out/bin/codex --prefix PATH : ${lib.makeBinPath [
+            pkgsUnstable.bubblewrap
+            pkgsUnstable.ripgrep
+          ]}
         '';
       };
     in
