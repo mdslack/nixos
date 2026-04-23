@@ -9,7 +9,7 @@
     [
       config.flake.modules.nixos.bundle-hardware-laptop
       config.flake.modules.nixos.graphics-amd
-      config.flake.modules.nixos.monitoring-victoriametrics
+      config.flake.modules.nixos.monitoring
     ]
     ++ lib.optionals (config.flake.meta.hostToggles.framework13.egpu or false) [
       config.flake.modules.nixos.graphics-egpu
