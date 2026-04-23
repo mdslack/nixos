@@ -114,6 +114,7 @@ _: {
         full = mkDevShell "full" {
           packages = packagesFor [
             "base"
+            "monitoring"
             "go"
             "rust"
             "python"
