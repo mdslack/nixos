@@ -1,9 +1,9 @@
 _: {
   flake.modules.nixos.communication-zoom =
-    { pkgs, ... }:
+    { pkgsUnstable, ... }:
     {
       environment.systemPackages = [
-        pkgs.zoom-us
+        pkgsUnstable.zoom-us
       ];
     };
 }
