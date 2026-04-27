@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   flake.modules.nixos.media = {
     imports = [
       config.flake.modules.nixos.media-audio
@@ -6,6 +7,7 @@
       config.flake.modules.nixos.media-publishing
       config.flake.modules.nixos.media-recording
       config.flake.modules.nixos.media-spotify
+      config.flake.modules.nixos.media-video
     ];
   };
 
@@ -15,14 +17,16 @@
     ];
   };
 
-  flake.modules.nixos.media-graphics = {pkgs, ...}: {
-    environment.systemPackages = with pkgs; [
-      imagemagick
-      gimp
-      loupe
-      inkscape
-      krita
-      zathura
-    ];
-  };
+  flake.modules.nixos.media-graphics =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = with pkgs; [
+        imagemagick
+        gimp
+        loupe
+        inkscape
+        krita
+        zathura
+      ];
+    };
 }
