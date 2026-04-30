@@ -4,11 +4,11 @@ _: {
     let
       codexLatest = pkgsUnstable.stdenv.mkDerivation {
         pname = "codex";
-        version = "0.124.0";
+        version = "0.128.0";
 
         src = pkgsUnstable.fetchurl {
-          url = "https://github.com/openai/codex/releases/download/rust-v0.124.0/codex-x86_64-unknown-linux-gnu.tar.gz";
-          hash = "sha256-DWGdUtJONsXtFZMj2SHYpnCdnrzjdQRdBD16WQn8awk=";
+          url = "https://github.com/openai/codex/releases/download/rust-v0.128.0/codex-x86_64-unknown-linux-musl.tar.gz";
+          hash = "sha256-iGuF5hGMC0MjRDfKAH++kjYRpTsQPQDg0650rvsg4jo=";
         };
 
         dontUnpack = true;
@@ -31,16 +31,18 @@ _: {
           runHook preInstall
           install -d $out/bin
           tar -xf $src -C $out/bin
-          mv $out/bin/codex-x86_64-unknown-linux-gnu $out/bin/codex
+          mv $out/bin/codex-x86_64-unknown-linux-musl $out/bin/codex
           chmod +x $out/bin/codex
           runHook postInstall
         '';
 
         postFixup = ''
-          wrapProgram $out/bin/codex --prefix PATH : ${lib.makeBinPath [
-            pkgsUnstable.bubblewrap
-            pkgsUnstable.ripgrep
-          ]}
+          wrapProgram $out/bin/codex --prefix PATH : ${
+            lib.makeBinPath [
+              pkgsUnstable.bubblewrap
+              pkgsUnstable.ripgrep
+            ]
+          }
         '';
       };
     in
@@ -58,12 +60,14 @@ _: {
       ];
     in
     {
-      home.file = lib.listToAttrs (map (name: {
-        name = ".codex/skills/${name}";
-        value = {
-          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/codex/skills/${name}";
-          recursive = true;
-        };
-      }) codexSkillDirs);
+      home.file = lib.listToAttrs (
+        map (name: {
+          name = ".codex/skills/${name}";
+          value = {
+            source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/codex/skills/${name}";
+            recursive = true;
+          };
+        }) codexSkillDirs
+      );
     };
 }
