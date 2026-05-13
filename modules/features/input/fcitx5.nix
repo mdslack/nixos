@@ -1,7 +1,8 @@
 {
   lib,
   ...
-}: let
+}:
+let
   rimeStatusIconPaths = [
     "icons/hicolor/16x16/status/fcitx-rime-zh.svg"
     "icons/hicolor/16x16/status/fcitx-rime-symbolic.svg"
@@ -55,7 +56,8 @@
     "icons/hicolor/48x48/apps/org.fcitx.Fcitx5.fcitx_rime_im.png"
   ];
 
-  mkDataFiles = paths: source:
+  mkDataFiles =
+    paths: source:
     lib.genAttrs paths (_: {
       inherit source;
     });
@@ -131,7 +133,8 @@
     "icons/Papirus-Dark/48x48/actions/fcitx-rime.svg"
     "icons/Papirus-Dark/64x64/actions/fcitx-rime.svg"
   ];
-in {
+in
+{
   flake.modules.nixos.input-fcitx5 =
     { pkgs, ... }:
     let
@@ -149,11 +152,6 @@ in {
     {
       environment.systemPackages = with pkgs; [
         rime-data
-      ];
-
-      fonts.packages = with pkgs; [
-        noto-fonts
-        noto-fonts-cjk-sans
       ];
 
       i18n.inputMethod = {
@@ -182,21 +180,19 @@ in {
         UseInputMethodLanguageToDisplayText=False
       '';
 
-      xdg.dataFile =
-        {
-          "icons/hicolor/scalable/status/input-keyboard-symbolic.svg".source =
-            ../../../assets/icons/input-keyboard-symbolic.svg;
+      xdg.dataFile = {
+        "icons/hicolor/scalable/status/input-keyboard-symbolic.svg".source =
+          ../../../assets/icons/input-keyboard-symbolic.svg;
 
-          "icons/hicolor/16x16/status/input-keyboard-symbolic.svg".source =
-            ../../../assets/icons/input-keyboard-symbolic.svg;
+        "icons/hicolor/16x16/status/input-keyboard-symbolic.svg".source =
+          ../../../assets/icons/input-keyboard-symbolic.svg;
 
-          "icons/hicolor/scalable/apps/input-keyboard.svg".source =
-            ../../../assets/icons/input-keyboard.svg;
-        }
-        // mkDataFiles keyboardThemeOverridePaths ../../../assets/icons/input-keyboard-symbolic.svg
-        // mkDataFiles rimeStatusIconPaths ../../../assets/icons/fcitx-rime.svg
-        // mkDataFiles rimeAppSvgIconPaths ../../../assets/icons/fcitx-rime.svg
-        // mkDataFiles rimeAppPngIconPaths ../../../assets/icons/fcitx-rime.png
-        // mkDataFiles rimeThemeOverridePaths ../../../assets/icons/fcitx-rime.svg;
+        "icons/hicolor/scalable/apps/input-keyboard.svg".source = ../../../assets/icons/input-keyboard.svg;
+      }
+      // mkDataFiles keyboardThemeOverridePaths ../../../assets/icons/input-keyboard-symbolic.svg
+      // mkDataFiles rimeStatusIconPaths ../../../assets/icons/fcitx-rime.svg
+      // mkDataFiles rimeAppSvgIconPaths ../../../assets/icons/fcitx-rime.svg
+      // mkDataFiles rimeAppPngIconPaths ../../../assets/icons/fcitx-rime.png
+      // mkDataFiles rimeThemeOverridePaths ../../../assets/icons/fcitx-rime.svg;
     };
 }
