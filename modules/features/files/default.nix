@@ -2,6 +2,7 @@
 {
   flake.modules.nixos.files = {
     imports = [
+      config.flake.modules.nixos.files-archives
       config.flake.modules.nixos.files-yazi
     ];
   };
