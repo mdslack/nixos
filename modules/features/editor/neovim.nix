@@ -31,9 +31,15 @@ _: {
     };
 
   flake.modules.homeManager.editor-neovim =
-    { config, pkgsUnstable, ... }:
+    {
+      config,
+      pkgs,
+      pkgsUnstable,
+      ...
+    }:
     let
       grammars = pkgsUnstable.tree-sitter-grammars;
+      markdownPreview = pkgs.vimPlugins.markdown-preview-nvim;
       nvimTreesitter = pkgsUnstable.vimPlugins.nvim-treesitter;
 
       parsers = {
@@ -182,6 +188,7 @@ _: {
       home.file = {
         ".config/nvim".source =
           config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
+        ".local/share/nvim/site/pack/nix/start/markdown-preview.nvim".source = markdownPreview;
       }
       // parserFiles
       // queryFiles;
