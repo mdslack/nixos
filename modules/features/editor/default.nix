@@ -10,7 +10,7 @@
 
   flake.modules.homeManager.editor = {
     imports = [
-      config.flake.modules.homeManager.editor-nvf
+      config.flake.modules.homeManager.editor-neovim
       config.flake.modules.homeManager.editor-zed
     ];
   };
