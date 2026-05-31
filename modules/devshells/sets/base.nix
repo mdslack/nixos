@@ -35,9 +35,6 @@ _: {
           repo_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
           cd "$repo_root"
 
-          echo "Updating opencode source pin..."
-          nix flake update opencode-src
-
           echo "Updating codex release pin..."
           latest_tag=$(curl -s https://api.github.com/repos/openai/codex/releases/latest | jq -r .tag_name)
           version=''${latest_tag#rust-v}
