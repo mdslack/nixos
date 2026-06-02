@@ -10,7 +10,7 @@ _: {
         mermaid-cli
         markdownlint-cli
         mdbook
-        texlive.combined.scheme-medium
+        texlive.combined.scheme-full
       ];
     };
 }
