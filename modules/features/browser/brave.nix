@@ -1,12 +1,12 @@
 _: {
   flake.modules.nixos.browser-brave =
     {
-      pkgs,
+      pkgsUnstable,
       ...
     }:
     {
       environment.systemPackages = [
-        pkgs.brave
+        pkgsUnstable.brave
       ];
 
       environment.etc."brave/policies/managed/workstation-browser.json".text = builtins.toJSON {
