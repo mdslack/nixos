@@ -10,6 +10,8 @@ _: {
         mermaid-cli
         markdownlint-cli
         mdbook
+        poppler-utils
+        qpdf
         texlive.combined.scheme-full
       ];
     };

@@ -12,6 +12,7 @@ _: {
         lazygit
         ansible
         awscli2
+        bubblewrap
         curl
         wget
         rclone
