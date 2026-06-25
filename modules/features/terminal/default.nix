@@ -5,6 +5,7 @@
       config.flake.modules.nixos.terminal-fonts
       config.flake.modules.nixos.terminal-alacritty
       config.flake.modules.nixos.terminal-ghostty
+      config.flake.modules.nixos.terminal-herdr
       config.flake.modules.nixos.terminal-kitty
     ];
   };

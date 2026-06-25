@@ -21,6 +21,10 @@
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.7.1";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell/v4.7.7";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
