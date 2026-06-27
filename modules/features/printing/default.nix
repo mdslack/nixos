@@ -10,10 +10,26 @@ _: {
       '';
     in
     {
-      services.printing.enable = true;
-      services.printing.drivers = [
-        pkgs.gutenprint
-        canonPdfPpd
+      services.printing = {
+        enable = true;
+        browsing = true;
+        browsed.enable = true;
+        drivers = [
+          pkgs.gutenprint
+          canonPdfPpd
+        ];
+      };
+
+      services.avahi = {
+        enable = true;
+        nssmdns4 = true;
+        openFirewall = true;
+      };
+
+      environment.systemPackages = with pkgs; [
+        avahi
+        cups
+        system-config-printer
       ];
 
       hardware.printers = {
