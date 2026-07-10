@@ -45,7 +45,7 @@ _: {
           codex_file="$repo_root/modules/features/ai/codex.nix"
           sed -i "s/version = \".*\";/version = \"''${version}\";/" "$codex_file"
           sed -i "s|url = \".*codex-x86_64-unknown-linux-[^\"]*.tar.gz\";|url = \"''${url}\";|" "$codex_file"
-          sed -i "s/hash = \"sha256-[^\"]*\";/hash = \"''${hash}\";/" "$codex_file"
+          sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"''${hash}\";|" "$codex_file"
 
           echo "codex updated to ''${version}"
         '')
