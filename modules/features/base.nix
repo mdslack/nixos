@@ -20,8 +20,10 @@ _: {
 
       environment.systemPackages = with pkgs; [
         git
+        git-annex
         git-lfs
         gh
+        jujutsu
         lazygit
         openssh
         curl

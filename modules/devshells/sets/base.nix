@@ -7,8 +7,10 @@ _: {
     {
       dev.shellSets.base = with config._module.args.pkgs; [
         git
+        git-annex
         git-lfs
         gh
+        jujutsu
         lazygit
         ansible
         awscli2
