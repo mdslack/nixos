@@ -2,12 +2,13 @@ _: {
   perSystem =
     {
       config,
+      pkgsUnstable,
       ...
     }:
     {
       dev.shellSets.go = with config._module.args.pkgs; [
         go
-        hugo
+        pkgsUnstable.hugo
         gopls
         golangci-lint
         delve
