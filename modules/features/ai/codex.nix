@@ -4,11 +4,11 @@ _: {
     let
       codexLatest = pkgsUnstable.stdenv.mkDerivation {
         pname = "codex";
-        version = "0.144.1";
+        version = "0.146.0";
 
         src = pkgsUnstable.fetchurl {
-          url = "https://github.com/openai/codex/releases/download/rust-v0.144.1/codex-x86_64-unknown-linux-musl.tar.gz";
-          hash = "sha256-hAka4gxl/MfUEg25fRvVfX/435x2Cft4HHjC671PWig=";
+          url = "https://github.com/openai/codex/releases/download/rust-v0.146.0/codex-package-x86_64-unknown-linux-musl.tar.gz";
+          hash = "sha256-PIkSWvHXyYq+yL61USku+Z2spS4gTlhSqROf6uLEZ+U=";
         };
 
         dontUnpack = true;
@@ -22,6 +22,7 @@ _: {
 
         buildInputs = [
           pkgsUnstable.libcap
+          pkgsUnstable.ncurses
           pkgsUnstable.openssl
           pkgsUnstable.stdenv.cc.cc.lib
           pkgsUnstable.zlib
@@ -29,9 +30,8 @@ _: {
 
         installPhase = ''
           runHook preInstall
-          install -d $out/bin
-          tar -xf $src -C $out/bin
-          mv $out/bin/codex-x86_64-unknown-linux-musl $out/bin/codex
+          install -d $out
+          tar -xf $src -C $out
           chmod +x $out/bin/codex
           runHook postInstall
         '';
@@ -53,7 +53,12 @@ _: {
     };
 
   flake.modules.homeManager.ai-codex =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       codexSkillDirs = [
         "rust-development"
@@ -69,5 +74,27 @@ _: {
           };
         }) codexSkillDirs
       );
+
+      home.activation.removeCodexStandaloneSymlink = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        codex_link="$HOME/.local/bin/codex"
+        standalone_root="$HOME/.codex/packages/standalone"
+
+        if [ -L "$codex_link" ]; then
+          codex_target="$(${pkgs.coreutils}/bin/readlink "$codex_link" 2>/dev/null || true)"
+          codex_resolved="$(${pkgs.coreutils}/bin/readlink -f "$codex_link" 2>/dev/null || true)"
+
+          case "$codex_target" in
+            "$standalone_root"/*)
+              rm -f "$codex_link"
+              ;;
+          esac
+
+          case "$codex_resolved" in
+            "$standalone_root"/*)
+              rm -f "$codex_link"
+              ;;
+          esac
+        fi
+      '';
     };
 }

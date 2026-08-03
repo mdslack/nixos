@@ -41,12 +41,12 @@ _: {
           echo "Updating codex release pin..."
           latest_tag=$(curl -s https://api.github.com/repos/openai/codex/releases/latest | jq -r .tag_name)
           version=''${latest_tag#rust-v}
-          url="https://github.com/openai/codex/releases/download/''${latest_tag}/codex-x86_64-unknown-linux-musl.tar.gz"
+          url="https://github.com/openai/codex/releases/download/''${latest_tag}/codex-package-x86_64-unknown-linux-musl.tar.gz"
           hash=$(nix store prefetch-file --json "$url" | jq -r .hash)
 
           codex_file="$repo_root/modules/features/ai/codex.nix"
           sed -i "s/version = \".*\";/version = \"''${version}\";/" "$codex_file"
-          sed -i "s|url = \".*codex-x86_64-unknown-linux-[^\"]*.tar.gz\";|url = \"''${url}\";|" "$codex_file"
+          sed -i "s|url = \".*codex-package-x86_64-unknown-linux-[^\"]*.tar.gz\";|url = \"''${url}\";|" "$codex_file"
           sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"''${hash}\";|" "$codex_file"
 
           echo "codex updated to ''${version}"
