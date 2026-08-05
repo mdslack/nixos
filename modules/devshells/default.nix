@@ -8,6 +8,56 @@ _: {
       inherit (config._module.args) pkgs;
       inherit (config.dev) shellSets;
       packagesFor = names: builtins.concatLists (map (name: shellSets.${name} or [ ]) names);
+      shellProfiles = {
+        baseline = packagesFor [ "base" ];
+        go = packagesFor [
+          "base"
+          "go"
+          "doppler"
+        ];
+        rust = packagesFor [
+          "base"
+          "rust"
+          "doppler"
+        ];
+        python = packagesFor [
+          "base"
+          "python"
+          "doppler"
+        ];
+        web = packagesFor [
+          "base"
+          "node"
+          "doppler"
+        ];
+        docs = packagesFor [
+          "base"
+          "docs"
+        ];
+        nix = packagesFor [
+          "base"
+          "nix"
+        ];
+        proto = packagesFor [
+          "base"
+          "protobuf"
+          "doppler"
+        ];
+        full = packagesFor [
+          "base"
+          "monitoring"
+          "go"
+          "rust"
+          "python"
+          "node"
+          "dotnet"
+          "protobuf"
+          "docs"
+          "nix"
+          "devenv"
+          "doppler"
+        ];
+      };
       nativePythonRuntimeLibs = with pkgs; [
         stdenv.cc.cc.lib
         fontconfig
@@ -38,94 +88,60 @@ _: {
           exec ${pkgs.zsh}/bin/zsh -l
         fi
       '';
-      mkDevShell = shellName: attrs:
+      mkDevShell =
+        shellName: attrs:
         pkgs.mkShell (
           attrs
           // {
             shellHook = ''
               export NIX_DEVSHELL_NAME="${shellName}"
-            '' + (attrs.shellHook or "") + zshShellHook;
+            ''
+            + (attrs.shellHook or "")
+            + zshShellHook;
           }
         );
     in
     {
+      dev.shellProfiles = shellProfiles;
+
       devShells = {
         default = mkDevShell "default" {
-          packages = packagesFor [ "base" ];
+          packages = shellProfiles.baseline;
         };
 
         go = mkDevShell "go" {
-          packages = packagesFor [
-            "base"
-            "go"
-            "doppler"
-          ];
+          packages = shellProfiles.go;
         };
 
         rust = mkDevShell "rust" {
-          packages = packagesFor [
-            "base"
-            "rust"
-            "doppler"
-          ];
+          packages = shellProfiles.rust;
           shellHook = nativePythonRuntimeShellHook;
         };
 
         python = mkDevShell "python" {
-          packages = packagesFor [
-            "base"
-            "python"
-            "doppler"
-          ];
+          packages = shellProfiles.python;
           shellHook = nativePythonRuntimeShellHook;
         };
 
         web = mkDevShell "web" {
-          packages = packagesFor [
-            "base"
-            "node"
-            "doppler"
-          ];
+          packages = shellProfiles.web;
         };
 
         docs = mkDevShell "docs" {
-          packages = packagesFor [
-            "base"
-            "docs"
-          ];
+          packages = shellProfiles.docs;
           MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
         };
 
         nix = mkDevShell "nix" {
-          packages = packagesFor [
-            "base"
-            "nix"
-          ];
+          packages = shellProfiles.nix;
         };
 
         proto = mkDevShell "proto" {
-          packages = packagesFor [
-            "base"
-            "protobuf"
-            "doppler"
-          ];
+          packages = shellProfiles.proto;
         };
 
         full = mkDevShell "full" {
-          packages = packagesFor [
-            "base"
-            "monitoring"
-            "go"
-            "rust"
-            "python"
-            "node"
-            "dotnet"
-            "protobuf"
-            "docs"
-            "nix"
-            "devenv"
-            "doppler"
-          ];
+          packages = shellProfiles.full;
           MARKDOWNLINT_CONFIG = ./config/markdownlint.yaml;
           shellHook = nativePythonRuntimeShellHook;
         };

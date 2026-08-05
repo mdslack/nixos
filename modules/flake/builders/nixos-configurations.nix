@@ -37,6 +37,7 @@ let
 
       specialArgs = {
         inherit hostName inputs;
+        devShellProfiles = config.allSystems.${system}.dev.shellProfiles;
         pkgsUnstable = import inputs.nixpkgs-unstable {
           inherit system;
           config.allowUnfree = true;

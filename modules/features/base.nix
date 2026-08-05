@@ -1,7 +1,10 @@
-_: {
+{ config, ... }:
+{
   flake.modules.nixos.base =
     { pkgs, ... }:
     {
+      imports = [ config.flake.modules.nixos.development-tools ];
+
       nix.settings.experimental-features = [
         "nix-command"
         "flakes"
