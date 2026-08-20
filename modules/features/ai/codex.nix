@@ -4,11 +4,11 @@ let
     { lib, pkgsUnstable }:
     pkgsUnstable.stdenv.mkDerivation {
       pname = "codex";
-      version = "0.147.0";
+      version = "0.148.0";
 
       src = pkgsUnstable.fetchurl {
-        url = "https://github.com/openai/codex/releases/download/rust-v0.147.0/codex-package-x86_64-unknown-linux-musl.tar.gz";
-        hash = "sha256-vXWNU9VuQdxl4EX0WJ33mgOO0ZegEa3LUqJY5q1kz9o=";
+        url = "https://github.com/openai/codex/releases/download/rust-v0.148.0/codex-package-x86_64-unknown-linux-musl.tar.gz";
+        hash = "sha256-jHkFAK8rpudM5JSP4mxlGsH3f227AFtHyNJv9xEUYmI=";
       };
 
       dontUnpack = true;
@@ -87,7 +87,10 @@ in
         )
         // {
           # Keep the daemon's fixed standalone path under Home Manager ownership.
-          ".codex/packages/standalone/current".source = codexLatest;
+          ".codex/packages/standalone/current" = {
+            source = codexLatest;
+            force = true;
+          };
         };
 
       home.activation.removeCodexStandaloneSymlink = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
