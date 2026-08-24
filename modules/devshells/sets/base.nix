@@ -4,8 +4,12 @@ _: {
       config,
       ...
     }:
+    let
+      pkgs = config._module.args.pkgs;
+      prettier = pkgs.callPackage ../../../packages/prettier.nix { };
+    in
     {
-      dev.shellSets.base = with config._module.args.pkgs; [
+      dev.shellSets.base = with pkgs; [
         git
         git-annex
         git-lfs
@@ -31,7 +35,7 @@ _: {
         opentofu
         luaPackages.luacheck
         markdownlint-cli
-        nodePackages.prettier
+        prettier
         (writeShellScriptBin "update-ai-packages" ''
           set -euo pipefail
 

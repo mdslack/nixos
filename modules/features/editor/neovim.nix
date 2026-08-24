@@ -2,6 +2,9 @@ _: {
   # Included in default editor baseline.
   flake.modules.nixos.editor-neovim =
     { pkgs, pkgsUnstable, ... }:
+    let
+      prettier = pkgs.callPackage ../../../packages/prettier.nix { };
+    in
     {
       environment.systemPackages = [
         pkgsUnstable.neovim
@@ -14,7 +17,7 @@ _: {
         pkgs.marksman
         pkgs.nil
         pkgs.nixfmt-rfc-style
-        pkgs.prettier
+        prettier
         pkgs.python3Packages.pylatexenc
         pkgs.ripgrep
         pkgs.ruff

@@ -7,6 +7,9 @@ in
   # Included in default editor baseline.
   flake.modules.homeManager.editor-nvf =
     { pkgs, pkgsUnstable, ... }:
+    let
+      prettier = pkgs.callPackage ../../../packages/prettier.nix { };
+    in
     {
       imports = [ inputs.nvf.homeManagerModules.nvf ];
 
@@ -358,7 +361,7 @@ in
                     ];
                   };
                   prettier = {
-                    command = "${pkgs.prettier}/bin/prettier";
+                    command = "${prettier}/bin/prettier";
                   };
                 };
                 formatters_by_ft.markdown = [ "prettier" ];
