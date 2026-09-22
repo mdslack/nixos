@@ -465,6 +465,13 @@ Example:
 nix develop .#full
 ```
 
+Hosts can install these tools permanently through `permanentDevShells` in
+`modules/hosts/toggles.nix`. Enabled profiles include a C compiler, development
+outputs, and pkg-config search paths. The `rust`, `python`, and `full` profiles
+also configure the native runtime libraries used by the development shells.
+After rebuilding, log out and back in to refresh the session environment before
+running project commands such as `just test-rust` without a development shell.
+
 CI workflow lives in `.github/workflows/eval.yml` and runs lint/eval/critical
 builds.
 

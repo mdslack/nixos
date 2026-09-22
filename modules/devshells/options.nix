@@ -12,5 +12,11 @@
       default = { };
       description = "Package compositions shared by development shells and NixOS hosts.";
     };
+
+    options.dev.nativeRuntimeLibs = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+      default = [ ];
+      description = "Native libraries shared by development shells and permanent development profiles.";
+    };
   };
 }

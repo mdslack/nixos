@@ -103,6 +103,7 @@ _: {
     in
     {
       dev.shellProfiles = shellProfiles;
+      dev.nativeRuntimeLibs = nativePythonRuntimeLibs;
 
       devShells = {
         default = mkDevShell "default" {
