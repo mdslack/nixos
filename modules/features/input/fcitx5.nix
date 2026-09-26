@@ -172,7 +172,7 @@ in
     };
 
   flake.modules.homeManager.input-fcitx5 =
-    { ... }:
+    { pkgs, ... }:
     {
       xdg.configFile."fcitx5/conf/classicui.conf".text = ''
         PreferTextIcon=False
@@ -181,6 +181,14 @@ in
       '';
 
       xdg.dataFile = {
+        # Noctalia v5 reads the GTK icon theme (Adwaita by default) and needs
+        # local theme metadata to discover overrides outside apps directories.
+        "icons/Adwaita/index.theme".source = "${pkgs.adwaita-icon-theme}/share/icons/Adwaita/index.theme";
+        "icons/Adwaita/scalable/devices/input-keyboard-symbolic.svg".source =
+          ../../../assets/icons/input-keyboard-symbolic.svg;
+        "icons/Adwaita/scalable/devices/input-keyboard.svg".source =
+          ../../../assets/icons/input-keyboard-symbolic.svg;
+
         "icons/hicolor/scalable/status/input-keyboard-symbolic.svg".source =
           ../../../assets/icons/input-keyboard-symbolic.svg;
 

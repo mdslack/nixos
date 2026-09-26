@@ -305,6 +305,12 @@ When to prefer `mkOutOfStoreSymlink` to `~/dotfiles/*`:
 - Example: Noctalia uses out-of-store linking in
   `modules/features/session/noctalia.nix`.
 
+Noctalia is pinned to v5.1.0 and runs as the Home Manager `noctalia.service`.
+Its baseline is `~/dotfiles/noctalia/config.toml`; GUI overrides live separately
+in `~/.local/state/noctalia/settings.toml`. Niri bindings use `noctalia msg`.
+See `~/dotfiles/noctalia/README.md` for configuration and migration notes;
+out-of-store dotfiles must be restored separately when rolling back NixOS.
+
 How out-of-store linking behaves in this system:
 
 - Home Manager creates a symlink into your live `~/dotfiles/*` path.
