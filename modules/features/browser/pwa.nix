@@ -246,9 +246,7 @@ in {
       update_icon_by_desktop_id "proton.vpn.app.gtk.desktop" "proton-vpn-logo"
 
       update_icon "Zed" "zed"
-      update_icon "Zed Nightly" "zed"
       update_icon_by_desktop_id "dev.zed.Zed.desktop" "zed"
-      update_icon_by_desktop_id "dev.zed.Zed-Nightly.desktop" "zed"
 
       update_icon "Neovim" "nvim"
       update_icon_by_desktop_id "nvim.desktop" "nvim"

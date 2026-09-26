@@ -4,16 +4,26 @@
   flake.modules.nixos.editor-zed =
     { pkgs, ... }:
     let
-      zedPackage = inputs.zed.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      # Keep Zed current independently of the shared unstable package set.
+      zedPackage = inputs.nixpkgs-zed.legacyPackages.${pkgs.stdenv.hostPlatform.system}.zed-editor;
     in
     {
       environment.systemPackages = [
         zedPackage
+        # nixpkgs names the CLI zeditor; preserve the existing zed command.
+        (pkgs.writeShellScriptBin "zed" ''
+          exec ${zedPackage}/bin/zeditor "$@"
+        '')
       ];
     };
 
   # Included in default editor baseline.
-  flake.modules.homeManager.editor-zed = {
+  flake.modules.homeManager.editor-zed = { lib, ... }: {
+    # The icon customization script used to copy this nightly desktop entry.
+    home.activation.removeZedNightlyLauncher = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      rm -f "$HOME/.local/share/applications/dev.zed.Zed-Nightly.desktop"
+    '';
+
     programs.zed-editor = {
       enable = true;
       package = null;
