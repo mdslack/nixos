@@ -372,7 +372,7 @@
         "type": "github"
       }
     },
-    "nixpkgs-zed": {
+    "nixpkgs-apps": {
       "locked": {
         "lastModified": 1790323409,
         "narHash": "sha256-VVTPf+Hyd5ebpjBMHmrLMSBIeW6ls48Bqtosj7CNKLA=",
@@ -523,7 +523,7 @@
         "nixos-facter-modules": "nixos-facter-modules",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "nixpkgs-zed": "nixpkgs-zed",
+        "nixpkgs-apps": "nixpkgs-apps",
         "noctalia": "noctalia",
         "nvf": "nvf",
         "rust-overlay": "rust-overlay",

@@ -29,7 +29,7 @@
       url = "github:noctalia-dev/noctalia/v5.1.0";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    nixpkgs-zed.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-apps.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);

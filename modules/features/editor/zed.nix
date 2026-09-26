@@ -5,7 +5,7 @@
     { pkgs, ... }:
     let
       # Keep Zed current independently of the shared unstable package set.
-      zedPackage = inputs.nixpkgs-zed.legacyPackages.${pkgs.stdenv.hostPlatform.system}.zed-editor;
+      zedPackage = inputs.nixpkgs-apps.legacyPackages.${pkgs.stdenv.hostPlatform.system}.zed-editor;
     in
     {
       environment.systemPackages = [
