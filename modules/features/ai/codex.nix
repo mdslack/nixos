@@ -4,11 +4,11 @@ let
     { lib, pkgsUnstable }:
     pkgsUnstable.stdenv.mkDerivation {
       pname = "codex";
-      version = "0.162.1";
+      version = "0.163.0";
 
       src = pkgsUnstable.fetchurl {
-        url = "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-package-x86_64-unknown-linux-musl.tar.gz";
-        hash = "sha256-pnb1ciquDYbL43ZDMvCOqx/didwKMAs61P+/SGEfo+M=";
+        url = "https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-package-x86_64-unknown-linux-musl.tar.gz";
+        hash = "sha256-WCZGxr8FYesN5UD3/IW5EhsAkagmvG6Wgwt/FyISIYI=";
       };
 
       dontUnpack = true;
