@@ -459,6 +459,24 @@ sudo nix-collect-garbage
 These commands remove old deployable system profiles. Run them only after you
 are confident you no longer need to roll back to those older generations.
 
+## Orca
+
+Graphical host modes include Orca through the `ai-orca` feature in the shared
+desktop bundle. Launch **Orca** from the application menu or run `orca-ide`.
+The package pins the upstream Linux AppImage in `packages/orca-ide.nix` and
+installs its desktop entry and icons.
+
+Build or try it independently of a system rebuild:
+
+```bash
+nix build .#orca-ide
+nix run .#orca-ide
+```
+
+Update the version and SHA-256 hash in `packages/orca-ide.nix`, then rebuild
+the system to upgrade Orca. Use Nix for updates; the installed application is
+in the read-only Nix store.
+
 ## Dev Environment
 
 Available dev shells on `x86_64-linux`:

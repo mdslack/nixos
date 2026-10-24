@@ -2,6 +2,7 @@
 {
   flake.modules.nixos.desktop-minimal = {
     imports = [
+      config.flake.modules.nixos.ai-orca
       config.flake.modules.nixos.theme
       config.flake.modules.nixos.browser
       config.flake.modules.nixos.cloud
