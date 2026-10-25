@@ -493,6 +493,9 @@ Hosts can install these tools permanently through `permanentDevShells` in
 `modules/hosts/toggles.nix`. Enabled profiles include a C compiler, development
 outputs, and pkg-config search paths. The `rust`, `python`, and `full` profiles
 also configure the native runtime libraries used by the development shells.
+The `rust` and `full` profiles include Wayland headers and libraries, the
+`wayland-scanner` tool, and protocol XML files, with pkg-config paths available
+in both development shells and the permanent host environment.
 After rebuilding, log out and back in to refresh the session environment before
 running project commands such as `just test-rust` without a development shell.
 
