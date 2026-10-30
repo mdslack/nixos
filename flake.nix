@@ -22,7 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     herdr = {
-      url = "github:ogulcancelik/herdr/v0.7.1";
+      url = "github:herdrdev/herdr/v0.9.5";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     noctalia = {
