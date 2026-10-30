@@ -490,6 +490,28 @@ terminal-browser open https://example.com
 Build it separately with `nix build .#terminal-browser`. Update the version, URL,
 and SHA-256 hash in the package and rebuild NixOS to upgrade it.
 
+## Moshi Hook
+
+The terminal stack includes the Moshi SSH/Mosh client's companion hook, pinned
+in `packages/moshi-hook.nix`. Home Manager runs `moshi-hook.service` as a user
+service. Settings use an out-of-store link from `~/.config/moshi/config.toml`
+to `~/dotfiles/moshi/config.toml`, with self-updates disabled so Nix manages
+the binary version. Only the settings file is linked; pairing and other runtime
+files stay local to the host.
+
+After rebuilding, pair with the token from Moshi's Settings → Hooks, then
+install hooks for the agents present on the host:
+
+```bash
+moshi-hook pair --token '<token from Moshi>'
+moshi-hook install
+moshi-hook doctor
+```
+
+Restart existing agent sessions after installing hooks. Use
+`moshi-hook set --first-run` to choose discovery and usage collection settings.
+Build the package separately with `nix build .#moshi-hook`.
+
 ## Dev Environment
 
 Available dev shells on `x86_64-linux`:

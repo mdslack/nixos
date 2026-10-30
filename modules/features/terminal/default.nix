@@ -15,6 +15,7 @@
       config.flake.modules.homeManager.terminal-alacritty
       config.flake.modules.homeManager.terminal-ghostty
       config.flake.modules.homeManager.terminal-kitty
+      config.flake.modules.homeManager.terminal-moshi
     ];
   };
 }
