@@ -477,6 +477,19 @@ Update the version and SHA-256 hash in `packages/orca-ide.nix`, then rebuild
 the system to upgrade Orca. Use Nix for updates; the installed application is
 in the read-only Nix store.
 
+## Terminal Browser
+
+Browser-enabled modes install `terminal-browser` from the pinned Linux release in
+`packages/terminal-browser.nix`. Launch it in a terminal with Kitty graphics
+support, such as Kitty or Ghostty:
+
+```bash
+terminal-browser open https://example.com
+```
+
+Build it separately with `nix build .#terminal-browser`. Update the version, URL,
+and SHA-256 hash in the package and rebuild NixOS to upgrade it.
+
 ## Dev Environment
 
 Available dev shells on `x86_64-linux`:

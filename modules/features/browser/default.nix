@@ -4,6 +4,7 @@
     imports = [
       config.flake.modules.nixos.browser-pwa
       config.flake.modules.nixos.browser-brave
+      config.flake.modules.nixos.browser-terminal
     ];
   };
 
