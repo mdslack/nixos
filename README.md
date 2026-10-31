@@ -532,8 +532,11 @@ also configure the native runtime libraries used by the development shells.
 The `rust` and `full` profiles include Wayland headers and libraries, the
 `wayland-scanner` tool, and protocol XML files, with pkg-config paths available
 in both development shells and the permanent host environment.
-After rebuilding, log out and back in to refresh the session environment before
-running project commands such as `just test-rust` without a development shell.
+After rebuilding, start a new shell (or run `exec zsh`) before running project
+commands such as `just test-rust` without a development shell. Shell startup
+restores the pkg-config and native library paths even inside an older Herdr or
+tmux session. Custom paths are preserved, and explicit Nix development shells
+keep their own environment.
 
 CI workflow lives in `.github/workflows/eval.yml` and runs lint/eval/critical
 builds.

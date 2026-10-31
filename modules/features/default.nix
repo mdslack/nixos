@@ -30,6 +30,11 @@ in
       # Include propagated dependencies such as X11 protocol headers when
       # resolving Requires entries in the libraries' pkg-config files.
       pkgConfigPackages = lib.closePropagation developmentPackages;
+      pkgConfigPath = builtins.concatStringsSep ":" [
+        (lib.makeSearchPathOutput "dev" "lib/pkgconfig" pkgConfigPackages)
+        (lib.makeSearchPathOutput "dev" "share/pkgconfig" pkgConfigPackages)
+      ];
+      nativeLibraryPath = lib.makeLibraryPath nativeLibraries;
     in
     {
       assertions = [
@@ -53,13 +58,31 @@ in
       environment.sessionVariables = lib.mkMerge [
         (lib.mkIf hasDevTools {
           PKG_CONFIG_PATH = [
-            (lib.makeSearchPathOutput "dev" "lib/pkgconfig" pkgConfigPackages)
-            (lib.makeSearchPathOutput "dev" "share/pkgconfig" pkgConfigPackages)
+            pkgConfigPath
           ];
         })
         (lib.mkIf hasNativeRuntime {
-          LD_LIBRARY_PATH = [ (lib.makeLibraryPath nativeLibraries) ];
+          LD_LIBRARY_PATH = [ nativeLibraryPath ];
         })
       ];
+
+      # Persistent terminals can inherit the "environment already loaded"
+      # marker while missing these variables. Restore the development paths
+      # for each new shell, preserving additional paths without duplicating
+      # our own prefix. Let explicit Nix development shells supply their own.
+      environment.shellInit = lib.mkIf hasDevTools ''
+        if [ -z "''${IN_NIX_SHELL-}" ]; then
+          case ":''${PKG_CONFIG_PATH-}:" in
+            *":${pkgConfigPath}:"*) ;;
+            *) export PKG_CONFIG_PATH="${pkgConfigPath}''${PKG_CONFIG_PATH:+:}''${PKG_CONFIG_PATH-}" ;;
+          esac
+          ${lib.optionalString hasNativeRuntime ''
+            case ":''${LD_LIBRARY_PATH-}:" in
+              *":${nativeLibraryPath}:"*) ;;
+              *) export LD_LIBRARY_PATH="${nativeLibraryPath}''${LD_LIBRARY_PATH:+:}''${LD_LIBRARY_PATH-}" ;;
+            esac
+          ''}
+        fi
+      '';
     };
 }
