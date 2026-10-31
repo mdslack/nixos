@@ -245,9 +245,6 @@ in {
       update_icon "Proton VPN" "proton-vpn-logo"
       update_icon_by_desktop_id "proton.vpn.app.gtk.desktop" "proton-vpn-logo"
 
-      update_icon "Zed" "zed"
-      update_icon_by_desktop_id "dev.zed.Zed.desktop" "zed"
-
       update_icon "Neovim" "nvim"
       update_icon_by_desktop_id "nvim.desktop" "nvim"
 
@@ -294,7 +291,6 @@ in {
     xdg.dataFile."icons/hicolor/scalable/apps/com.mitchellh.ghostty.svg".source = "${papirusAppIcons}/com.mitchellh.ghostty.svg";
     xdg.dataFile."icons/hicolor/scalable/apps/kitty.svg".source = "${papirusAppIcons}/kitty.svg";
     xdg.dataFile."icons/hicolor/scalable/apps/proton-vpn-logo.svg".source = "${papirusAppIcons}/proton-vpn-logo.svg";
-    xdg.dataFile."icons/hicolor/scalable/apps/zed.svg".source = "${papirusAppIcons}/zed.svg";
     xdg.dataFile."icons/hicolor/scalable/apps/nvim.svg".source = "${papirusAppIcons}/nvim.svg";
     xdg.dataFile."icons/hicolor/scalable/apps/spotify.svg".source = "${papirusAppIcons}/spotify.svg";
     xdg.dataFile."icons/hicolor/scalable/apps/virt-manager.svg".source = "${papirusAppIcons}/virt-manager.svg";
