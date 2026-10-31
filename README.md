@@ -342,7 +342,8 @@ Working rule of thumb:
 - Networking defaults:
   - firewall is enabled.
   - OpenSSH is enabled with password and keyboard-interactive disabled.
-  - Tailscale is enabled with SSH support via `--ssh`.
+  - Tailscale networking is enabled with Tailscale SSH disabled. SSH and Mosh
+    use the host's OpenSSH server over the tailnet.
 
 ## Day-2 Operations
 

@@ -3,6 +3,7 @@
   flake.modules.nixos.network = {
     imports = [
       config.flake.modules.nixos.network-firewall
+      config.flake.modules.nixos.network-mosh
       config.flake.modules.nixos.network-ssh
     ];
 
