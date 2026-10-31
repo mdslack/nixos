@@ -532,6 +532,12 @@ also configure the native runtime libraries used by the development shells.
 The `rust` and `full` profiles include Wayland headers and libraries, the
 `wayland-scanner` tool, and protocol XML files, with pkg-config paths available
 in both development shells and the permanent host environment.
+The Rust toolchain includes the `wasm32-unknown-unknown` target for browser
+WebAssembly, plus `wasm-pack` and `wasm-bindgen-cli`. These are also installed
+globally on hosts with the permanent `rust` or `full` profile enabled. Projects
+still declare `wasm-bindgen` as a Cargo dependency; `wasm-pack` obtains the
+matching bindings generator when its version differs from the global CLI.
+
 After rebuilding, start a new shell (or run `exec zsh`) before running project
 commands such as `just test-rust` without a development shell. Shell startup
 restores the pkg-config and native library paths even inside an older Herdr or
