@@ -4,6 +4,8 @@ _: {
     {
       environment.systemPackages = [
         inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
+        # Herdr uses notify-send for Linux system notifications.
+        pkgs.libnotify
       ];
     };
 
