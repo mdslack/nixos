@@ -29,6 +29,13 @@
 
       services.displayManager.noctalia-greeter.enable = true;
       services.greetd.settings.default_session.user = "greeter";
+      # greetd's login shell loads the global development library path. Clear it
+      # after that shell starts so the greeter uses its own C++/graphics libraries.
+      services.greetd.settings.default_session.command =
+        "${lib.getExe' pkgs.coreutils "env"} -u LD_LIBRARY_PATH "
+        + "XDG_DATA_DIRS=${config.services.displayManager.sessionData.desktops}/share "
+        + "${config.services.displayManager.noctalia-greeter.package}/bin/noctalia-greeter-session -- "
+        + config.services.displayManager.noctalia-greeter.greeter-args;
 
       # The greeter cannot traverse a private home directory. Keep the editable
       # source in dotfiles and deploy a readable copy before the login UI starts.
