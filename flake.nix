@@ -22,14 +22,20 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     noctalia = {
-      url = "github:noctalia-dev/noctalia/v5.1.0";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      url = "github:noctalia-dev/noctalia/v5.4.1";
+      inputs.nixpkgs.follows = "nixpkgs-apps";
     };
     nixpkgs-apps.url = "github:NixOS/nixpkgs/nixos-unstable";
     niri = {
       # Includes the virtual-keyboard rewrite and subsequent fcitx5/wtype fixes.
       url = "github:niri-wm/niri/9955d921ce6491e34fb74ec94f30a7cca76826e4";
       inputs.nixpkgs.follows = "nixpkgs-apps";
+    };
+    # Keep Umbriel's own nixpkgs lock to match its official binary cache.
+    umbriel.url = "github:noctalia-dev/umbriel/7ffde7901bbed0ad67f0b1167c10792924ab9066";
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter/effcb9ffc33f7120cbc6cfc6c6527e9da763a0e9";
+      inputs.nixpkgs.follows = "umbriel/nixpkgs";
     };
   };
 

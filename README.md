@@ -271,8 +271,40 @@ Modes in this repo:
 - `niri-bootstrap`
 - `niri-dms`
 - `niri-noctalia`
+- `umbriel-noctalia`
 
 All combinations are built as `.#<host>-<mode>`.
+
+### Umbriel with Noctalia Greeter
+
+`umbriel-noctalia` is a separate desktop profile using Umbriel, the existing
+Noctalia shell, and Noctalia Greeter. Existing Niri and Hyprland profiles remain
+available. For example, select it on meerkat with:
+
+```bash
+sudo nixos-rebuild boot --flake ~/nixos#meerkat-umbriel-noctalia
+```
+
+This prepares the profile for the next boot without replacing the live desktop.
+Reboot when ready, then select **Umbriel** on the login screen. Its scrolling layout uses
+Ghostty for Super+T/Return, Super+V for floating, and Super+Ctrl+V for Voxtype.
+The bindings mirror the Niri dotfiles where Umbriel provides equivalent actions;
+the four unmatched operations are documented beside the keybind table. The BenQ
+RD280U monitor identity uses 150% scale at its preferred native resolution.
+
+Home Manager creates out-of-store links for:
+
+- `~/.config/umbriel/config.toml` → `~/dotfiles/umbriel/config.toml`
+- `~/.config/noctalia-greeter/greeter.toml` → `~/dotfiles/noctalia-greeter/greeter.toml`
+
+Umbriel reloads valid config edits live. The greeter runs before login and cannot
+read a private user home: system activation and greetd startup deploy its dotfiles
+config to `/var/lib/noctalia-greeter/greeter.toml`, readable by the greeter without
+opening the home directory. Rebuild to deploy greeter changes. No autologin or
+passwordless appearance sync is enabled.
+
+Umbriel and its portal are pinned together using the upstream cached revision
+and its own nixpkgs lock; the profile enables the project's signed Cachix cache.
 
 ## Configuration Guide
 
@@ -305,7 +337,7 @@ When to prefer `mkOutOfStoreSymlink` to `~/dotfiles/*`:
 - Example: Noctalia uses out-of-store linking in
   `modules/features/session/noctalia.nix`.
 
-Noctalia is pinned to v5.1.0 and runs as the Home Manager `noctalia.service`.
+Noctalia is pinned to v5.4.1 and runs as the Home Manager `noctalia.service`.
 Its baseline is `~/dotfiles/noctalia/config.toml`; GUI overrides live separately
 in `~/.local/state/noctalia/settings.toml`. Niri bindings use `noctalia msg`.
 See `~/dotfiles/noctalia/README.md` for configuration and migration notes;

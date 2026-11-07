@@ -47,5 +47,11 @@ _: {
       "bundle-wm-niri"
       "bundle-session-noctalia"
     ];
+    umbriel-noctalia = [
+      "minimal"
+      "bundle-wm-umbriel"
+      "bundle-session-noctalia"
+      "bundle-session-noctalia-greeter"
+    ];
   };
 }
