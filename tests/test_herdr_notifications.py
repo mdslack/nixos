@@ -64,6 +64,13 @@ class NotificationTests(unittest.TestCase):
         }})
         self.assertEqual(self.sent, [])
 
+    def test_null_event_data_does_not_interrupt_notifications(self):
+        self.listener.accept({"method": "event", "params": {
+            "type": "size", "terminal": "t1", "data": None,
+        }})
+        self.status("done")
+        self.assertEqual(len(self.sent), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

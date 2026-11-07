@@ -27,7 +27,7 @@ class Notifications:
         if kind == "removed":
             self.records.pop(address, None)
             return
-        data = params.get("data", {})
+        data = params.get("data") or {}
         if kind in ("created", "restarted"):
             self.records[address] = data
             return
