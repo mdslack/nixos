@@ -10,6 +10,7 @@
   flake.modules.homeManager.input = {
     imports = [
       config.flake.modules.homeManager.input-fcitx5
+      config.flake.modules.homeManager.input-voxtype
     ];
   };
 }

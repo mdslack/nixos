@@ -21,15 +21,16 @@
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    herdr = {
-      url = "github:herdrdev/herdr/v0.9.5";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     noctalia = {
       url = "github:noctalia-dev/noctalia/v5.1.0";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nixpkgs-apps.url = "github:NixOS/nixpkgs/nixos-unstable";
+    niri = {
+      # Includes the virtual-keyboard rewrite and subsequent fcitx5/wtype fixes.
+      url = "github:niri-wm/niri/9955d921ce6491e34fb74ec94f30a7cca76826e4";
+      inputs.nixpkgs.follows = "nixpkgs-apps";
+    };
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);

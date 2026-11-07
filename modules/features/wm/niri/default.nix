@@ -1,9 +1,10 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake.modules.nixos.wm-niri =
     { pkgs, ... }:
     {
       programs.niri.enable = true;
+      programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
 
       services.greetd = {
         enable = true;
@@ -50,8 +51,8 @@
       home.sessionVariables.TERMINAL = "ghostty";
 
       xdg.configFile."niri" = {
-      	source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/niri";
-	recursive = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/niri";
+        recursive = true;
       };
     };
 }

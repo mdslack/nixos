@@ -460,23 +460,76 @@ sudo nix-collect-garbage
 These commands remove old deployable system profiles. Run them only after you
 are confident you no longer need to roll back to those older generations.
 
-## Orca
+## Herdr Desktop and Core
 
-Graphical host modes include Orca through the `ai-orca` feature in the shared
-desktop bundle. Launch **Orca** from the application menu or run `orca-ide`.
-The package pins the upstream Linux AppImage in `packages/orca-ide.nix` and
-installs its desktop entry and icons.
-
-Build or try it independently of a system rebuild:
+The terminal stack installs Herdr Desktop (`herdr-app`) and its runtime
+(`herdr-core`, also available as `hc`). The legacy Herdr TUI is no longer installed.
+Launch **Herdr Desktop** from the application menu after rebuilding, or run:
 
 ```bash
-nix build .#orca-ide
-nix run .#orca-ide
+herdr-app
+hc server status
 ```
 
-Update the version and SHA-256 hash in `packages/orca-ide.nix`, then rebuild
-the system to upgrade Orca. Use Nix for updates; the installed application is
-in the read-only Nix store.
+The pinned release packages live in `packages/herdr-app.nix` and
+`packages/herdr-core.nix`. Build or launch them separately:
+
+```bash
+nix build .#herdr-app .#herdr-core
+nix run .#herdr-app
+```
+
+Desktop's wrapper supplies Core and its native libraries on NixOS. Nix owns
+both binaries: update their versions and hashes and rebuild to upgrade. The
+desktop icon is installed separately from the executable so the app does not
+enable its standalone self-updater; Core recognizes its Nix installation.
+
+Desktop preferences live in `~/.config/herdr-app`; Core's optional configuration
+is `~/.config/herdr-core/config.toml`. Home Manager links Desktop's `settings.json`,
+`keys.json`, and `themes/catppuccin-mocha.json` out of the store to
+`~/dotfiles/herdr-app/`. Settings select Catppuccin Mocha from the
+[community Desktop theme](https://github.com/suree33/herdr-app). Generated assets
+and session state stay in `~/.config/herdr-app`.
+
+The Home Manager user service `herdr-notifications` forwards new Desktop agent
+completion, attention, and error events to the desktop notification service
+(Noctalia in the Noctalia session). Initial snapshots and repeated status
+reports do not replay old alerts. Herdr's own sounds are disabled in the linked
+settings; Noctalia controls how desktop notifications appear.
+
+Core 0.1.18 can inherit `NO_COLOR` when started or replaced from an agent's
+command environment ([upstream issue](https://github.com/herdrdev/herdr-core/issues/20)).
+The upstream restart fix is merged after that release. As a workaround,
+`~/dotfiles/zsh/.zshrc` clears `NO_COLOR` in interactive Core shells. In an
+already open shell, run `unset NO_COLOR` before reopening affected programs.
+
+The former TUI configuration, sidebar icon font, and agent hooks have been removed.
+
+## Voice dictation
+
+Voxtype is installed from the pinned `nixpkgs-apps` input and runs as the
+Home Manager user service `voxtype`. Its configuration is linked out of the
+store to `~/dotfiles/voxtype/config.toml`.
+The package enables Vulkan GPU acceleration; the dictation config enables
+short-recording context optimization for lower latency. This optimization can
+affect recognition accuracy; set `whisper.context_window_optimization = false`
+to retain full-context decoding while keeping GPU acceleration.
+
+In Niri, **Super+Ctrl+V** starts recording; press it again to stop, transcribe
+offline with the English `base.en` model, and insert the result at the cursor.
+Voxtype types into the focused application, with clipboard fallback if
+typing fails. A 300 ms delay allows shortcut modifiers to release first.
+Niri is pinned to upstream revision `9955d92`, which includes the virtual-input
+rewrite and subsequent fcitx5/wtype fixes. After rebuilding, log out and back
+in before using automatic typing; a system switch does not replace the
+running compositor. `niri msg version` compares the live compositor and CLI.
+Recording is capped at 60 seconds. Noctalia shows recording and processing
+notifications, including when the transcription completes.
+The existing Super+V floating-window bindings are unchanged.
+
+Models live in `~/.local/share/voxtype/models`. On a fresh installation, download
+the configured model with `voxtype setup --download --model base.en` before
+starting the service. To cancel a recording, run `voxtype record cancel`.
 
 ## Terminal Browser
 
