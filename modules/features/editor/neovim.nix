@@ -1,13 +1,15 @@
-_: {
+{ inputs, ... }:
+{
   # Included in default editor baseline.
   flake.modules.nixos.editor-neovim =
-    { pkgs, pkgsUnstable, ... }:
+    { pkgs, ... }:
     let
+      appPkgs = inputs.nixpkgs-apps.legacyPackages.${pkgs.stdenv.hostPlatform.system};
       prettier = pkgs.callPackage ../../../packages/prettier.nix { };
     in
     {
       environment.systemPackages = [
-        pkgsUnstable.neovim
+        appPkgs.neovim
         pkgs.basedpyright
         pkgs.bash-language-server
         pkgs.fd
