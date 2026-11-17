@@ -529,10 +529,15 @@ completion, attention, and error events to the desktop notification service
 reports do not replay old alerts. Herdr's own sounds are disabled in the linked
 settings; Noctalia controls how desktop notifications appear.
 
-Core 0.1.18 can inherit `NO_COLOR` when started or replaced from an agent's
-command environment ([upstream issue](https://github.com/herdrdev/herdr-core/issues/20)).
-The upstream restart fix is merged after that release. As a workaround,
-`~/dotfiles/zsh/.zshrc` clears `NO_COLOR` in interactive Core shells. In an
+Desktop is pinned to 0.1.16 and Core to 0.1.21. Desktop includes the fix for
+reclaiming a terminal's size when selecting it after another device resized it.
+Rebuild both machines and reopen Desktop to use the updated client.
+
+Core 0.1.19 and newer preserve the original environment across updates and
+restarts, fixing accidental `NO_COLOR` inheritance from an agent's command
+environment ([upstream issue](https://github.com/herdrdev/herdr-core/issues/20)).
+The first upgrade from an older Core can still inherit the updater's environment.
+`~/dotfiles/zsh/.zshrc` also clears `NO_COLOR` in interactive Core shells. In an
 already open shell, run `unset NO_COLOR` before reopening affected programs.
 
 The former TUI configuration, sidebar icon font, and agent hooks have been removed.
