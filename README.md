@@ -492,6 +492,16 @@ sudo nix-collect-garbage
 These commands remove old deployable system profiles. Run them only after you
 are confident you no longer need to roll back to those older generations.
 
+## Antigravity CLI
+
+The shared AI bundle installs Google Antigravity CLI alongside Claude Code and
+Codex. Run `agy` to start its interactive terminal interface and sign in.
+
+The pinned binary and upstream checksum live in
+`modules/features/ai/antigravity.nix`. Nix patches the Linux executable and supplies
+Bubblewrap and ripgrep. Automatic updates are disabled; update the version, release
+URL, and hash in that module and rebuild NixOS to upgrade.
+
 ## Herdr Desktop and Core
 
 The terminal stack installs Herdr Desktop (`herdr-app`) and its runtime
