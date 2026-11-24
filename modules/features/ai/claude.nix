@@ -4,11 +4,11 @@ let
     pkgs:
     pkgs.stdenv.mkDerivation (finalAttrs: {
       pname = "claude-code";
-      version = "2.1.330";
+      version = "2.1.331";
 
       src = pkgs.fetchurl {
         url = "https://downloads.claude.ai/claude-code-releases/${finalAttrs.version}/linux-x64/claude";
-        hash = "sha256-85DqoIFOahv/dMu0est0y5yJ0wztgJ/gr1rwDHv+jrs=";
+        hash = "sha256-TACDnPRr6ys47DEBBfLVOPf5Mh/kbGNimbdLyrlGJrE=";
       };
 
       dontUnpack = true;

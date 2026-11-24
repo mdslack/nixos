@@ -4,11 +4,11 @@ let
     pkgs:
     pkgs.stdenv.mkDerivation {
       pname = "antigravity-cli";
-      version = "1.5.13";
+      version = "1.5.16";
 
       src = pkgs.fetchurl {
-        url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.13-5999302598852608/linux-x64/cli_linux_x64.tar.gz";
-        hash = "sha512-AUs3OHcDrKsfR81TLIu2AWemo1N7D5iR3gPxsf+pYUMHvIPEsvdVEnOwh31yJxawzZ4meC9rKlBwXbTwXhjGjw==";
+        url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.16-5250855658717184/linux-x64/cli_linux_x64.tar.gz";
+        hash = "sha512-Pe6fJuKYFW22c/bOKg9d/tWzAAbgTOuYCcaAcOe3F1h7M6PaD4vC7aRa+BpQvIsUyCsorlgyvP4+f9STlxF7MQ==";
       };
 
       dontUnpack = true;
