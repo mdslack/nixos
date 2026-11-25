@@ -1,9 +1,16 @@
-_: {
+{ inputs, ... }:
+{
   flake.modules.nixos.communication-zoom =
-    { pkgsUnstable, ... }:
+    { pkgs, ... }:
+    let
+      zoomPkgs = import inputs.nixpkgs-app-updates {
+        system = pkgs.stdenv.hostPlatform.system;
+        config.allowUnfree = true;
+      };
+    in
     {
       environment.systemPackages = [
-        pkgsUnstable.zoom-us
+        zoomPkgs.zoom-us
       ];
     };
 }
