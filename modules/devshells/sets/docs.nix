@@ -11,6 +11,7 @@ _: {
         markdownlint-cli
         mdbook
         poppler-utils
+        librsvg
         qpdf
         texlive.combined.scheme-full
       ];

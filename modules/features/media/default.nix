@@ -22,6 +22,7 @@
     {
       environment.systemPackages = with pkgs; [
         imagemagick
+        librsvg
         gimp
         loupe
         inkscape
