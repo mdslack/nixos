@@ -35,6 +35,9 @@
     };
     # Keep Umbriel's own nixpkgs lock to match its official binary cache.
     umbriel.url = "github:noctalia-dev/umbriel/7ffde7901bbed0ad67f0b1167c10792924ab9066";
+    # Pinned to the commit on upstream's `cachix` branch; no follows so the
+    # noctalia.cachix.org binaries match.
+    luciole.url = "github:noctalia-dev/luciole/179bc55ced1cf69acfcb58e0dd287c3e2c4e4ffe";
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter/effcb9ffc33f7120cbc6cfc6c6527e9da763a0e9";
       inputs.nixpkgs.follows = "umbriel/nixpkgs";

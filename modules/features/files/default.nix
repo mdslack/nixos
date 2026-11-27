@@ -28,6 +28,7 @@
   flake.modules.nixos.files = {
     imports = [
       config.flake.modules.nixos.files-archives
+      config.flake.modules.nixos.files-luciole
       config.flake.modules.nixos.files-removable
       config.flake.modules.nixos.files-yazi
     ];
@@ -35,6 +36,7 @@
 
   flake.modules.homeManager.files = {
     imports = [
+      config.flake.modules.homeManager.files-luciole
       config.flake.modules.homeManager.files-removable
       config.flake.modules.homeManager.files-yazi
     ];
