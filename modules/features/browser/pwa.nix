@@ -46,7 +46,7 @@ _: let
       custom_name = "Outlook";
     }
     {
-      url = "https://calendar.proton.me";
+      url = "https://new-calendar.proton.me";
       default_launch_container = "window";
       custom_name = "Proton Calendar";
     }
