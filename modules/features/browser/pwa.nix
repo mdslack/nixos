@@ -31,7 +31,7 @@ _: let
       custom_name = "PowerPoint";
     }
     {
-      url = "https://teams.microsoft.com";
+      url = "https://teams.cloud.microsoft";
       default_launch_container = "window";
       custom_name = "Microsoft Teams";
     }
